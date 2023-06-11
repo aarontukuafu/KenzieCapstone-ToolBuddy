@@ -1,8 +1,14 @@
-package com.kenzie.appserver.service.model;
+package com.kenzie.appserver.repositories.model;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
-public class Tool {
+@DynamoDBTable(tableName = "ToolDatabase")
+public class ToolRecord {
     private int toolId;
     private String owner; //GSI //username from UserDB
     private String toolName;
@@ -11,9 +17,10 @@ public class Tool {
     private List<String> comments;
     private String borrower;
 
-    public Tool(){}
+    public ToolRecord() {
+    }
 
-    public Tool(int toolId, String owner, String toolName, boolean isAvailable, String description, String borrower) {
+    public ToolRecord(int toolId, String owner, String toolName, boolean isAvailable, String description, String borrower) {
         this.toolId = toolId;
         this.owner = owner;
         this.toolName = toolName;
@@ -22,6 +29,8 @@ public class Tool {
         this.borrower = borrower;
     }
 
+    @Id
+    @DynamoDBHashKey
     public int getToolId() {
         return toolId;
     }
@@ -30,6 +39,7 @@ public class Tool {
         this.toolId = toolId;
     }
 
+    @DynamoDBAttribute
     public String getOwner() {
         return owner;
     }
@@ -38,6 +48,7 @@ public class Tool {
         this.owner = owner;
     }
 
+    @DynamoDBAttribute
     public String getToolName() {
         return toolName;
     }
@@ -46,6 +57,7 @@ public class Tool {
         this.toolName = toolName;
     }
 
+    @DynamoDBAttribute
     public boolean getIsAvailable() {
         return isAvailable;
     }
@@ -54,6 +66,7 @@ public class Tool {
         this.isAvailable = isAvailable;
     }
 
+    @DynamoDBAttribute
     public String getDescription() {
         return description;
     }
@@ -62,6 +75,7 @@ public class Tool {
         this.description = description;
     }
 
+    @DynamoDBAttribute
     public List<String> getComments() {
         return comments;
     }
@@ -70,6 +84,7 @@ public class Tool {
         this.comments = comments;
     }
 
+    @DynamoDBAttribute
     public String getBorrower() {
         return borrower;
     }
@@ -78,3 +93,4 @@ public class Tool {
         this.borrower = borrower;
     }
 }
+
