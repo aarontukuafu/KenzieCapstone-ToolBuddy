@@ -22,14 +22,14 @@ public class UserRecord {
         this.password = password;
     }
 
-    @Id
-    @DynamoDBHashKey(
+
+    @DynamoDBAttribute(
             attributeName = "name")
     public String getName(){return this.name;}
 
     public void setName(String userId){this.name = name;}
-
-    @DynamoDBAttribute(attributeName = "userName")
+    @Id
+    @DynamoDBHashKey(attributeName = "userName")
     public String getUserName() {
         return userName;
     }
