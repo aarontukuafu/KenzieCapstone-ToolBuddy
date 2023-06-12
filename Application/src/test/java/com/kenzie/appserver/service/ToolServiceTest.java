@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -57,4 +58,28 @@ public class ToolServiceTest {
         Assertions.assertEquals("description2", tools.get(1).getDescription());
         Assertions.assertEquals("borrower2", tools.get(1).getBorrower());
     }
+
+    @Test
+    public void getAllTools_isNotSuccessful(){
+        //GIVEN
+        List<ToolRecord> emptyList = new ArrayList<>();
+
+        //WHEN
+        when(toolRepository.findAll()).thenReturn(emptyList);
+        List<Tool> tools = toolService.getAllTools();
+
+        //THEN
+        Assertions.assertTrue(tools.isEmpty());
+    }
+
+//    @Test
+//    public void getAllTools_handlesException(){
+//        //GIVEN
+//        //WHEN
+//        when(toolRepository.findAll()).thenThrow(new RuntimeException("Failed to retrieve tools"));
+//        List<Tool> tools = toolService.getAllTools();
+//
+//        //THEN
+//        Assertions.assertTrue(tools.isEmpty());
+//    }
 }
