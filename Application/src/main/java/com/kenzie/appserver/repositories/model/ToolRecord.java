@@ -17,12 +17,8 @@ public class ToolRecord {
     private List<String> comments;
     private String borrower;
 
-<<<<<<< HEAD
     public ToolRecord() {
     }
-=======
-    public ToolRecord(){}
->>>>>>> main
 
     public ToolRecord(int toolId, String owner, String toolName, boolean isAvailable, String description, String borrower) {
         this.toolId = toolId;
@@ -62,21 +58,14 @@ public class ToolRecord {
     }
 
     @DynamoDBAttribute
-<<<<<<< HEAD
     public boolean getIsAvailable() {
         return isAvailable;
     }
 
     public void setIsAvailable(boolean isAvailable) {
-=======
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean isAvailable) {
->>>>>>> main
         this.isAvailable = isAvailable;
     }
+
 
     @DynamoDBAttribute
     public String getDescription() {
@@ -105,7 +94,3 @@ public class ToolRecord {
         this.borrower = borrower;
     }
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> main
