@@ -45,4 +45,18 @@ public class ToolController {
         toolResponse.setBorrower(tool.getBorrower());
         return toolResponse;
     }
+
+    @GetMapping
+    public ResponseEntity<List<ToolResponse>> viewAllTools() {
+        List<Tool> allTools = toolService.getAllTools();
+        if (allTools == null ||  allTools.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        List<ToolResponse> response = new ArrayList<>();
+        for (Tool tool : allTools) {
+            response.add(this.createToolResponse(tool));
+        }
+
+        return ResponseEntity.ok(response);
+    }
 }

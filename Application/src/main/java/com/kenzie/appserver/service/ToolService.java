@@ -41,4 +41,19 @@ public class ToolService {
         return tool;
     }
 
+    public List<Tool> viewAllTools() {
+        List<Tool> allTools = new ArrayList<>();
+
+        Iterable<ToolRecord> toolIterator = toolRepository.findAll();
+        for(ToolRecord record : toolIterator) {
+            allTools.add(new Tool(record.getToolId(),
+                    record.getOwner(),
+                    record.getToolName(),
+                    record.getIsAvailable(),
+                    record.getDescription(),
+                    record.getBorrower()));
+        }
+        return allTools;
+    }
+
 }

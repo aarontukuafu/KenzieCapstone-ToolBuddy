@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.UUID.randomUUID;
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -82,4 +83,40 @@ public class ToolServiceTest {
 //        //THEN
 //        Assertions.assertTrue(tools.isEmpty());
 //    }
+
+
+    @Test
+    public void viewAllTools_returnsListOfTools() {
+        // GIVEN
+        ToolRecord record = new ToolRecord();
+        record.setToolId(12345);
+        record.setOwner("owner");
+        record.setToolName("toolName");
+        record.setIsAvailable(true);
+        record.setDescription("toolDescription");
+        record.setBorrower("borrower");
+
+        ToolRecord record2 = new ToolRecord();
+        record.setToolId(54321);
+        record.setOwner("owner");
+        record.setToolName("toolName");
+        record.setIsAvailable(false);
+        record.setDescription("toolDescription");
+        record.setBorrower("borrower");
+
+        List<ToolRecord> records = new ArrayList<>();
+
+        records.add(record);
+        records.add(record2);
+
+        when(toolRepository.findAll()).thenReturn(records);
+        // WHEN
+
+        List<Tool> tools = toolService.getAllTools();
+
+        // THEN
+        Assertions.assertNotNull(tools, "List of tools is returned");
+        Assertions.assertEquals(2, tools.size(), "There are two tools in list");
+    }
+
 }
