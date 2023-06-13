@@ -21,6 +21,9 @@ public class UserRecord {
         this.userName = userName;
         this.password = password;
     }
+    public UserRecord(){
+
+    }
 
 
     @DynamoDBAttribute(

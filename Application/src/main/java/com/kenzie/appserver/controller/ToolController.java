@@ -46,8 +46,8 @@ public class ToolController {
         return toolResponse;
     }
 
-    @GetMapping
-    public ResponseEntity<List<ToolResponse>> viewAllTools() {
+   @GetMapping
+    public ResponseEntity<List<ToolResponse>> getAllToolsByUserId() {
         List<Tool> allTools = toolService.getAllTools();
         if (allTools == null ||  allTools.isEmpty()) {
             return ResponseEntity.noContent().build();

@@ -1,7 +1,9 @@
 package com.kenzie.appserver.service;
 
 import com.kenzie.appserver.repositories.ToolRepository;
+import com.kenzie.appserver.repositories.UserRecordRepository;
 import com.kenzie.appserver.repositories.model.ToolRecord;
+import com.kenzie.appserver.repositories.model.UserRecord;
 import com.kenzie.appserver.service.model.Tool;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -14,11 +16,12 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.UUID.randomUUID;
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.client.ExpectedCount.times;
 
 public class ToolServiceTest {
     @InjectMocks
@@ -26,6 +29,8 @@ public class ToolServiceTest {
 
     @Mock
     private ToolRepository toolRepository;
+    @Mock
+    private UserRecordRepository userRecordRepository;
 
     @BeforeEach
     public void setUp() {
@@ -86,37 +91,24 @@ public class ToolServiceTest {
 
 
     @Test
-    public void viewAllTools_returnsListOfTools() {
+    public void viewAllToolsById_returnsListOfTools() {
         // GIVEN
-        ToolRecord record = new ToolRecord();
-        record.setToolId(12345);
-        record.setOwner("owner");
-        record.setToolName("toolName");
-        record.setIsAvailable(true);
-        record.setDescription("toolDescription");
-        record.setBorrower("borrower");
+        String name = "name";
 
-        ToolRecord record2 = new ToolRecord();
-        record.setToolId(54321);
-        record.setOwner("owner");
-        record.setToolName("toolName");
-        record.setIsAvailable(false);
-        record.setDescription("toolDescription");
-        record.setBorrower("borrower");
+        UserRecord userRecord = new UserRecord(name,"username","password");
+        Optional<UserRecord> userRecords = Optional.of(userRecord);
 
-        List<ToolRecord> records = new ArrayList<>();
 
-        records.add(record);
-        records.add(record2);
+        ToolRecord toolRecord1 = new ToolRecord(1, name, "toolName1",
+                true, "description1", "borrower1");
+        Optional<ToolRecord> toolRecord = Optional.of(toolRecord1);
 
-        when(toolRepository.findAll()).thenReturn(records);
-        // WHEN
+        when(userRecordRepository.findById(name)).thenReturn(userRecords);
+        when(toolRepository.findById(name)).thenReturn(toolRecord);
 
-        List<Tool> tools = toolService.getAllTools();
+        List<Tool> result = toolService.getAllToolsByUserId();
 
-        // THEN
-        Assertions.assertNotNull(tools, "List of tools is returned");
-        Assertions.assertEquals(2, tools.size(), "There are two tools in list");
+        Assertions.assertEquals(1, result.size());
+
     }
-
 }
