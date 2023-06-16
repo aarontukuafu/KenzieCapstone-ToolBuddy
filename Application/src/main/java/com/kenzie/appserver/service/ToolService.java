@@ -81,7 +81,7 @@ public class ToolService {
     }
 
     public List<Tool> getAllToolsByUserId() {
-        Optional<UserRecord> userRecord1 = userRecordRepository.findById(userRecord.getName());
+        Optional<UserRecord> userRecord1 = userRecordRepository.findById(userResponse.getName());
 
         if (userRecord1.isPresent()) {
             Optional<ToolRecord> allTools = toolRepository.findById(toolRecord.getOwner());

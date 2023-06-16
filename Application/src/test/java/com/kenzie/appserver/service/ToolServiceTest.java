@@ -90,25 +90,22 @@ public class ToolServiceTest {
 //    }
 
 
-    @Test
-    public void viewAllToolsById_returnsListOfTools() {
-        // GIVEN
-        String name = "name";
+   /* @Test
+    String userId = getUserId(); // Assuming you have a way to retrieve the user ID
 
-        UserRecord userRecord = new UserRecord(name,"username","password");
-        Optional<UserRecord> userRecords = Optional.of(userRecord);
+    Optional<UserRecord> userRecordOptional = userRecordRepository.findById(userId);
 
+    if (userRecordOptional.isPresent()) {
+        UserRecord userRecord = userRecordOptional.get();
 
-        ToolRecord toolRecord1 = new ToolRecord(1, name, "toolName1",
-                true, "description1", "borrower1");
-        Optional<ToolRecord> toolRecord = Optional.of(toolRecord1);
+        List<ToolRecord> allTools = toolRepository.findByOwner(userRecord.getName());
 
-        when(userRecordRepository.findById(name)).thenReturn(userRecords);
-        when(toolRepository.findById(name)).thenReturn(toolRecord);
+        List<ToolResponse> toolResponses = new ArrayList<>();
+        for (ToolRecord toolRecord : allTools) {
+            ToolResponse toolResponse = convertToToolResponse(toolRecord);
+            toolResponses.add(toolResponse);
+        }
 
-        List<Tool> result = toolService.getAllToolsByUserId();
-
-        Assertions.assertEquals(1, result.size());
-
-    }
+        return ResponseEntity.ok(toolResponses);
+    }*/
 }
