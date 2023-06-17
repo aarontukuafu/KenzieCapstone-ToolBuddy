@@ -40,5 +40,20 @@ public class ToolService {
 
         return tool;
     }
+    public Tool addNewTool (Tool tool) {
+
+        ToolRecord toolRecord = new ToolRecord();
+
+        toolRecord.setToolId(tool.getToolId());
+        toolRecord.setOwner(tool.getOwner());
+        toolRecord.setToolName(tool.getToolName());
+        toolRecord.setIsAvailable(tool.getIsAvailable());
+        toolRecord.setDescription(tool.getDescription());
+        toolRecord.setBorrower(tool.getBorrower());
+
+        toolRepository.save(toolRecord);
+
+        return tool;
+    }
 
 }
