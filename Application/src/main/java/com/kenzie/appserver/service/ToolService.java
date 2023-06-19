@@ -75,7 +75,7 @@ public class ToolService {
     }
 
     public void addNewTool(Tool tool) {
-        if (userService.authenticator(userRecord)) {
+        if (userService.authenticator(userRecord, userResponse)) {
             createToolRecord(tool);
         }
     }

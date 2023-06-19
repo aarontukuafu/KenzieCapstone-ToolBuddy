@@ -30,7 +30,7 @@ public class UserService {
 
     }
 
-    public boolean authenticator(UserRecord userRecord) {
+    public boolean authenticator(UserRecord userRecord, UserResponse userResponse) { // added user response as parameter in service and service
         if (userRecordRepository.existsById(userResponse.getUserName()) && userResponse.getPassword().equals(userRecord.getPassword())) {
             return true;
         } else if (userResponse.getUserName().isEmpty()) {
