@@ -1,7 +1,9 @@
 package com.kenzie.appserver.service;
 
 import com.kenzie.appserver.repositories.ToolRepository;
+import com.kenzie.appserver.repositories.UserRecordRepository;
 import com.kenzie.appserver.repositories.model.ToolRecord;
+import com.kenzie.appserver.repositories.model.UserRecord;
 import com.kenzie.appserver.service.model.Tool;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -14,10 +16,12 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static java.util.UUID.randomUUID;
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.client.ExpectedCount.times;
 
 public class ToolServiceTest {
     @InjectMocks
@@ -25,6 +29,8 @@ public class ToolServiceTest {
 
     @Mock
     private ToolRepository toolRepository;
+    @Mock
+    private UserRecordRepository userRecordRepository;
 
     @BeforeEach
     public void setUp() {
@@ -82,4 +88,24 @@ public class ToolServiceTest {
 //        //THEN
 //        Assertions.assertTrue(tools.isEmpty());
 //    }
+
+
+   /* @Test
+    String userId = getUserId(); // Assuming you have a way to retrieve the user ID
+
+    Optional<UserRecord> userRecordOptional = userRecordRepository.findById(userId);
+
+    if (userRecordOptional.isPresent()) {
+        UserRecord userRecord = userRecordOptional.get();
+
+        List<ToolRecord> allTools = toolRepository.findByOwner(userRecord.getName());
+
+        List<ToolResponse> toolResponses = new ArrayList<>();
+        for (ToolRecord toolRecord : allTools) {
+            ToolResponse toolResponse = convertToToolResponse(toolRecord);
+            toolResponses.add(toolResponse);
+        }
+
+        return ResponseEntity.ok(toolResponses);
+    }*/
 }
