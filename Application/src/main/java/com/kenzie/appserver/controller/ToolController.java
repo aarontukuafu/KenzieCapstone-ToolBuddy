@@ -5,6 +5,7 @@ import com.kenzie.appserver.service.ToolService;
 import com.kenzie.appserver.service.model.Tool;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +33,16 @@ public class ToolController {
             response.add(this.createToolResponse(tool));
         }
         return ResponseEntity.ok(response);
+    }
+    @GetMapping("/{toolId}")
+    public ResponseEntity<ToolResponse> getToolById(@PathVariable("toolId") String toolId) {
+        Tool tool = toolService.findByToolName(toolId);
+
+        if(tool == null) {
+            return ResponseEntity.notFound().build();
+        }
+        ToolResponse toolResponse = createToolResponse(tool);
+        return ResponseEntity.ok(toolResponse);
     }
 
     private ToolResponse createToolResponse(Tool tool) {

@@ -39,6 +39,6 @@ public class ToolContollerTest {
         Tool tool = new Tool(id, owner, toolName, isAvailable, description, borrower);
         Tool existingTool = toolService.addNewTool(tool);
 
-
+        mvc.perform(get(""))
     }
 }

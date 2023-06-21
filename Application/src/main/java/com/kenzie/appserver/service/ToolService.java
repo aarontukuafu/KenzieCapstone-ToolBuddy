@@ -5,6 +5,7 @@ import com.kenzie.appserver.repositories.model.ToolRecord;
 import com.kenzie.appserver.service.model.Tool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.kenzie.appserver.config.CacheStore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +13,12 @@ import java.util.List;
 @Service
 public class ToolService {
     private ToolRepository toolRepository;
+    private CacheStore cache;
 
     @Autowired
-    public ToolService(ToolRepository toolRepository) {
+    public ToolService(ToolRepository toolRepository, CacheStore cache) {
         this.toolRepository = toolRepository;
+        this.cache = cache;
     }
 
     public List<Tool> getAllTools() {
@@ -55,5 +58,25 @@ public class ToolService {
 
         return tool;
     }
+    //Testing to see if this will pull what i need, grabbed from Unit Four project
+    public Tool findByToolName(String toolName) {
+        Tool cachedTool = cache.get(toolName);
 
+        if(cachedTool != null) {
+            return cachedTool;
+        }
+        Tool toolFromBackendService = toolRepository
+                .findById(toolName)
+                .map(tool -> new Tool(tool.getToolId(),
+                        tool.getOwner(),
+                        tool.getToolName(),
+                        tool.getIsAvailable(),
+                        tool.getDescription(),
+                        tool.getBorrower()))
+                .orElse(null);
+        if(toolFromBackendService != null) {
+            cache.add(toolFromBackendService.getToolName(), toolFromBackendService);
+        }
+        return toolFromBackendService;
+    }
 }
