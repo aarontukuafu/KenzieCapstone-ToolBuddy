@@ -1,19 +1,29 @@
 package com.kenzie.appserver.controller;
 
-
-
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.kenzie.appserver.IntegrationTest;
 import com.kenzie.appserver.service.ToolService;
 import com.kenzie.appserver.service.model.Tool;
 import net.andreinc.mockneat.MockNeat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 import java.util.Random;
 import java.util.UUID;
 
+@IntegrationTest
 public class ToolContollerTest {
     @Autowired
     private MockMvc mvc;
@@ -38,7 +48,22 @@ public class ToolContollerTest {
 
         Tool tool = new Tool(id, owner, toolName, isAvailable, description, borrower);
         Tool existingTool = toolService.addNewTool(tool);
-
-        mvc.perform(get(""))
+        //WHEN
+        mvc.perform(get("/tools/{toolId}", existingTool.getToolId())
+                .accept(MediaType.APPLICATION_JSON))
+                //THEN
+                .andExpect(jsonPath("id")
+                        .value(is(id)))
+                .andExpect(jsonPath("owner")
+                        .value(is(owner)))
+                .andExpect(jsonPath("toolName")
+                        .value(is(toolName)))
+                .andExpect(jsonPath("isAvailable")
+                        .value(is(false)))
+                .andExpect(jsonPath("description")
+                        .value(is(description)))
+                .andExpect(jsonPath("borrower")
+                        .value(is(borrower)))
+                .andExpect(status().isOk());
     }
 }
