@@ -19,6 +19,10 @@ public class ToolRecord {
 
     public ToolRecord() {
     }
+    public ToolRecord(int toolId, String owner){
+        this.toolId = toolId;
+        this.owner = owner;
+    }
 
     public ToolRecord(int toolId, String owner, String toolName, boolean isAvailable, String description, String borrower) {
         this.toolId = toolId;
