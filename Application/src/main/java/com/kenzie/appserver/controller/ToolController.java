@@ -10,10 +10,7 @@ import com.kenzie.appserver.service.ToolService;
 import com.kenzie.appserver.service.UserService;
 import com.kenzie.appserver.service.model.Tool;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,4 +74,24 @@ public class ToolController {
        }
        return ResponseEntity.badRequest().build(); //Use frontend to display message to User
    }
+
+   @PostMapping("/tools")
+   public ResponseEntity<Void> addNewTool(@PathVariable ToolRecord toolRecord, @RequestParam String username, @RequestParam String password) {
+       if (userService.authenticator(username, password)) {
+           toolRepository.save(toolRecord);
+           return ResponseEntity.ok().build();
+       } else {
+           return ResponseEntity.badRequest().build();
+       }
+   }
+
+    @DeleteMapping("/tools")
+    public ResponseEntity<Void> removeTool(@PathVariable ToolRecord toolRecord, @RequestParam String username, @RequestParam String password) {
+        if (userService.authenticator(username, password)) {
+            toolRepository.delete(toolRecord);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
