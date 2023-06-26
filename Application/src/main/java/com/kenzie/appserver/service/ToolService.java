@@ -83,4 +83,11 @@ public class ToolService {
         return tools;
     }
 
+    public void removeTool(Tool tool, String username, String password) {
+        if (userService.authenticator(username, password)) {
+            ToolRecord toolRecord = convertToToolRecord(tool);
+            toolRepository.delete(toolRecord);
+        }
+    }
+
 }
