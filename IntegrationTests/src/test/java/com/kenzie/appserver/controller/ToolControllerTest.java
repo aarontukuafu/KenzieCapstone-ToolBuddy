@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.module.SimpleModule;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,10 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 import java.util.Random;
-import java.util.UUID;
 
 @IntegrationTest
-public class ToolContollerTest {
+class ToolControllerTest {
     @Autowired
     private MockMvc mvc;
 
@@ -48,9 +48,11 @@ public class ToolContollerTest {
 
         Tool tool = new Tool(id, owner, toolName, isAvailable, description, borrower);
         Tool existingTool = toolService.addNewTool(tool);
+
+        mapper.registerModule(new SimpleModule());
         //WHEN
         mvc.perform(get("/tools/{toolId}", existingTool.getToolId())
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 //THEN
                 .andExpect(jsonPath("id")
                         .value(is(id)))
