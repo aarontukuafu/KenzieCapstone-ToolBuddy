@@ -11,6 +11,7 @@ import com.kenzie.appserver.service.UserService;
 import com.kenzie.appserver.service.model.Tool;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +26,6 @@ public class ToolController {
     private ToolService toolService;
     private UserRecordRepository userRecordRepository;
     private ToolRepository toolRepository;
-    private UserResponse userResponse;
 
     private UserRecord userRecord;
     private ToolRecord toolRecord;
@@ -60,13 +60,13 @@ public class ToolController {
         return toolResponse;
     }
 
-   @GetMapping
-    public ResponseEntity<List<ToolResponse>> getAllToolsByUserId() {
-       Optional<UserRecord> userRecord = userRecordRepository.findById(userResponse.getName());
+   @GetMapping("/{owner}")
+    public ResponseEntity<List<ToolResponse>> getAllToolsByOwnerId(@PathVariable String owner) {
+       Optional<UserRecord> userRecord = userRecordRepository.findById(owner);
 
        if (userRecord.isPresent()) {
 
-           Iterable<Tool> allTools = toolService.getAllToolsByUserId();
+           Iterable<Tool> allTools = toolService.getAllToolsByOwnerId(owner);
 
            List<ToolResponse> toolResponses = new ArrayList<>();
            for (Tool tool : allTools) {
@@ -75,6 +75,6 @@ public class ToolController {
            }
            return ResponseEntity.ok(toolResponses);
        }
-       return ResponseEntity.ok(new ArrayList<>());
+       return ResponseEntity.badRequest().build(); //Use frontend to display message to User
    }
 }

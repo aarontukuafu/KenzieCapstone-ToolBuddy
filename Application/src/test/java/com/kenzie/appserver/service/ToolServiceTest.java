@@ -78,34 +78,21 @@ public class ToolServiceTest {
         Assertions.assertTrue(tools.isEmpty());
     }
 
-//    @Test
-//    public void getAllTools_handlesException(){
-//        //GIVEN
-//        //WHEN
-//        when(toolRepository.findAll()).thenThrow(new RuntimeException("Failed to retrieve tools"));
-//        List<Tool> tools = toolService.getAllTools();
-//
-//        //THEN
-//        Assertions.assertTrue(tools.isEmpty());
-//    }
+    @Test
+    public void getAllToolsForUserById_isSuccessful() {
+        ToolRecord testToolRecord = new ToolRecord();
+        testToolRecord.setOwner("owner1");
+        testToolRecord.setToolId(1);
+        ToolRecord testToolRecord2 = new ToolRecord();
+        testToolRecord2.setOwner("owner1");
+        testToolRecord2.setToolId(2);
 
+        when(toolRepository.findByOwner("owner1")).thenReturn(Arrays.asList(testToolRecord, testToolRecord2));
 
-   /* @Test
-    String userId = getUserId(); // Assuming you have a way to retrieve the user ID
+        List<Tool> testList = toolService.getAllToolsByOwnerId("owner1");
 
-    Optional<UserRecord> userRecordOptional = userRecordRepository.findById(userId);
-
-    if (userRecordOptional.isPresent()) {
-        UserRecord userRecord = userRecordOptional.get();
-
-        List<ToolRecord> allTools = toolRepository.findByOwner(userRecord.getName());
-
-        List<ToolResponse> toolResponses = new ArrayList<>();
-        for (ToolRecord toolRecord : allTools) {
-            ToolResponse toolResponse = convertToToolResponse(toolRecord);
-            toolResponses.add(toolResponse);
-        }
-
-        return ResponseEntity.ok(toolResponses);
-    }*/
+        assertEquals(2, testList.size());
+        assertEquals("owner1", testList.get(0).getOwner());
+        assertEquals("owner1", testList.get(1).getOwner());
+    }
 }
