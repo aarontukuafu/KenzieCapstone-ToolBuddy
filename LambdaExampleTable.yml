@@ -3,12 +3,15 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       "AttributeDefinitions":
-        - "AttributeName": "id"
-          "AttributeType": "S"
+        - "AttributeName": "name"
+          "AttributeType": "S",
+                             - "AttributeName": "password"
+                               "AttributeType": "S"
       "KeySchema":
-        - "AttributeName": "id"
-          "KeyType": "HASH"
+        - "AttributeName": "userName"
+          "KeyType": "S"
       PointInTimeRecoverySpecification:
         PointInTimeRecoveryEnabled: false
       BillingMode: PAY_PER_REQUEST
-      TableName: "LambdaExample"
+      TableName: "ToolDatabase"
+

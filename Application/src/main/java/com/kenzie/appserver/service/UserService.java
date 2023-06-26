@@ -23,7 +23,7 @@ public class UserService {
         this.toolRepository = toolRepository;
         this.userRecordRepository = userRecordRepository;
     }
-
+  
     public boolean authenticator(String username, String password) {
         if (userRecordRepository.existsById(username) &&
                 userRecordRepository.findById(username).get().getPassword().equals(password)) {
