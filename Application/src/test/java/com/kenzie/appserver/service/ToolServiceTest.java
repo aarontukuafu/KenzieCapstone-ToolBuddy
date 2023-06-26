@@ -78,18 +78,6 @@ public class ToolServiceTest {
         Assertions.assertTrue(tools.isEmpty());
     }
 
-//    @Test
-//    public void getAllTools_handlesException(){
-//        //GIVEN
-//        //WHEN
-//        when(toolRepository.findAll()).thenThrow(new RuntimeException("Failed to retrieve tools"));
-//        List<Tool> tools = toolService.getAllTools();
-//
-//        //THEN
-//        Assertions.assertTrue(tools.isEmpty());
-//    }
-
-
    /* @Test
     String userId = getUserId(); // Assuming you have a way to retrieve the user ID
 
