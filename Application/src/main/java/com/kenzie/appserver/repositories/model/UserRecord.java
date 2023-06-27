@@ -21,13 +21,17 @@ public class UserRecord {
         this.userName = userName;
         this.password = password;
     }
+    public UserRecord() {
+
+    }
 
 
-    @DynamoDBAttribute(
-            attributeName = "name")
-    public String getName(){return this.name;}
+    @DynamoDBAttribute(attributeName = "name")
+    public String getName() {return this.name;}
 
-    public void setName(String userId){this.name = name;}
+    public void setName(String userId) {
+        this.name = name;
+    }
     @Id
     @DynamoDBHashKey(attributeName = "userName")
     public String getUserName() {

@@ -2,6 +2,7 @@ package com.kenzie.appserver.repositories.model;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import org.springframework.data.annotation.Id;
 
@@ -18,6 +19,10 @@ public class ToolRecord {
     private String borrower;
 
     public ToolRecord() {
+    }
+    public ToolRecord(int toolId, String owner){
+        this.toolId = toolId;
+        this.owner = owner;
     }
 
     public ToolRecord(int toolId, String owner, String toolName, boolean isAvailable, String description, String borrower) {
@@ -39,7 +44,7 @@ public class ToolRecord {
         this.toolId = toolId;
     }
 
-    @DynamoDBAttribute
+    @DynamoDBIndexHashKey(globalSecondaryIndexName = "getOwner")
     public String getOwner() {
         return owner;
     }

@@ -1,32 +1,32 @@
 package com.kenzie.appserver.controller;
 
-import com.kenzie.appserver.controller.model.CreateToolRequest;
 import com.kenzie.appserver.controller.model.ToolResponse;
-import com.kenzie.appserver.controller.model.UserCreateRequest;
+import com.kenzie.appserver.controller.model.UserResponse;
+import com.kenzie.appserver.repositories.ToolRepository;
+import com.kenzie.appserver.repositories.UserRecordRepository;
+import com.kenzie.appserver.repositories.model.ToolRecord;
+import com.kenzie.appserver.repositories.model.UserRecord;
 import com.kenzie.appserver.service.ToolService;
+import com.kenzie.appserver.service.UserService;
 import com.kenzie.appserver.service.model.Tool;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tools")
 public class ToolController {
 
     private ToolService toolService;
+    private UserRecordRepository userRecordRepository;
+    private ToolRepository toolRepository;
+
+    private UserRecord userRecord;
+    private ToolRecord toolRecord;
+    private UserService userService;
 
     ToolController(ToolService toolService) {
         this.toolService = toolService;
@@ -44,28 +44,6 @@ public class ToolController {
         }
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/{toolId}")
-    public ResponseEntity<ToolResponse> getToolById(@PathVariable("toolId") String toolId) {
-        Tool tool = toolService.findByToolName(toolId);
-
-        if(tool == null) {
-            return ResponseEntity.notFound().build();
-        }
-        ToolResponse toolResponse = createToolResponse(tool);
-        return ResponseEntity.ok(toolResponse);
-    }
-    @PostMapping
-    public ResponseEntity<ToolResponse> addNewTool(@RequestBody CreateToolRequest createToolRequest) {
-        Tool tool = new Tool(createToolRequest.getId(),
-                createToolRequest.getToolName(), createToolRequest.getOwner(),
-                createToolRequest.isAvailable(), createToolRequest.getDescription(),
-                createToolRequest.getBorrower());
-        toolService.addNewTool(tool);
-
-        ToolResponse toolResponse = createToolResponse(tool);
-
-        return ResponseEntity.created(URI.create("/tools/" + toolResponse.getToolId())).body(toolResponse);
-    }
 
     private ToolResponse createToolResponse(Tool tool) {
         ToolResponse toolResponse = new ToolResponse();
@@ -77,5 +55,43 @@ public class ToolController {
         toolResponse.setComments(tool.getComments());
         toolResponse.setBorrower(tool.getBorrower());
         return toolResponse;
+    }
+
+   @GetMapping("/{owner}")
+    public ResponseEntity<List<ToolResponse>> getAllToolsByOwnerId(@PathVariable String owner) {
+       Optional<UserRecord> userRecord = userRecordRepository.findById(owner);
+
+       if (userRecord.isPresent()) {
+
+           Iterable<Tool> allTools = toolService.getAllToolsByOwnerId(owner);
+
+           List<ToolResponse> toolResponses = new ArrayList<>();
+           for (Tool tool : allTools) {
+               ToolResponse toolResponse = createToolResponse(tool);
+               toolResponses.add(toolResponse);
+           }
+           return ResponseEntity.ok(toolResponses);
+       }
+       return ResponseEntity.badRequest().build(); //Use frontend to display message to User
+   }
+
+   @PostMapping("/tools")
+   public ResponseEntity<Void> addNewTool(@PathVariable ToolRecord toolRecord, @RequestParam String username, @RequestParam String password) {
+       if (userService.authenticator(username, password)) {
+           toolRepository.save(toolRecord);
+           return ResponseEntity.ok().build();
+       } else {
+           return ResponseEntity.badRequest().build();
+       }
+   }
+
+    @DeleteMapping("/tools")
+    public ResponseEntity<Void> removeTool(@PathVariable ToolRecord toolRecord, @RequestParam String username, @RequestParam String password) {
+        if (userService.authenticator(username, password)) {
+            toolRepository.delete(toolRecord);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

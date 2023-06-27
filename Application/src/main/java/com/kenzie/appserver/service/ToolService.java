@@ -1,19 +1,30 @@
 package com.kenzie.appserver.service;
 
+import com.kenzie.appserver.controller.model.UserResponse;
 import com.kenzie.appserver.repositories.ToolRepository;
+import com.kenzie.appserver.repositories.UserRecordRepository;
 import com.kenzie.appserver.repositories.model.ToolRecord;
+import com.kenzie.appserver.repositories.model.UserRecord;
 import com.kenzie.appserver.service.model.Tool;
+import com.kenzie.appserver.service.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.kenzie.appserver.config.CacheStore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ToolService {
     private ToolRepository toolRepository;
     private CacheStore cache;
+
+    private UserRecordRepository userRecordRepository;
+    private UserResponse userResponse;
+    private UserService userService;
+
+    private User user;
 
     @Autowired
     public ToolService(ToolRepository toolRepository, CacheStore cache) {
@@ -37,27 +48,12 @@ public class ToolService {
         tool.setToolId(toolRecord.getToolId());
         tool.setOwner(toolRecord.getOwner());
         tool.setToolName(toolRecord.getToolName());
-        tool.setIsAvailable(true);
+        tool.setIsAvailable(toolRecord.getIsAvailable());
         tool.setDescription(toolRecord.getDescription());
         tool.setBorrower(toolRecord.getBorrower());
-
         return tool;
     }
-    public Tool addNewTool (Tool tool) {
-
-        ToolRecord toolRecord = new ToolRecord();
-
-        toolRecord.setToolId(tool.getToolId());
-        toolRecord.setOwner(tool.getOwner());
-        toolRecord.setToolName(tool.getToolName());
-        toolRecord.setIsAvailable(tool.getIsAvailable());
-        toolRecord.setDescription(tool.getDescription());
-        toolRecord.setBorrower(tool.getBorrower());
-
-        toolRepository.save(toolRecord);
-
-        return tool;
-    }
+ 
     //Testing to see if this will pull what i need, grabbed from Unit Four project
     public Tool findByToolName(String toolName) {
         Tool cachedTool = cache.get(toolName);
@@ -78,5 +74,33 @@ public class ToolService {
             cache.add(toolFromBackendService.getToolName(), toolFromBackendService);
         }
         return toolFromBackendService;
+    }
+
+    public void addNewTool(Tool tool, String username, String password) {
+        if (userService.authenticator(username, password)) {
+            convertToToolRecord(tool);
+        }
+    }
+
+    public List<Tool> getAllToolsByOwnerId(String owner) {
+        List<ToolRecord> toolRecords = toolRepository.findByOwner(owner);
+        if (toolRecords == null) {
+            return new ArrayList<>();
+        }
+
+            List<Tool> tools = new ArrayList<>();
+            for (ToolRecord toolRecord : toolRecords) {
+                Tool tool = convertToTool(toolRecord);
+                tools.add(tool);
+            }
+
+        return tools;
+    }
+
+    public void removeTool(Tool tool, String username, String password) {
+        if (userService.authenticator(username, password)) {
+            ToolRecord toolRecord = convertToToolRecord(tool);
+            toolRepository.delete(toolRecord);
+        }
     }
 }
