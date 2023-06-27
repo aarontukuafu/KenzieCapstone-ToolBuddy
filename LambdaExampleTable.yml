@@ -3,13 +3,28 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       "AttributeDefinitions":
-        - "AttributeName": "name"
-          "AttributeType": "S",
-                             - "AttributeName": "password"
-                               "AttributeType": "S"
+        - "AttributeName": "toolId"
+          "AttributeType": "N"
+        - "AttributeName": "owner"
+          "AttributeType": "S"
+        - "AttributeName": "toolName"
+          "AttributeType": "S"
+        - "AttributeName": "isAvailable"
+          "AttributeType": "BOOL"
+        - "AttributeName": "description"
+          "AttributeType": "S"
+        - "AttributeName": "comments"
+          "AttributeType": "L"
+        - "AttributeName": "borrower"
+          "AttributeType": "S"
       "KeySchema":
-        - "AttributeName": "userName"
-          "KeyType": "S"
+        - "AttributeName": "toolId"
+          "KeyType": "N"
+      GlobalSecondaryIndexes:
+        - IndexName: Owner
+          KeySchema:
+            - AttributeName: owner
+              KeyType: S
       PointInTimeRecoverySpecification:
         PointInTimeRecoveryEnabled: false
       BillingMode: PAY_PER_REQUEST
