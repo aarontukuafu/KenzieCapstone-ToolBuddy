@@ -20,26 +20,14 @@ public class ToolService {
 
     private UserRecordRepository userRecordRepository;
     private UserResponse userResponse;
-    private UserRecord userRecord;
     private UserService userService;
-    private ToolRecord toolRecord;
+
     private User user;
 
     @Autowired
     public ToolService(ToolRepository toolRepository) {
         this.toolRepository = toolRepository;
     }
-    @Autowired
-    public ToolService(ToolRepository toolRepository, UserRecordRepository userRecordRepository, UserResponse userResponse, UserRecord userRecord, UserService userService, ToolRecord toolRecord, User user) {
-        this.toolRepository = toolRepository;
-        this.userRecordRepository = userRecordRepository;
-        this.userResponse = userResponse;
-        this.userRecord = userRecord;
-        this.userService = userService;
-        this.toolRecord = toolRecord;
-        this.user = user;
-    }
-
 
     public List<Tool> getAllTools() {
         Iterable<ToolRecord> allTools = toolRepository.findAll();
@@ -57,44 +45,49 @@ public class ToolService {
         tool.setToolId(toolRecord.getToolId());
         tool.setOwner(toolRecord.getOwner());
         tool.setToolName(toolRecord.getToolName());
-        tool.setIsAvailable(true);
+        tool.setIsAvailable(toolRecord.getIsAvailable());
         tool.setDescription(toolRecord.getDescription());
         tool.setBorrower(toolRecord.getBorrower());
         return tool;
     }
 
-    private ToolRecord createToolRecord(Tool tool) {
+    private ToolRecord convertToToolRecord(Tool tool) {
         ToolRecord toolRecord = new ToolRecord();
         toolRecord.setToolId(tool.getToolId());
         toolRecord.setOwner(tool.getOwner());
         toolRecord.setToolName(tool.getToolName());
-        toolRecord.setIsAvailable(true);
+        toolRecord.setIsAvailable(toolRecord.getIsAvailable());
         toolRecord.setDescription(tool.getDescription());
         toolRecord.setBorrower(tool.getBorrower());
         return toolRecord;
     }
 
-    public void addNewTool(Tool tool) {
-        if (userService.authenticator(userRecord)) {
-            createToolRecord(tool);
+    public void addNewTool(Tool tool, String username, String password) {
+        if (userService.authenticator(username, password)) {
+            convertToToolRecord(tool);
         }
     }
 
-    public List<Tool> getAllToolsByUserId() {
-        Optional<UserRecord> userRecord1 = userRecordRepository.findById(userResponse.getName());
-
-        if (userRecord1.isPresent()) {
-            Optional<ToolRecord> allTools = toolRepository.findById(toolRecord.getOwner());
+    public List<Tool> getAllToolsByOwnerId(String owner) {
+        List<ToolRecord> toolRecords = toolRepository.findByOwner(owner);
+        if (toolRecords == null) {
+            return new ArrayList<>();
+        }
 
             List<Tool> tools = new ArrayList<>();
-            allTools.ifPresent(toolRecord -> {
+            for (ToolRecord toolRecord : toolRecords) {
                 Tool tool = convertToTool(toolRecord);
                 tools.add(tool);
-            });
+            }
 
-            return tools;
+        return tools;
+    }
+
+    public void removeTool(Tool tool, String username, String password) {
+        if (userService.authenticator(username, password)) {
+            ToolRecord toolRecord = convertToToolRecord(tool);
+            toolRepository.delete(toolRecord);
         }
-        return new ArrayList<>();
     }
 
 }

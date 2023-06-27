@@ -78,22 +78,22 @@ public class ToolServiceTest {
         Assertions.assertTrue(tools.isEmpty());
     }
 
-   /* @Test
-    String userId = getUserId(); // Assuming you have a way to retrieve the user ID
+    @Test
+    public void getAllToolsForUserById_isSuccessful() {
+        ToolRecord testToolRecord = new ToolRecord();
+        testToolRecord.setOwner("owner1");
+        testToolRecord.setToolId(1);
+        ToolRecord testToolRecord2 = new ToolRecord();
+        testToolRecord2.setOwner("owner1");
+        testToolRecord2.setToolId(2);
 
-    Optional<UserRecord> userRecordOptional = userRecordRepository.findById(userId);
 
-    if (userRecordOptional.isPresent()) {
-        UserRecord userRecord = userRecordOptional.get();
+        when(toolRepository.findByOwner("owner1")).thenReturn(Arrays.asList(testToolRecord, testToolRecord2));
 
-        List<ToolRecord> allTools = toolRepository.findByOwner(userRecord.getName());
+        List<Tool> testList = toolService.getAllToolsByOwnerId("owner1");
 
-        List<ToolResponse> toolResponses = new ArrayList<>();
-        for (ToolRecord toolRecord : allTools) {
-            ToolResponse toolResponse = convertToToolResponse(toolRecord);
-            toolResponses.add(toolResponse);
-        }
-
-        return ResponseEntity.ok(toolResponses);
-    }*/
+        assertEquals(2, testList.size());
+        assertEquals("owner1", testList.get(0).getOwner());
+        assertEquals("owner1", testList.get(1).getOwner());
+    }
 }

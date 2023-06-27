@@ -17,26 +17,21 @@ public class UserService {
 
     private ToolRepository toolRepository;
     private UserRecordRepository userRecordRepository;
-    private UserResponse userResponse;
 
     @Autowired
-    public UserService(ToolRepository toolRepository, UserRecordRepository userRecordRepository, UserResponse userResponse) {
+    public UserService(ToolRepository toolRepository, UserRecordRepository userRecordRepository) {
         this.toolRepository = toolRepository;
         this.userRecordRepository = userRecordRepository;
-        this.userResponse = userResponse;
     }
-
-    public UserService() {
-
-    }
-
-    public boolean authenticator(UserRecord userRecord) {
-        if (userRecordRepository.existsById(userResponse.getUserName()) && userResponse.getPassword().equals(userRecord.getPassword())) {
+  
+    public boolean authenticator(String username, String password) {
+        if (userRecordRepository.existsById(username) &&
+                userRecordRepository.findById(username).get().getPassword().equals(password)) {
             return true;
-        } else if (userResponse.getUserName().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be empty. Please enter username again");
-        } else if (!userResponse.getPassword().equals(userRecord.getPassword())) {
-            throw new IllegalArgumentException("Password does not match. Please re-enter password.");
+//        } else if (username.isEmpty()) {
+//            throw new IllegalArgumentException("Username cannot be empty. Please enter username again");
+//        } else if (!userResponse.getPassword().equals(userRecord.getPassword())) {
+//            throw new IllegalArgumentException("Password does not match. Please re-enter password.");
         }
         return false;
     }
