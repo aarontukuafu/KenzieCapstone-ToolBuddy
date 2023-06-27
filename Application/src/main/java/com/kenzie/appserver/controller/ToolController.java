@@ -1,7 +1,9 @@
 package com.kenzie.appserver.controller;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.kenzie.appserver.controller.model.ToolResponse;
-import com.kenzie.appserver.controller.model.UserResponse;
 import com.kenzie.appserver.repositories.ToolRepository;
 import com.kenzie.appserver.repositories.UserRecordRepository;
 import com.kenzie.appserver.repositories.model.ToolRecord;
@@ -84,6 +86,17 @@ public class ToolController {
            return ResponseEntity.badRequest().build();
        }
    }
+
+    @PostMapping("/borrowTool")
+    public ResponseEntity<Void> borrowTool(@PathVariable Tool tool) {
+        if (tool.getOwner() != null) {
+            toolService.borrowTool(tool);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
     @DeleteMapping("/tools")
     public ResponseEntity<Void> removeTool(@PathVariable ToolRecord toolRecord, @RequestParam String username, @RequestParam String password) {

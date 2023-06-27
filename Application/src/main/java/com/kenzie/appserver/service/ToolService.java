@@ -1,10 +1,14 @@
 package com.kenzie.appserver.service;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.kenzie.appserver.controller.model.UserResponse;
 import com.kenzie.appserver.repositories.ToolRepository;
 import com.kenzie.appserver.repositories.UserRecordRepository;
 import com.kenzie.appserver.repositories.model.ToolRecord;
-import com.kenzie.appserver.repositories.model.UserRecord;
 import com.kenzie.appserver.service.model.Tool;
 import com.kenzie.appserver.service.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ToolService {
@@ -90,4 +93,16 @@ public class ToolService {
         }
     }
 
+    public void borrowTool(Tool tool){
+        if (tool.getOwner() != null) {
+            tool.setIsAvailable(false);
+            AmazonDynamoDB amazonDynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
+            DynamoDB dynamoDB = new DynamoDB(amazonDynamoDBClient);
+            Table toolTable = dynamoDB.getTable("ToolDatabase");
+            Item toolBorrowed = new Item()
+                    .withPrimaryKey("toolId", tool.getToolId())
+                    .withBoolean("isAvailable", false);
+            toolTable.putItem(toolBorrowed);
+        }
+    }
 }
