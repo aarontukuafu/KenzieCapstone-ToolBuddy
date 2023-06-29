@@ -12,6 +12,7 @@ import java.util.UUID;
 public class LambdaService {
 
     private ExampleDao exampleDao;
+    //private ToolDao toolDao;
 
     @Inject
     public LambdaService(ExampleDao exampleDao) {

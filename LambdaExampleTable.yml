@@ -7,24 +7,14 @@ Resources:
           "AttributeType": "N"
         - "AttributeName": "owner"
           "AttributeType": "S"
-        - "AttributeName": "toolName"
-          "AttributeType": "S"
-        - "AttributeName": "isAvailable"
-          "AttributeType": "BOOL"
-        - "AttributeName": "description"
-          "AttributeType": "S"
-        - "AttributeName": "comments"
-          "AttributeType": "L"
-        - "AttributeName": "borrower"
-          "AttributeType": "S"
       "KeySchema":
         - "AttributeName": "toolId"
-          "KeyType": "N"
+          "KeyType": "HASH"
       GlobalSecondaryIndexes:
         - IndexName: Owner
           KeySchema:
             - AttributeName: owner
-              KeyType: S
+              KeyType: HASH
       PointInTimeRecoverySpecification:
         PointInTimeRecoveryEnabled: false
       BillingMode: PAY_PER_REQUEST

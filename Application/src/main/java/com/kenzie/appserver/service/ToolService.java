@@ -28,8 +28,9 @@ public class ToolService {
     private User user;
 
     @Autowired
-    public ToolService(ToolRepository toolRepository) {
+    public ToolService(ToolRepository toolRepository, UserService userService) {
         this.toolRepository = toolRepository;
+        this.userService = userService;
     }
 
     public List<Tool> getAllTools() {
@@ -93,16 +94,16 @@ public class ToolService {
         }
     }
 
-    public void borrowTool(Tool tool){
-        if (tool.getOwner() != null) {
-            tool.setIsAvailable(false);
-            AmazonDynamoDB amazonDynamoDBClient = AmazonDynamoDBClientBuilder.defaultClient();
-            DynamoDB dynamoDB = new DynamoDB(amazonDynamoDBClient);
-            Table toolTable = dynamoDB.getTable("ToolDatabase");
-            Item toolBorrowed = new Item()
-                    .withPrimaryKey("toolId", tool.getToolId())
-                    .withBoolean("isAvailable", false);
-            toolTable.putItem(toolBorrowed);
+    public Tool borrowTool(String toolId, String borrower, String password){
+        if (toolRepository.existsById(toolId) && userService.authenticator(borrower, password)){
+            ToolRecord toolRecord = toolRepository.findById(toolId).get();
+                if (toolRecord.getIsAvailable()){
+                    toolRecord.setIsAvailable(false);
+                    toolRecord.setBorrower(borrower);
+                    toolRepository.save(toolRecord);
+                    return convertToTool(toolRecord);
+                }
         }
+        return null;
     }
 }

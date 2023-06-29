@@ -15,12 +15,10 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private ToolRepository toolRepository;
     private UserRecordRepository userRecordRepository;
 
     @Autowired
-    public UserService(ToolRepository toolRepository, UserRecordRepository userRecordRepository) {
-        this.toolRepository = toolRepository;
+    public UserService(UserRecordRepository userRecordRepository) {
         this.userRecordRepository = userRecordRepository;
     }
   
