@@ -10,13 +10,13 @@ Resources:
       "KeySchema":
         - "AttributeName": "toolId"
           "KeyType": "HASH"
-      GlobalSecondaryIndexes:
-        - IndexName: Owner
-          KeySchema:
-            - AttributeName: owner
-              KeyType: HASH
       PointInTimeRecoverySpecification:
         PointInTimeRecoveryEnabled: false
       BillingMode: PAY_PER_REQUEST
       TableName: "ToolDatabase"
+      GlobalSecondaryIndexes:
+        - IndexName: "Owner"
+          KeySchema:
+            - AttributeName: "owner"
+              KeyType: "HASH"
 
