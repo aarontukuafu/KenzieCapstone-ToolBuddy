@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping({"/tools"})
+@RequestMapping("/tools")
 public class ToolController {
 
     private ToolService toolService;

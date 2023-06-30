@@ -13,6 +13,7 @@ import com.kenzie.appserver.service.model.Tool;
 import com.kenzie.appserver.service.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.kenzie.appserver.config.CacheStore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
 @Service
 public class ToolService {
     private ToolRepository toolRepository;
+    private CacheStore cache;
 
     private UserRecordRepository userRecordRepository;
     private UserResponse userResponse;
@@ -28,9 +30,10 @@ public class ToolService {
     private User user;
 
     @Autowired
-    public ToolService(ToolRepository toolRepository, UserService userService) {
+    public ToolService(ToolRepository toolRepository, UserService userService, CacheStore cache) {
         this.toolRepository = toolRepository;
         this.userService = userService;
+        this.cache = cache;
     }
 
     public List<Tool> getAllTools() {
@@ -54,16 +57,27 @@ public class ToolService {
         tool.setBorrower(toolRecord.getBorrower());
         return tool;
     }
+ 
+    //Testing to see if this will pull what i need, grabbed from Unit Four project
+    public Tool findByToolName(String toolName) {
+        Tool cachedTool = cache.get(toolName);
 
-    private ToolRecord convertToToolRecord(Tool tool) {
-        ToolRecord toolRecord = new ToolRecord();
-        toolRecord.setToolId(tool.getToolId());
-        toolRecord.setOwner(tool.getOwner());
-        toolRecord.setToolName(tool.getToolName());
-        toolRecord.setIsAvailable(toolRecord.getIsAvailable());
-        toolRecord.setDescription(tool.getDescription());
-        toolRecord.setBorrower(tool.getBorrower());
-        return toolRecord;
+        if(cachedTool != null) {
+            return cachedTool;
+        }
+        Tool toolFromBackendService = toolRepository
+                .findById(toolName)
+                .map(tool -> new Tool(tool.getToolId(),
+                        tool.getOwner(),
+                        tool.getToolName(),
+                        tool.getIsAvailable(),
+                        tool.getDescription(),
+                        tool.getBorrower()))
+                .orElse(null);
+        if(toolFromBackendService != null) {
+            cache.add(toolFromBackendService.getToolName(), toolFromBackendService);
+        }
+        return toolFromBackendService;
     }
 
     public void addNewTool(Tool tool, String username, String password) {
