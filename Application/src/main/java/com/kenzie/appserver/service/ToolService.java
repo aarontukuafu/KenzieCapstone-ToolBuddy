@@ -1,10 +1,14 @@
 package com.kenzie.appserver.service;
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.kenzie.appserver.controller.model.UserResponse;
 import com.kenzie.appserver.repositories.ToolRepository;
 import com.kenzie.appserver.repositories.UserRecordRepository;
 import com.kenzie.appserver.repositories.model.ToolRecord;
-import com.kenzie.appserver.repositories.model.UserRecord;
 import com.kenzie.appserver.service.model.Tool;
 import com.kenzie.appserver.service.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +17,6 @@ import com.kenzie.appserver.config.CacheStore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ToolService {
@@ -27,8 +30,9 @@ public class ToolService {
     private User user;
 
     @Autowired
-    public ToolService(ToolRepository toolRepository, CacheStore cache) {
+    public ToolService(ToolRepository toolRepository, UserService userService, CacheStore cache) {
         this.toolRepository = toolRepository;
+        this.userService = userService;
         this.cache = cache;
     }
 
@@ -102,5 +106,18 @@ public class ToolService {
             ToolRecord toolRecord = convertToToolRecord(tool);
             toolRepository.delete(toolRecord);
         }
+    }
+
+    public Tool borrowTool(String toolId, String borrower, String password){
+        if (toolRepository.existsById(toolId) && userService.authenticator(borrower, password)){
+            ToolRecord toolRecord = toolRepository.findById(toolId).get();
+                if (toolRecord.getIsAvailable()){
+                    toolRecord.setIsAvailable(false);
+                    toolRecord.setBorrower(borrower);
+                    toolRepository.save(toolRecord);
+                    return convertToTool(toolRecord);
+                }
+        }
+        return null;
     }
 }
