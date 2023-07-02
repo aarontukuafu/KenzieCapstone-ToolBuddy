@@ -78,7 +78,7 @@ public class ToolService {
 
     public void addNewTool(Tool tool, String username, String password) {
         if (userService.authenticator(username, password)) {
-            convertToToolRecord(tool);
+            convertToToolRecord(tool); //Where is the convertToToolRecord method?
         }
     }
 
@@ -103,4 +103,5 @@ public class ToolService {
             toolRepository.delete(toolRecord);
         }
     }
+
 }
