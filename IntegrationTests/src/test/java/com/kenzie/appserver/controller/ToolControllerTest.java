@@ -19,19 +19,22 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
+
 @IntegrationTest
-public class ToolControllerTest {
-    @Autowired
-    ToolService toolService;
+class ToolControllerTest {
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    ToolService toolService;
+  
     @InjectMocks
     ToolController toolController;
 
     private final MockNeat mockNeat = MockNeat.threadLocal();
 
     private final ObjectMapper mapper = new ObjectMapper();
-
+  
     @BeforeEach
     public void setUp() {
         mvc = MockMvcBuilders.standaloneSetup(toolController).build();
@@ -68,4 +71,41 @@ public class ToolControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].description").value("description2"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].borrower").value("borrower2"));
     }
+  
+    @Test
+    public void getTool_ToolExists() throws Exception {
+        Random random = new Random();
+
+        int id = random.nextInt();
+        String owner = mockNeat.strings().valStr();
+        String toolName = mockNeat.strings().valStr();
+        boolean isAvailable = true;
+        String description = mockNeat.strings().valStr();
+        String borrower = mockNeat.strings().valStr();
+
+        Tool tool = new Tool(id, owner, toolName, isAvailable, description, borrower);
+        Tool existingTool = toolService.addNewTool(tool);
+
+        mapper.registerModule(new SimpleModule());
+        //WHEN
+        mvc.perform(get("/tools/{toolId}", existingTool.getToolId())
+                        .accept(MediaType.APPLICATION_JSON))
+                //THEN
+                .andExpect(jsonPath("id")
+                        .value(is(id)))
+                .andExpect(jsonPath("owner")
+                        .value(is(owner)))
+                .andExpect(jsonPath("toolName")
+                        .value(is(toolName)))
+                .andExpect(jsonPath("isAvailable")
+                        .value(is(false)))
+                .andExpect(jsonPath("description")
+                        .value(is(description)))
+                .andExpect(jsonPath("borrower")
+                        .value(is(borrower)))
+                .andExpect(status().isOk());
+    }
 }
+
+}
+
