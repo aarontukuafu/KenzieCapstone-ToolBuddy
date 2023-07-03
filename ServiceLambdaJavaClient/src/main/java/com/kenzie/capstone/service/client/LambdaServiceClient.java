@@ -71,7 +71,8 @@ public class LambdaServiceClient {
         String response = endpointUtility.getEndpoint(GET_ALL_TOOLS_BY_OWNER_ENDPOINT.replace("{owner}", ownerId));
         List<Tool> tools;
         try {
-            tools = mapper.readValue(response, new TypeReference<List<Tool>>(){});
+            tools = mapper.readValue(response, new TypeReference<List<Tool>>() {
+            });
         } catch (Exception e) {
             throw new ApiGatewayException("Unable to map deserialize JSON: " + e);
         }
@@ -109,6 +110,13 @@ public class LambdaServiceClient {
 
     public void deleteTool(String toolId) {
         EndpointUtility endpointUtility = new EndpointUtility();
-        endpointUtility.postEndpoint(DELETE_TOOL_ENDPOINT.replace("{id}", toolId));
+        try {
+            String response = endpointUtility.postEndpoint(DELETE_TOOL_ENDPOINT.replace("{id}", toolId), null);
+            if (!response.contains("success")) {
+                throw new ApiGatewayException("Failed to delete the tool with id: " + toolId);
+            }
+        } catch (Exception e) {
+            throw new ApiGatewayException("Failed to delete the tool: " + e.getMessage());
+        }
     }
 }
