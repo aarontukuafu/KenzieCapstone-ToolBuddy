@@ -11,14 +11,21 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.module.SimpleModule;
+import org.testcontainers.shaded.com.github.dockerjava.core.MediaType;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 
 @IntegrationTest
 class ToolControllerTest {
@@ -56,20 +63,20 @@ class ToolControllerTest {
 
         // Perform the GET request to the /tools endpoint
         mvc.perform(MockMvcRequestBuilders.get("/tools"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].toolId").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].owner").value("owner1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].toolName").value("toolName1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].available").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value("description1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].borrower").value("borrower1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].toolId").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].owner").value("owner2"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].toolName").value("toolName2"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].available").value(true))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].description").value("description2"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].borrower").value("borrower2"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].toolId").value(1))
+                .andExpect(jsonPath("$[0].owner").value("owner1"))
+                .andExpect(jsonPath("$[0].toolName").value("toolName1"))
+                .andExpect(jsonPath("$[0].available").value(true))
+                .andExpect(jsonPath("$[0].description").value("description1"))
+                .andExpect(jsonPath("$[0].borrower").value("borrower1"))
+                .andExpect(jsonPath("$[1].toolId").value(2))
+                .andExpect(jsonPath("$[1].owner").value("owner2"))
+                .andExpect(jsonPath("$[1].toolName").value("toolName2"))
+                .andExpect(jsonPath("$[1].available").value(true))
+                .andExpect(jsonPath("$[1].description").value("description2"))
+                .andExpect(jsonPath("$[1].borrower").value("borrower2"));
     }
   
     @Test

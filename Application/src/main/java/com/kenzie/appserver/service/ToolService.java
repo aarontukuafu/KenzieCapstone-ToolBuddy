@@ -57,12 +57,23 @@ public class ToolService {
         tool.setBorrower(toolRecord.getBorrower());
         return tool;
     }
- 
+
+    private ToolRecord convertToToolRecord(Tool tool) {
+        ToolRecord toolRecord = new ToolRecord();
+        toolRecord.setToolId(tool.getToolId());
+        toolRecord.setOwner(tool.getOwner());
+        toolRecord.setToolName(tool.getToolName());
+        toolRecord.setIsAvailable(toolRecord.getIsAvailable());
+        toolRecord.setDescription(tool.getDescription());
+        toolRecord.setBorrower(tool.getBorrower());
+        return toolRecord;
+    }
+
     //Testing to see if this will pull what i need, grabbed from Unit Four project
     public Tool findByToolName(String toolName) {
         Tool cachedTool = cache.get(toolName);
 
-        if(cachedTool != null) {
+        if (cachedTool != null) {
             return cachedTool;
         }
         Tool toolFromBackendService = toolRepository
@@ -74,7 +85,7 @@ public class ToolService {
                         tool.getDescription(),
                         tool.getBorrower()))
                 .orElse(null);
-        if(toolFromBackendService != null) {
+        if (toolFromBackendService != null) {
             cache.add(toolFromBackendService.getToolName(), toolFromBackendService);
         }
         return toolFromBackendService;
@@ -92,11 +103,11 @@ public class ToolService {
             return new ArrayList<>();
         }
 
-            List<Tool> tools = new ArrayList<>();
-            for (ToolRecord toolRecord : toolRecords) {
-                Tool tool = convertToTool(toolRecord);
-                tools.add(tool);
-            }
+        List<Tool> tools = new ArrayList<>();
+        for (ToolRecord toolRecord : toolRecords) {
+            Tool tool = convertToTool(toolRecord);
+            tools.add(tool);
+        }
 
         return tools;
     }
@@ -108,15 +119,15 @@ public class ToolService {
         }
     }
 
-    public Tool borrowTool(String toolId, String borrower, String password){
-        if (toolRepository.existsById(toolId) && userService.authenticator(borrower, password)){
+    public Tool borrowTool(String toolId, String borrower, String password) {
+        if (toolRepository.existsById(toolId) && userService.authenticator(borrower, password)) {
             ToolRecord toolRecord = toolRepository.findById(toolId).get();
-                if (toolRecord.getIsAvailable()){
-                    toolRecord.setIsAvailable(false);
-                    toolRecord.setBorrower(borrower);
-                    toolRepository.save(toolRecord);
-                    return convertToTool(toolRecord);
-                }
+            if (toolRecord.getIsAvailable()) {
+                toolRecord.setIsAvailable(false);
+                toolRecord.setBorrower(borrower);
+                toolRepository.save(toolRecord);
+                return convertToTool(toolRecord);
+            }
         }
         return null;
     }
