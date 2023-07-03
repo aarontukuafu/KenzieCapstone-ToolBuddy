@@ -1,25 +1,30 @@
 package com.kenzie.appserver.controller;
 
+import com.amazonaws.services.dynamodbv2.xspec.M;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kenzie.appserver.IntegrationTest;
 import com.kenzie.appserver.service.ToolService;
+import com.kenzie.appserver.service.UserService;
 import com.kenzie.appserver.service.model.Tool;
 import net.andreinc.mockneat.MockNeat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.module.SimpleModule;
-import org.testcontainers.shaded.com.github.dockerjava.core.MediaType;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,6 +39,9 @@ class ToolControllerTest {
 
     @Autowired
     ToolService toolService;
+
+    @Autowired
+    UserService userService;
 
     @InjectMocks
     ToolController toolController;
@@ -77,5 +85,62 @@ class ToolControllerTest {
                 .andExpect(jsonPath("$[1].available").value(true))
                 .andExpect(jsonPath("$[1].description").value("description2"))
                 .andExpect(jsonPath("$[1].borrower").value("borrower2"));
+    }
+    @Test
+    public void getToolByOwnerId_toolDoesNotExists() throws Exception {
+        String id = UUID.randomUUID().toString();
+        mvc.perform(get("/tools/{owner}", id)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+    @Test
+    public void removeTool_Successful() throws Exception {
+        Random random = new Random();
+        int toolId = random.nextInt();
+        String owner = mockNeat.strings().valStr();
+        String toolName = mockNeat.strings().valStr();
+        String description = mockNeat.strings().valStr();
+        String borrower = mockNeat.strings().valStr();
+
+        String user = UUID.randomUUID().toString();
+        String password = UUID.randomUUID().toString();
+
+        Tool tool = new Tool(toolId, owner, toolName, true, description, borrower);
+
+        Mockito.when(userService.authenticator(user, password)).thenReturn(true);
+        Mockito.when(toolService.findByToolName(toolName)).thenReturn(tool);
+
+        mvc.perform(delete("/toolId")
+                .param("toolId", String.valueOf(toolId))
+                .param("user", user)
+                .param("password", password))
+                .andExpect(status().isNoContent());
+
+        Mockito.verify(toolService, Mockito.times(1)).removeTool(tool,user, password);
+    }
+    @Test
+    public void removeTool_IncorrectUser() throws Exception {
+        Random random = new Random();
+        int toolId = random.nextInt();
+        String owner = mockNeat.strings().valStr();
+        String toolName = mockNeat.strings().valStr();
+        String description = mockNeat.strings().valStr();
+        String borrower = mockNeat.strings().valStr();
+
+        String user = UUID.randomUUID().toString();
+        String password = UUID.randomUUID().toString();
+
+        Tool tool = new Tool(toolId, owner, toolName, true, description, borrower);
+
+        Mockito.when(userService.authenticator(user, password)).thenReturn(true);
+
+        mvc.perform(delete("/toolId")
+                        .param("toolId", String.valueOf(toolId))
+                        .param("user", user)
+                        .param("password", password))
+                .andExpect(status().isBadRequest());
+
+        Mockito.verify(toolService, Mockito.never()).removeTool(Mockito.any(Tool.class),
+                Mockito.anyString(), Mockito.anyString());
     }
 }
