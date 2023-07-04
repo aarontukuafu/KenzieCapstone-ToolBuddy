@@ -36,7 +36,8 @@ public class GetExampleData implements RequestHandler<APIGatewayProxyRequestEven
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
                 .withHeaders(headers);
 
-        String id = input.getPathParameters().get("id");
+        String id = input.getPathParameters().get("id"); //update this line only? or entire method based off java in lambda? is this the equivalent of the addTool in toolController?
+                                                         //do we need a class for each method or is this separate and do we still need it in the controller?
 
         if (id == null || id.length() == 0) {
             return response
