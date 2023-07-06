@@ -13,6 +13,7 @@ You must do this for the ServiceLambda to work!
 
 ```
 aws cloudformation create-stack --stack-name lambda-table --template-body file://LambdaExampleTable.yml --capabilities CAPABILITY_IAM
+aws cloudformation create-stack --stack-name lambda-tool-table --template-body file://LambdaToolTable.yml --capabilities CAPABILITY_IAM
 ```
 
 ### To deploy the Development Environment

@@ -26,12 +26,6 @@ public class UserRecord {
     }
 
 
-    @DynamoDBAttribute(attributeName = "name")
-    public String getName() {return this.name;}
-
-    public void setName(String userId) {
-        this.name = name;
-    }
     @Id
     @DynamoDBHashKey(attributeName = "userName")
     public String getUserName() {
@@ -40,6 +34,13 @@ public class UserRecord {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    @DynamoDBAttribute(attributeName = "name")
+    public String getName() {return this.name;}
+
+    public void setName(String userId) {
+        this.name = name;
     }
 
     @DynamoDBAttribute(attributeName = "password")
