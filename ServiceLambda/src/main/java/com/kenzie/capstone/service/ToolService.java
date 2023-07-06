@@ -1,9 +1,12 @@
-package com.kenzie.capstone.service.util;
+package com.kenzie.capstone.service;
 
+import com.kenzie.capstone.service.converter.ToolConverter;
 import com.kenzie.capstone.service.dao.ToolDao;
 
+import com.kenzie.capstone.service.model.CreateToolRequest;
 import com.kenzie.capstone.service.model.Tool;
 import com.kenzie.capstone.service.model.ToolRecord;
+import com.kenzie.capstone.service.model.ToolResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,8 +34,10 @@ public class ToolService {
         return toolDao.getAllToolsByOwnerId(owner);
     }
 
-    public ToolRecord addNewTool(ToolRecord toolRecord) {
-        return toolDao.addNewTool(toolRecord);
+    public ToolResponse addNewTool(CreateToolRequest toolRequest) {
+        ToolRecord toolRecord = ToolConverter.fromRequestToRecord(toolRequest);
+        toolDao.addNewTool(toolRecord);
+        return ToolConverter.fromRecordToResponse(toolRecord);
     }
 
     public ToolRecord borrowTool(String toolId, String borrower) {

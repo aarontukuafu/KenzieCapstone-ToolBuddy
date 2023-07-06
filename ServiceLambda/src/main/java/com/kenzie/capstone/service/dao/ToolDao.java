@@ -45,7 +45,7 @@ public class ToolDao {
         try {
             mapper.save(toolRecord, new DynamoDBSaveExpression()
                     .withExpected(ImmutableMap.of(
-                            "id",
+                            "ToolId",
                             new ExpectedAttributeValue().withExists(false)
                     )));
         } catch (ConditionalCheckFailedException e) {

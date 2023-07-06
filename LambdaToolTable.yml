@@ -1,0 +1,23 @@
+Resources:
+  UserTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      "AttributeDefinitions":
+        - "AttributeName": "toolId"
+          "AttributeType": "S"
+        - "AttributeName": "owner"
+          "AttributeType": "S"
+      "KeySchema":
+        - "AttributeName": "toolId"
+          "KeyType": "HASH"
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: false
+      BillingMode: PAY_PER_REQUEST
+      TableName: "ToolDatabase"
+      GlobalSecondaryIndexes:
+        - IndexName: "OwnerIndex"
+          KeySchema:
+            - AttributeName: "owner"
+              KeyType: "HASH"
+          Projection:
+            ProjectionType: "ALL"
