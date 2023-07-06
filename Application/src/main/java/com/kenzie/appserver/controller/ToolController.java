@@ -26,7 +26,7 @@ import java.util.Optional;
 @RequestMapping("/tools")
 public class ToolController {
 
-    private LambdaServiceClient toolService;
+    private final LambdaServiceClient toolService;
     private UserRecordRepository userRecordRepository;
     private ToolRepository toolRepository;
 
@@ -51,33 +51,33 @@ public class ToolController {
         return ResponseEntity.ok(response);
     }
 
-   @GetMapping("/{owner}")
+    @GetMapping("/{owner}")
     public ResponseEntity<List<ToolResponse>> getAllToolsByOwnerId(@PathVariable String owner) {
-       Optional<UserRecord> userRecord = userRecordRepository.findById(owner);
+        Optional<UserRecord> userRecord = userRecordRepository.findById(owner);
 
-       if (userRecord.isPresent()) {
+        if (userRecord.isPresent()) {
 
-           List<Tool> allTools = toolService.getAllToolsByOwnerId(owner);
+            List<Tool> allTools = toolService.getAllToolsByOwnerId(owner);
 
-           List<ToolResponse> toolResponses = new ArrayList<>();
-           for (Tool tool : allTools) {
-               ToolResponse toolResponse = createToolResponse(tool);
-               toolResponses.add(toolResponse);
-           }
-           return ResponseEntity.ok(toolResponses);
-       }
-       return ResponseEntity.badRequest().build(); //Use frontend to display message to User
-   }
+            List<ToolResponse> toolResponses = new ArrayList<>();
+            for (Tool tool : allTools) {
+                ToolResponse toolResponse = createToolResponse(tool);
+                toolResponses.add(toolResponse);
+            }
+            return ResponseEntity.ok(toolResponses);
+        }
+        return ResponseEntity.badRequest().build(); //Use frontend to display message to User
+    }
 
-   @PostMapping("/tools")
-   public ResponseEntity<ToolResponse> addNewTool(@RequestBody Tool tool, @RequestParam String username, @RequestParam String password) {
-       if (userService.authenticator(username, password)) {
-           Tool createdTool = toolService.addNewTool(tool);
-           return ResponseEntity.ok().body(this.createToolResponse(createdTool));
-       } else {
-           return ResponseEntity.badRequest().build();
-       }
-   }
+    @PostMapping("/tools")
+    public ResponseEntity<ToolResponse> addNewTool(@RequestBody Tool tool, @RequestParam String username, @RequestParam String password) {
+        if (userService.authenticator(username, password)) {
+            Tool createdTool = toolService.addNewTool(tool);
+            return ResponseEntity.ok().body(this.createToolResponse(createdTool));
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 //    @PutMapping("/borrowTool") //Switched to Put
 //    public ResponseEntity<ToolResponse> borrowTool(@RequestBody BorrowToolRequest borrowToolRequest) {
@@ -88,9 +88,13 @@ public class ToolController {
 //    }
 
     @PutMapping("/{toolId}/borrow")
-    public ResponseEntity<ToolResponse> borrowTool(@PathVariable String toolId, @RequestParam String borrower) {
-        Tool borrowedTool = toolService.borrowTool(toolId, borrower);
-        return ResponseEntity.ok().body(this.createToolResponse(borrowedTool));
+    public ResponseEntity<ToolResponse> borrowTool(@PathVariable String toolId, @RequestParam String borrower, @RequestParam String username, @RequestParam String password) {
+        if (userService.authenticator(username, password)) {
+            Tool borrowedTool = toolService.borrowTool(toolId, borrower);
+            return ResponseEntity.ok().body(this.createToolResponse(borrowedTool));
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 
@@ -109,7 +113,7 @@ public class ToolController {
         toolResponse.setToolId(tool.getToolId());
         toolResponse.setOwner(tool.getOwner());
         toolResponse.setToolName(tool.getToolName());
-        toolResponse.setAvailable(tool.getIsAvailable());
+        toolResponse.setIsAvailable(tool.getIsAvailable());
         toolResponse.setDescription(tool.getDescription());
         toolResponse.setComments(tool.getComments());
         toolResponse.setBorrower(tool.getBorrower());

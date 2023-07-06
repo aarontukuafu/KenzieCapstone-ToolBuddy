@@ -1,4 +1,4 @@
- AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: An AWS Lambda application that calls the Lambda API.
 Parameters:
@@ -54,4 +54,27 @@ Resources:
           Properties:
             Path: /example/
             Method: post
-
+  AddNewToolFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ServiceLambda/build/distributions/ServiceLambda.zip
+      Handler: com.kenzie.capstone.service.lambda.AddNewTool
+      Runtime: java11
+      Description: Add New Tool to Table
+      MemorySize: 512
+      Timeout: 240
+      # Function's execution role
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AWSLambda_ReadOnlyAccess
+        - AWSXrayWriteOnlyAccess
+        - AWSLambdaVPCAccessExecutionRole
+        - AmazonS3FullAccess
+        - AmazonDynamoDBFullAccess
+      Tracing: Active
+      Events:
+        UpdateResource:
+          Type: Api
+          Properties:
+            Path: /tools
+            Method: post

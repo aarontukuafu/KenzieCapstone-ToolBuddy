@@ -8,7 +8,7 @@ import java.util.List;
 @JsonInclude
 public class ToolResponse {
     @JsonProperty("toolId")
-    private int toolId;
+    private String toolId;
 
     @JsonProperty("owner")
     private String owner; //GSI //username from UserDB
@@ -32,7 +32,7 @@ public class ToolResponse {
 
     }
 
-    public ToolResponse(int toolId, String owner, String toolName, boolean isAvailable, String description, List<String> comments, String borrower) {
+    public ToolResponse(String toolId, String owner, String toolName, boolean isAvailable, String description, List<String> comments, String borrower) {
         this.toolId = toolId;
         this.owner = owner;
         this.toolName = toolName;
@@ -43,11 +43,11 @@ public class ToolResponse {
     }
 
 
-    public int getToolId() {
+    public String getToolId() {
         return toolId;
     }
 
-    public void setToolId(int toolId) {
+    public void setToolId(String toolId) {
         this.toolId = toolId;
     }
 
@@ -67,11 +67,11 @@ public class ToolResponse {
         this.toolName = toolName;
     }
 
-    public boolean isAvailable() {
+    public boolean getIsAvailable() {
         return isAvailable;
     }
 
-    public void setAvailable(boolean available) {
+    public void setIsAvailable(boolean available) {
         isAvailable = available;
     }
 
