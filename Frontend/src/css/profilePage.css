@@ -11,10 +11,10 @@
 }
 
 .background {
-    background: linear-gradient(to bottom, #113F61 30%, #ffffff);
-    /*background-color: #eaeded;
+    /*background: linear-gradient(to bottom, #113F61, #ffffff);*/
+    background-color: #eaeded;
     margin: 0;
-    counter-reset: section;*/
+    counter-reset: section;
 }
 
 .header {
@@ -43,20 +43,6 @@
 
 .about {
     margin-left: 20px;
-}
-
-.button, button {
-    background: #aed9ff;
-    padding: 3px;
-    border-radius: 3px;
-    text-decoration: none;
-    color: black;
-    border: 1px solid black;
-    cursor: pointer;
-}
-
-.button:hover, button:hover {
-    background: #9cc3e4;
 }
 
 .card {
@@ -95,11 +81,6 @@
     display: block;
 }
 
-.centered-image {
-  display: block;
-  margin: 0 auto;
-}
-
 .brandName {
     width: 250px;
     height: auto;
@@ -116,78 +97,4 @@
     line-height: 5px; /* Center align text vertically within the header */
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
-.photo-container {
-  margin-bottom: 20px;
-}
-
-.Main_logo {
-  width: 200px;
-  height: 200px;
-  /* Additional styling for the image */
-}
-
-.card {
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 4px;
-  padding: 20px;
-  width: 300px;
-  text-align: center;
-  border: 2px solid #CBB26A;
-}
-
-.card h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.card p {
-  margin-bottom: 20px;
-}
-
-.button-container {
-  display: flex;
-  justify-content: center;
-}
-
-.card-button {
-  background-color: #195b8c;
-  color: #ffffff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  margin: 0 10px;
-  cursor: pointer;
-}
-
-.card-button:hover {
-  background-color: #0f405e;
-}
-
-.card {
-  background-color: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 4px;
-  padding: 20px;
-  width: 300px;
-  text-align: center;
-}
-
-.card-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-
-.sentence {
-  font-size: 18px;
-  color: #333333;
-  margin: 0;
-}
