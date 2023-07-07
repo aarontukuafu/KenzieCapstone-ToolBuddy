@@ -10,91 +10,66 @@
     --error-color: rgba(194, 0, 0, 0.71);
 }
 
-.background {
-    /*background: linear-gradient(to bottom, #113F61, #ffffff);*/
-    background-color: #eaeded;
-    margin: 0;
-    counter-reset: section;
-}
-
+/* Header styles, similar to the main page */
 .header {
-    /* Flexbox: https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--primary-color);
-    color: var(--secondary-color);
-    padding: 0 20px;
+    background-color: #131921;
+    color: #ffffff;
+    padding: 20px;
 }
 
 .header_home {
-    font-size: 36px;
-    line-height: 40px;
-    height: 100px;
+    font-size: 24px;
     text-decoration: none;
-    color: var(--secondary-color);
+    color: #ffffff;
 }
 
 .header_nav_link {
-    margin-left: 20px;
-    vertical-align: top;
-    line-height: 40px;
-}
-
-.about {
+    color: #ffffff;
+    text-decoration: none;
     margin-left: 20px;
 }
 
-.card {
-    font-family: 'myFont', sans-serif;
-    color: var(--primary-color);
-    background-color: var(--secondary-color);
-    margin: 20px;
+.header_nav_link:hover {
+    text-decoration: underline;
+}
+
+/* Profile section styles */
+.profile-section {
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.profile-section h2 {
+    margin-top: 0;
+}
+
+/* Catalog section styles */
+.catalog-section {
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.catalog-section h2 {
+    margin-top: 0;
+}
+
+.catalog-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
     padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
 }
-
-.validated-field:invalid {
-    outline: 2px solid var(--error-color);
-}
-.validated-field:focus:invalid {
-    color: var(--error-color);
-}
-
-.card-content {
-    max-width: 500px;
-}
-
-.card-content .form-field {
-    display: flex;
-    flex-direction: column;
-}
-
-#concert-list li {
-    margin-bottom: 1rem;
-}
-
-.state {
-    display: none;
-}
-
-.state.active {
-    display: block;
-}
-
-.brandName {
-    width: 250px;
-    height: auto;
-    border: 2px solid #CBB26A;
-}
-
-.logo-image {
-    width: 45px; /* Adjust the width as needed */
-    height: auto; /* Maintain aspect ratio */
-}
-
-.header {
-    height: 70px; /* Adjust the height to match the image height */
-    line-height: 5px; /* Center align text vertically within the header */
-}
-
-
