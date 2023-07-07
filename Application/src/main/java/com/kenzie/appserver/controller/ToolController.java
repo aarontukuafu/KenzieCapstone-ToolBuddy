@@ -54,13 +54,13 @@ public class ToolController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{owner}")
-    public ResponseEntity<List<ToolResponse>> getAllToolsByOwnerId(@PathVariable String owner) {
-        Optional<UserRecord> userRecord = userRecordRepository.findById(owner);
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<ToolResponse>> getAllToolsByOwnerId(@PathVariable String ownerId) {
+        Optional<UserRecord> userRecord = userRecordRepository.findById(ownerId);
 
         if (userRecord.isPresent()) {
 
-            List<Tool> allTools = toolService.getAllToolsByOwnerId(owner);
+            List<Tool> allTools = toolService.getAllToolsByOwnerId(ownerId);
 
             List<ToolResponse> toolResponses = new ArrayList<>();
             for (Tool tool : allTools) {
@@ -72,9 +72,9 @@ public class ToolController {
         return ResponseEntity.badRequest().build(); //Use frontend to display message to User
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ToolResponse> getToolById(@PathVariable String id) {
-        Tool tool = toolService.getToolById(id);
+    @GetMapping("/tool/{toolId}")
+    public ResponseEntity<ToolResponse> getToolById(@PathVariable String toolId) {
+        Tool tool = toolService.getToolById(toolId);
         if (tool == null) {
             return ResponseEntity.notFound().build();
         }

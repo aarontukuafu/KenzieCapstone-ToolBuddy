@@ -19,8 +19,8 @@ public class LambdaServiceClient {
     private static final String GET_EXAMPLE_ENDPOINT = "example/{id}";
     private static final String SET_EXAMPLE_ENDPOINT = "example";
     private static final String GET_ALL_TOOLS_ENDPOINT = "tools/getall";
-    private static final String GET_ALL_TOOLS_BY_OWNER_ENDPOINT = "tools/get/{owner}";
-    private static final String GET_TOOL_BY_ID_ENDPOINT = "tools/get/{id}";
+    private static final String GET_ALL_TOOLS_BY_OWNER_ENDPOINT = "/owner/{ownerid}";
+    private static final String GET_TOOL_BY_ID_ENDPOINT = "/tool/{toolid}";
     private static final String POST_NEW_TOOL_ENDPOINT = "tools"; //Can also be post
     private static final String PUT_BORROW_TOOL_ENDPOINT = "borrowtool";
     private static final String DELETE_TOOL_ENDPOINT = "tools/delete"; //uses post NOT delete
@@ -70,7 +70,7 @@ public class LambdaServiceClient {
 
     public List<Tool> getAllToolsByOwnerId(String ownerId) {
         EndpointUtility endpointUtility = new EndpointUtility();
-        String response = endpointUtility.getEndpoint(GET_ALL_TOOLS_BY_OWNER_ENDPOINT.replace("{owner}", ownerId));
+        String response = endpointUtility.getEndpoint(GET_ALL_TOOLS_BY_OWNER_ENDPOINT.replace("{ownerid}", ownerId));
         List<Tool> tools;
         try {
             tools = mapper.readValue(response, new TypeReference<List<Tool>>() {
@@ -83,7 +83,7 @@ public class LambdaServiceClient {
 
     public Tool getToolById(String toolId) {
         EndpointUtility endpointUtility = new EndpointUtility();
-        String response = endpointUtility.getEndpoint(GET_TOOL_BY_ID_ENDPOINT.replace("{id}", toolId));
+        String response = endpointUtility.getEndpoint(GET_TOOL_BY_ID_ENDPOINT.replace("{toolid}", toolId));
         Tool tool;
         try {
             tool = mapper.readValue(response, Tool.class);
@@ -114,7 +114,7 @@ public class LambdaServiceClient {
 
     public Tool borrowTool(String toolId, String borrower) {
         EndpointUtility endpointUtility = new EndpointUtility();
-        String response = endpointUtility.postEndpoint(PUT_BORROW_TOOL_ENDPOINT.replace("{id}", toolId), borrower);
+        String response = endpointUtility.postEndpoint(PUT_BORROW_TOOL_ENDPOINT.replace("{toolid}", toolId), borrower);
         Tool borrowedTool;
         try {
             borrowedTool = mapper.readValue(response, Tool.class);
