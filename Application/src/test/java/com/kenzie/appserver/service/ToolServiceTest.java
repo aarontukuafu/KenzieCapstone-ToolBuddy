@@ -9,14 +9,16 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.*;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Mock;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testcontainers.shaded.com.github.dockerjava.core.MediaType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.UUID.randomUUID;
 import static junit.framework.TestCase.assertEquals;
@@ -26,6 +28,8 @@ import static org.springframework.test.web.client.ExpectedCount.times;
 public class ToolServiceTest {
     @InjectMocks
     private ToolService toolService;
+    @Mock
+    private UserService userService;
 
     @Mock
     private ToolRepository toolRepository;
@@ -95,5 +99,52 @@ public class ToolServiceTest {
         assertEquals(2, testList.size());
         assertEquals("owner1", testList.get(0).getOwner());
         assertEquals("owner1", testList.get(1).getOwner());
+    }
+    @Test
+    public void getAllToolsByOwnerId_isSuccessful() {
+        String owner = randomUUID().toString();
+        List<ToolRecord> toolRecords = new ArrayList<>();
+        toolRecords.add(new ToolRecord());
+
+        Mockito.when(toolRepository.findByOwner(owner)).thenReturn(toolRecords);
+
+        List<Tool> tools = toolService.getAllToolsByOwnerId(owner);
+
+        Assert.assertNotNull(tools);
+
+        Assert.assertEquals(toolRecords.size(), tools.size());
+    }
+    @Test
+    public void removeTool_isSuccessful() {
+        Tool tool = new Tool();
+        String username = randomUUID().toString();
+        String password = randomUUID().toString();
+
+        when(userService.authenticator(username,password)).thenReturn(true);
+        toolService.removeTool(tool,username,password);
+
+        verify(userService).authenticator(username,password);
+        verify(toolRepository).delete(any(ToolRecord.class));
+    }
+    @Test
+    public void removeTool_Fails() {
+        Tool tool = new Tool();
+        String username = randomUUID().toString();
+        String password = randomUUID().toString();
+
+        when(userService.authenticator(username,password)).thenReturn(false);
+        toolService.removeTool(tool,username,password);
+
+        verify(userService).authenticator(username,password);
+        verify(toolRepository,never()).delete(any(ToolRecord.class));
+    }
+    @Test
+    public void addNewTool_isSuccessful() {
+        Mockito.when(userService.authenticator(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+
+        Tool tool = new Tool();
+        toolService.addNewTool(tool, "dude11", "password");
+
+//        Mockito.verify(tool, Mockito.times(1)).
     }
 }
