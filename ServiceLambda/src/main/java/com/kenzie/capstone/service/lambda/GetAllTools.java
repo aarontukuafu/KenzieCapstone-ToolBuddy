@@ -37,7 +37,7 @@ public class GetAllTools implements RequestHandler<APIGatewayProxyRequestEvent, 
 
         try {
             //CreateToolRecordRequest createToolRecordRequest = jsonStringToolRecordConverter.convert(input.getBody());
-            List<ToolRecord> toolRecordList = toolService.getAllTools();
+            List<ToolResponse> toolRecordList = toolService.getAllTools();
             //ToolRecordResponse toolRecordResponse = ToolConverter.fromRequestToToolRecord(createToolRecordRequest);
 
             return response

@@ -26,7 +26,7 @@ public class ToolService {
         this.toolDao = toolDao;
     }
 
-    public List<ToolRecord> getAllTools() {
+    public List<ToolResponse> getAllTools() {
         return toolDao.getAllTools();
     }
 

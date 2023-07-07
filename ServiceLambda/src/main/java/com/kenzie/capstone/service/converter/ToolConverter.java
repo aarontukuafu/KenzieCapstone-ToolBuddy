@@ -43,7 +43,7 @@ public class ToolConverter {
         return createToolRequest;
     }
 
-    public static ToolRecordResponse fromRequestToToolRecord(List<ToolRecord> toolRecordList, CreateToolRecordRequest createToolRecordRequest) {
+    /*public static ToolRecordResponse fromRequestToToolRecord(List<ToolRecord> toolRecordList, CreateToolRecordRequest createToolRecordRequest) {
         ToolRecordResponse toolRecordResponse = new ToolRecordResponse();
         toolRecordResponse.setToolId(createToolRecordRequest.g);
         toolRecordResponse.setOwner(createToolRecordRequest.getOwner());
@@ -51,7 +51,7 @@ public class ToolConverter {
         toolRecordResponse.setIsAvailable(createToolRecordRequest.getIsAvailable());
         toolRecordResponse.setDescription(createToolRecordRequest.getDescription());
         toolRecordResponse.setBorrower(createToolRecordRequest.getBorrower());
-        toolRecordResponse.add(toolRecordResponse);
+        //toolRecordResponse.add(toolRecordResponse);
         return toolRecordResponse;
-    }
+    }*/
 }
