@@ -24,7 +24,6 @@ public class GetAllTools implements RequestHandler<APIGatewayProxyRequestEvent, 
 
     @Override
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input, Context context) {
-        JsonStringToolRecordConverter jsonStringToolRecordConverter = new JsonStringToolRecordConverter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = new Gson();
 
@@ -36,13 +35,10 @@ public class GetAllTools implements RequestHandler<APIGatewayProxyRequestEvent, 
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
 
         try {
-            //CreateToolRecordRequest createToolRecordRequest = jsonStringToolRecordConverter.convert(input.getBody());
-            List<ToolResponse> toolRecordList = toolService.getAllTools();
-            //ToolRecordResponse toolRecordResponse = ToolConverter.fromRequestToToolRecord(createToolRecordRequest);
-
+            List<ToolResponse> toolResponses = toolService.getAllTools();
             return response
                     .withStatusCode(200)
-                    .withBody(gson.toJson(toolRecordList));
+                    .withBody(gson.toJson(toolResponses));
         } catch (RuntimeException e) {
             return response
                     .withStatusCode(400)
