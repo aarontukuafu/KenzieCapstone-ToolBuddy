@@ -9,12 +9,10 @@ import com.google.gson.GsonBuilder;
 import com.kenzie.capstone.service.ToolService;
 import com.kenzie.capstone.service.converter.JsonStringToToolConverter;
 import com.kenzie.capstone.service.converter.JsonStringToolRecordConverter;
+import com.kenzie.capstone.service.converter.ToolConverter;
 import com.kenzie.capstone.service.dependency.DaggerServiceComponent;
 import com.kenzie.capstone.service.dependency.ServiceComponent;
-import com.kenzie.capstone.service.model.CreateToolRecordRequest;
-import com.kenzie.capstone.service.model.CreateToolRequest;
-import com.kenzie.capstone.service.model.ToolRecord;
-import com.kenzie.capstone.service.model.ToolRecordResponse;
+import com.kenzie.capstone.service.model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +24,8 @@ public class GetAllTools implements RequestHandler<APIGatewayProxyRequestEvent, 
 
     @Override
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input, Context context) {
-        //JsonStringToolRecordConverter jsonStringToolRecordConverter = new JsonStringToolRecordConverter();
+        JsonStringToolRecordConverter jsonStringToolRecordConverter = new JsonStringToolRecordConverter();
+        GsonBuilder builder = new GsonBuilder();
         Gson gson = new Gson();
 
         log.info(gson.toJson(input));
@@ -39,6 +38,8 @@ public class GetAllTools implements RequestHandler<APIGatewayProxyRequestEvent, 
         try {
             //CreateToolRecordRequest createToolRecordRequest = jsonStringToolRecordConverter.convert(input.getBody());
             List<ToolRecord> toolRecordList = toolService.getAllTools();
+            //ToolRecordResponse toolRecordResponse = ToolConverter.fromRequestToToolRecord(createToolRecordRequest);
+
             return response
                     .withStatusCode(200)
                     .withBody(gson.toJson(toolRecordList));
