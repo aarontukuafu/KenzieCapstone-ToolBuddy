@@ -124,7 +124,7 @@ Resources:
         UpdateResource:
           Type: Api
           Properties:
-            Path: /tools/get/{owner}
+            Path: /owner/{ownerid}
             Method: get
   GetToolByIdFunction:
     Type: AWS::Serverless::Function
@@ -148,7 +148,7 @@ Resources:
         UpdateResource:
           Type: Api
           Properties:
-            Path: /tools/get/{id}
+            Path: /tool/{toolid}
             Method: get
   BorrowToolFunction:
     Type: AWS::Serverless::Function
@@ -172,8 +172,8 @@ Resources:
         UpdateResource:
           Type: Api
           Properties:
-            Path: borrowtool
-            Method: put
+            Path: /borrowtool
+            Method: post
   RemoveToolFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -197,4 +197,4 @@ Resources:
           Type: Api
           Properties:
             Path: /tools/delete
-            Method: delete
+            Method: post

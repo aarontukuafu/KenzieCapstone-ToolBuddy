@@ -12,7 +12,7 @@ public class JsonStringToToolConverter {
             Gson gson = builder.create();
             return gson.fromJson(body, CreateToolRequest.class);
         } catch (Exception e) {
-            throw new RuntimeException("Referral could not be deserialized");
+            throw new RuntimeException("Tool could not be deserialized");
         }
     }
 }

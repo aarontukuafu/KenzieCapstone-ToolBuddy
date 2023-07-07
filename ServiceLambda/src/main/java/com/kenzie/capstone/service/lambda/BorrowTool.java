@@ -8,11 +8,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kenzie.capstone.service.ToolService;
 import com.kenzie.capstone.service.converter.JsonStringToBorrowToolRequestConverter;
+import com.kenzie.capstone.service.converter.ToolConverter;
 import com.kenzie.capstone.service.dependency.DaggerServiceComponent;
 import com.kenzie.capstone.service.dependency.ServiceComponent;
+import com.kenzie.capstone.service.model.ToolRecord;
 import com.kenzie.capstone.service.model.UpdateToolRequest;
 import com.kenzie.capstone.service.model.ToolResponse;
-import com.kenzie.capstone.service.model.UpdateToolRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +36,8 @@ public class BorrowTool implements RequestHandler<APIGatewayProxyRequestEvent, A
 
         try {
             UpdateToolRequest borrowToolRequest = jsonStringToBorrowToolRequestConverter.convert(input.getBody());
-            ToolResponse toolResponse = toolService.borrowTool(borrowToolRequest);
+            ToolRecord toolRecord = toolService.borrowTool(borrowToolRequest.getToolId(), borrowToolRequest.getUsername());
+            ToolResponse toolResponse = ToolConverter.fromRecordToResponse(toolRecord);
             return response
                     .withStatusCode(200)
                     .withBody(gson.toJson(toolResponse));
