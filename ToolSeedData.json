@@ -1,0 +1,52 @@
+{
+  "ToolDatabase": [
+    {
+      "PutRequest": {
+        "Item": {
+          "toolId": {
+            "S": "2c13cba7-2fce-43e6-bb93-44194102090d"
+          },
+          "owner": {
+            "S": "testOwnerId"
+          },
+          "toolName": {
+            "S": "Hammer"
+          },
+          "isAvailable": {
+            "B": "true"
+          },
+          "description": {
+            "S": "This is a test hammer."
+          },
+          "borrower": {
+            "S": ""
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "toolId": {
+            "S": "2164d730-98b6-49d7-b058-92b498b7d1e3"
+          },
+          "owner": {
+            "S": "testOwnerId2"
+          },
+          "toolName": {
+            "S": "Hammer2"
+          },
+          "isAvailable": {
+            "B": "true"
+          },
+          "description": {
+            "S": "This is a test hammer.2"
+          },
+          "borrower": {
+            "S": ""
+          }
+        }
+      }
+    }
+  ]
+}

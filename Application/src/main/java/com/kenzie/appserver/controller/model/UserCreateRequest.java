@@ -7,8 +7,8 @@ import javax.validation.constraints.NotEmpty;
 public class UserCreateRequest  {
     @JsonProperty("name")
     private @NotEmpty String name;
-    @JsonProperty("userName")
-    private @NotEmpty String userName;
+    @JsonProperty("username")
+    private @NotEmpty String username;
     @JsonProperty("password")
     private @NotEmpty String password;
 
@@ -23,12 +23,12 @@ public class UserCreateRequest  {
         this.name = name;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

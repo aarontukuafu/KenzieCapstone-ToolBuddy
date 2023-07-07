@@ -10,7 +10,7 @@ import java.util.List;
 
 @DynamoDBTable(tableName = "ToolDatabase")
 public class ToolRecord {
-    private int toolId;
+    private String toolId;
     private String owner; //GSI //username from UserDB
     private String toolName;
     private boolean isAvailable;
@@ -20,12 +20,12 @@ public class ToolRecord {
 
     public ToolRecord() {
     }
-    public ToolRecord(int toolId, String owner){
+    public ToolRecord(String toolId, String owner){
         this.toolId = toolId;
         this.owner = owner;
     }
 
-    public ToolRecord(int toolId, String owner, String toolName, boolean isAvailable, String description, String borrower) {
+    public ToolRecord(String toolId, String owner, String toolName, boolean isAvailable, String description, String borrower) {
         this.toolId = toolId;
         this.owner = owner;
         this.toolName = toolName;
@@ -36,15 +36,15 @@ public class ToolRecord {
 
 
     @DynamoDBHashKey(attributeName = "toolId")
-    public int getToolId() {
+    public String getToolId() {
         return toolId;
     }
 
-    public void setToolId(int toolId) {
+    public void setToolId(String toolId) {
         this.toolId = toolId;
     }
 
-    @DynamoDBIndexHashKey(globalSecondaryIndexName = "getOwner")
+    @DynamoDBIndexHashKey(globalSecondaryIndexName = "owner")
     public String getOwner() {
         return owner;
     }
