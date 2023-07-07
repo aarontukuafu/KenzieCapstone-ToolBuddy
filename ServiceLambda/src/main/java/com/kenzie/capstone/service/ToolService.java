@@ -34,6 +34,11 @@ public class ToolService {
         return toolDao.getAllToolsByOwnerId(owner);
     }
 
+    public ToolResponse getToolById(String toolId) {
+        ToolRecord toolRecord = toolDao.getToolById(toolId);
+        return ToolConverter.fromRecordToResponse(toolRecord);
+    }
+
     public ToolResponse addNewTool(CreateToolRequest toolRequest) {
         ToolRecord toolRecord = ToolConverter.fromRequestToRecord(toolRequest);
         toolDao.addNewTool(toolRecord);
