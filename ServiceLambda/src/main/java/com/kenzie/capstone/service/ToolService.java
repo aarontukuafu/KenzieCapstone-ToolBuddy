@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class ToolService {
@@ -26,8 +27,12 @@ public class ToolService {
         this.toolDao = toolDao;
     }
 
-    public List<ToolRecord> getAllTools() {
-        return toolDao.getAllTools();
+    public List<ToolResponse> getAllTools() {
+        List<ToolRecord> toolRecords = toolDao.getAllTools();
+        List<ToolResponse> toolResponses = toolRecords.stream()
+                .map(ToolConverter::fromRecordToResponse)
+                .collect(Collectors.toList());
+        return toolResponses;
     }
 
     public List<ToolRecord> getAllToolsByOwnerId(String owner) {
