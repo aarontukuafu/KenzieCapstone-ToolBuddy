@@ -8,8 +8,8 @@ public class CreateToolRequest {
     @JsonProperty("toolName")
     private String toolName;
 
-    @JsonProperty("id")
-    private String id;
+    @JsonProperty("toolId")
+    private String toolId;
 
     @JsonProperty("owner")
     private String owner;
@@ -29,8 +29,8 @@ public class CreateToolRequest {
     public String getToolName() {
         return toolName;
     }
-    public String getId() {
-        return id;
+    public String getToolId() {
+        return toolId;
     }
     public String getOwner() {
         return owner;
@@ -56,8 +56,8 @@ public class CreateToolRequest {
         this.toolName = toolName;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setToolId(String toolId) {
+        this.toolId = toolId;
     }
 
     public void setOwner(String owner) {
