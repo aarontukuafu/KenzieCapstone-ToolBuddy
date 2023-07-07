@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="profile.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="examplePage.js"></script>
+</head>
+
+<body class="background">
+
+<!-- Header -->
+<header class="header" id="header">
+    <div class="site-title">
+        <a class="header_home" href="index.html">
+            <img src="./images/Tool_logo.PNG" alt="Logo" class="logo-image">
+            <img src="./images/name.png" alt="name" class="brandName">
+        </a>
+    </div>
+    <nav>
+        <a href="index.html" class="header_nav_link">Home</a>
+        <a href="profile.html" class="header_nav_link">Profile</a>
+    </nav>
+</header>
+
+<!-- Profile Section -->
+<section class="profile-section">
+    <h2>Your Profile</h2>
+    <form id="catalog-form">
+        <input type="text" id="new-item" placeholder="Add to your catalog...">
+        <input type="submit" value="Add" class="button">
+    </form>
+</section>
+
+<!-- Catalog Section -->
+<section class="catalog-section">
+    <h2>Your Catalog</h2>
+    <ul id="catalog-list">
+    </ul>
+</section>
+
+<!-- Script for handling form submission -->
+<script>
+        document.getElementById('catalog-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var item = document.getElementById('new-item').value;
+            var catalogList = document.getElementById('catalog-list');
+            var listItem = document.createElement('li');
+            listItem.textContent = item;
+            catalogList.appendChild(listItem);
+            document.getElementById('new-item').value = '';
+        });
+    </script>
+
+</body>
+
+</html>

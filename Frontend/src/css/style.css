@@ -1,24 +1,78 @@
+/* Variables */
 :root {
-    /* css variables: https://developer.mozilla.org/en-US/docs/Web/CSS/var */
     --primary-color: #131921;
     --secondary-color: #fff;
     --error-color: rgba(194, 0, 0, 0.71);
 }
 
+/* Generic Styles */
 .background {
-    background-color: #eaeded;
-    margin: 0;
-    counter-reset: section;
+    background: #ffffff;
 }
 
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.color-background {
+  font-family: 'myFont', sans-serif;
+  background-color: #F5F5F5; /* Replace with your desired color */
+  padding: 20px; /* Adjust the padding as needed */
+  width: 150%;
+  height: 300px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center; /* Center the images horizontally */
+  align-items: center;
+  width: 12%;
+  margin-top: -50px;
+  border-radius: 10px;
+
+}
+
+.image-container img {
+  flex: 1;
+  margin: 50px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.image-container img:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  transform: scale(1.05);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+}
+
+/* Header Styles */
 .header {
-    /* Flexbox: https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: var(--primary-color);
+    background-color: #113F61;
     color: var(--secondary-color);
-    padding: 0 20px;
+    padding: 20px;
+    height: 30px;
+    line-height: 5px;
+    border-radius: 10px;
+
 }
 
 .header_home {
@@ -29,46 +83,102 @@
     color: var(--secondary-color);
 }
 
-.header_nav_link {
-    margin-left: 20px;
-    vertical-align: top;
-    line-height: 40px;
+.logo-image {
+    width: 45px;
+    height: auto;
+    margin-right: 750px;
+    border: 2px solid #CBB26A;
+    border-radius: 10px;
 }
 
-.about {
-    margin-left: 20px;
+.brandName {
+    width: 250px;
+    height: auto;
+    border: 2px solid #CBB26A;
+    margin-right: 40px;
 }
 
-.button, button {
-    background: #aed9ff;
-    padding: 3px;
-    border-radius: 3px;
-    text-decoration: none;
-    color: black;
-    border: 1px solid black;
-    cursor: pointer;
-}
-
-.button:hover, button:hover {
-    background: #9cc3e4;
-}
-
+/* Card Styles */
 .card {
-    color: var(--primary-color);
+    font-family: 'myFont', sans-serif;
     background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
     margin: 20px;
-    padding: 10px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
 }
 
-.validated-field:invalid {
-    outline: 2px solid var(--error-color);
+.card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
-.validated-field:focus:invalid {
-    color: var(--error-color);
+
+.card h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    margin-bottom: 20px;
 }
 
 .card-content {
     max-width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.sentence {
+    font-size: 18px;
+    color: #333333;
+    margin: 0;
+}
+
+/* Button Styles */
+.button, button {
+    background-color: #aed9ff;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.button:hover, button:hover {
+    background-color: #9cc3e4;
+    transform: scale(1.05);
+}
+
+.card-button {
+    background-color: #195b8c;
+    color: #ffffff;
+    margin: 0 10px;
+}
+
+.card-button:hover {
+    background-color: #0f405e;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+/* Form Styles */
+.validated-field:invalid {
+    outline: 2px solid var(--error-color);
+}
+
+.validated-field:focus:invalid {
+    color: var(--error-color);
 }
 
 .card-content .form-field {
@@ -76,14 +186,13 @@
     flex-direction: column;
 }
 
-#concert-list li {
-    margin-bottom: 1rem;
-}
+/* Media Queries for Responsiveness */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
 
-.state {
-    display: none;
-}
-
-.state.active {
-    display: block;
+    .header {
+        flex-direction: column;
+    }
 }

@@ -13,12 +13,12 @@ import org.springframework.data.annotation.Id;
 )
 public class UserRecord {
     private String name;
-    private String userName;
+    private String username;
     private String password;
 
-    public UserRecord(String name, String userName, String password){
+    public UserRecord(String name, String username, String password){
         this.name = name;
-        this.userName = userName;
+        this.username = username;
         this.password = password;
     }
     public UserRecord() {
@@ -26,20 +26,21 @@ public class UserRecord {
     }
 
 
+    @Id
+    @DynamoDBHashKey(attributeName = "username")
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @DynamoDBAttribute(attributeName = "name")
     public String getName() {return this.name;}
 
     public void setName(String userId) {
         this.name = name;
-    }
-    @Id
-    @DynamoDBHashKey(attributeName = "userName")
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     @DynamoDBAttribute(attributeName = "password")

@@ -1,40 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <script type="text/javascript" src="examplePage.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="examplePage.js" defer></script>
+    <title>My Web Page</title>
 </head>
-<body class="background">
-    <header class="header" id="header">
-        <div class="site-title">
-            <a class="header_home" href="index.html">Example App</a>
-        </div>
-    </header>
-    <div class="card">
-        <h2>Create Example</h2>
-        <form class="card-content" id="create-form">
-            <p class="form-field">
-                <label>Name</label>
-                <input type="text" required class="validated-field" id="create-name-field">
-            </p>
-            <button type="submit">Create</button>
-        </form>
+
+
+<header class="header" id="header">
+    <div class="site-title">
+        <a href="index.html" class="header_home">
+            <img src="./images/Tool_logo.PNG" alt="Logo" class="logo-image">
+            <img src="./images/name.png" alt="Site Name" class="brandName">
+        </a>
     </div>
-    <div class="card">
-        <h2>Get By ID</h2>
-        <form class="card-content" id="get-by-id-form">
-            <p class="form-field">
-                <label>ID</label>
-                <input type="text" required class="validated-field" id="id-field">
-            </p>
-            <button type="submit">Get</button>
-        </form>
-    </div>
-    <div class="card" id="result">
-        <h2>Result:</h2>
-        <p id="result-info"></p>
+</header>
+
+<main class="container">
+    <div class="photo-container">
+        <img src="./images/Main_logo.png" alt="Main Logo" class="centered-image">
     </div>
 
+    <div class="card">
+        <h2>Directory</h2>
+        <p>Card content goes here.</p>
+        <div class="button-container">
+            <button class="card-button">Browse</button>
+            <a href="profile.html"><button class="card-button">Profile</button></a>
+        </div>
+    </div>
+
+    <div class="color-background">
+        <h2>Tools at Your Disposal!</h2>
+        <div class="image-container">
+            <img src="./images/handtools.jpg" alt="hand" class="hand-tool">
+            <img src="./images/powertool.jpg" alt="power" class="power-tool">
+            <img src="./images/shovel.jpg" alt="shovel" class="gardening-tool">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-content">
+            <p class="sentence">
+                Join our tool-sharing revolution!
+                We're a platform that connects people, allowing them to easily upload and borrow tools from one another.
+                Say goodbye to expensive one-time purchases and hello to a vibrant community of sharing and collaboration.
+                Let's transform the way we access tools, build friendships, and make borrowing and lending tools a breeze!
+            </p>
+        </div>
+    </div>
+
+</main>
+
 </body>
+
 </html>
+

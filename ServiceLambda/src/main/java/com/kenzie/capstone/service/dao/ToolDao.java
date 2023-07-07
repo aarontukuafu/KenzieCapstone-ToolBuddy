@@ -41,11 +41,21 @@ public class ToolDao {
         return mapper.query(ToolRecord.class, queryExpression);
     }
 
+    public ToolRecord getToolById(String toolId) {
+        ToolRecord toolRecord = mapper.load(ToolRecord.class, toolId);
+
+        if (toolRecord == null) {
+            throw new IllegalArgumentException("Tool not found");
+        }
+
+        return toolRecord;
+    }
+
     public ToolRecord addNewTool(ToolRecord toolRecord) {
         try {
             mapper.save(toolRecord, new DynamoDBSaveExpression()
                     .withExpected(ImmutableMap.of(
-                            "id",
+                            "ToolId",
                             new ExpectedAttributeValue().withExists(false)
                     )));
         } catch (ConditionalCheckFailedException e) {
