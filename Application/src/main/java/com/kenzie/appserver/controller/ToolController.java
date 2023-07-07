@@ -41,15 +41,6 @@ public class ToolController {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ToolResponse> getToolById(@PathVariable String id) {
-        Tool tool = toolService.getToolById(id);
-        if (tool == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(createToolResponse(tool));
-    }
-
     @GetMapping
     public ResponseEntity<List<ToolResponse>> getAllTools() {
         List<Tool> tools = toolService.getAllTools();
@@ -81,6 +72,15 @@ public class ToolController {
         return ResponseEntity.badRequest().build(); //Use frontend to display message to User
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ToolResponse> getToolById(@PathVariable String id) {
+        Tool tool = toolService.getToolById(id);
+        if (tool == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(createToolResponse(tool));
+    }
+
     @PostMapping("/tools")
     public ResponseEntity<ToolResponse> addNewTool(@RequestBody UserCreateToolRequest userCreateToolRequest) {
         if (userService.authenticator(userCreateToolRequest.getUsername(), userCreateToolRequest.getPassword())) {
@@ -101,13 +101,20 @@ public class ToolController {
         if (userService.authenticator(borrowToolRequest.getUsername(), borrowToolRequest.getPassword())) {
             //user is valid
             //What tool do the want to borrow? hint hint getToolById
+            Tool tool = toolService.getToolById(borrowToolRequest.getToolId());
+
             //if tool is not Null && isAvailable is True THEN call borrow method with correct user and correct tool
-            Tool tool = toolService.borrowTool(borrowToolRequest.getToolId(), borrowToolRequest.getUsername());
-            if (tool == null) {
+            if (tool != null && tool.getIsAvailable()) {
+                tool = toolService.borrowTool(borrowToolRequest.getToolId(), borrowToolRequest.getUsername());
+                return ResponseEntity.ok(createToolResponse(tool));
+            } else {
+                // The tool is either not found or not available.
                 return ResponseEntity.badRequest().build();
             }
-
-        } else return ResponseEntity.ok(createToolResponse(tool));
+        } else {
+            // Invalid user credentials
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 //    @PutMapping("/{toolId}/borrow")
@@ -122,7 +129,8 @@ public class ToolController {
 
 
     @DeleteMapping("/toolId")
-    public ResponseEntity<Void> removeTool(@PathVariable String toolId, @RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Void> removeTool(@PathVariable String toolId, @RequestParam String
+            username, @RequestParam String password) {
         if (userService.authenticator(username, password)) {
             toolService.deleteTool(toolId);
             return ResponseEntity.noContent().build();
@@ -143,3 +151,5 @@ public class ToolController {
         return toolResponse;
     }
 }
+}
+
