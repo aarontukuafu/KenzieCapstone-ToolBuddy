@@ -9,6 +9,7 @@ import com.kenzie.appserver.repositories.UserRecordRepository;
 import com.kenzie.appserver.repositories.model.UserRecord;
 import com.kenzie.appserver.service.UserService;
 import com.kenzie.appserver.service.model.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping({"/user"})
@@ -31,15 +33,30 @@ public class UserController {
     UserController(UserService userService){
         this.userService = userService;
     }
-    @PostMapping("/user")
-    public ResponseEntity<User> createNewUser(User user) {
-        UserRecord record = new UserRecord();
-        record.setName(user.getName());
-        record.setUserName(user.getUserName());
-        record.setPassword(user.getPassword());
-        // record.setZipCode(user.getZipCode()); // Implement later per User notes
-        userRecordRepository.save(record);
-        return ResponseEntity.ok(user);
+    @PostMapping("/user") //check if User already exists in DB
+    public ResponseEntity<UserResponse> createNewUser(@RequestBody UserCreateRequest userCreateRequest) {
+
+        if (userCreateRequest.getName() == null || userCreateRequest.getName().length() == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Customer Name");
+        }
+        if (userCreateRequest.getUsername() == null || userCreateRequest.getUsername().length() == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Username");
+        }
+        if (userCreateRequest.getPassword() == null || userCreateRequest.getPassword().length() == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Password");
+        }
+
+        UserResponse userResponse = userService.createNewUser(userCreateRequest);
+
+        return ResponseEntity.created(URI.create("/user" + userResponse.getUsername())).body(userResponse);
+
+
+//        UserRecord record = new UserRecord();
+//        record.setName(user.getName());
+//        record.setUsername(user.getUsername());
+//        record.setPassword(user.getPassword());
+//        userRecordRepository.save(record);
+//        return ResponseEntity.ok(user);
     }
 
 

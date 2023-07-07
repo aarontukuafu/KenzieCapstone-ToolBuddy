@@ -1,6 +1,7 @@
 package com.kenzie.capstone.service.converter;
 
 import com.kenzie.capstone.service.model.CreateToolRequest;
+import com.kenzie.capstone.service.model.Tool;
 import com.kenzie.capstone.service.model.ToolRecord;
 import com.kenzie.capstone.service.model.ToolResponse;
 
@@ -30,5 +31,17 @@ public class ToolConverter {
         toolResponse.setDescription(toolRecord.getDescription());
         toolResponse.setBorrower(toolRecord.getBorrower());
         return toolResponse;
+    }
+
+    public static CreateToolRequest fromToolToRequest(Tool tool) {
+        CreateToolRequest createToolRequest = new CreateToolRequest();
+        createToolRequest.setToolId(tool.getToolId());
+        createToolRequest.setOwner(tool.getOwner());
+        createToolRequest.setToolName(tool.getToolName());
+        createToolRequest.setIsAvailable(tool.getIsAvailable());
+        createToolRequest.setDescription(tool.getDescription());
+        createToolRequest.setComments(tool.getComments());
+        createToolRequest.setBorrower(tool.getBorrower());
+        return createToolRequest;
     }
 }

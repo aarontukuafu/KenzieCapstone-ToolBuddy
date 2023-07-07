@@ -1,0 +1,34 @@
+{
+  "UserDatabase": [
+    {
+      "PutRequest": {
+        "Item": {
+          "username": {
+            "S": "testUsername8001"
+          },
+          "name": {
+            "S": "Test User"
+          },
+          "password": {
+            "S": "testPassword8001"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "username": {
+            "S": "testUsername8002"
+          },
+          "name": {
+            "S": "Test User2"
+          },
+          "password": {
+            "S": "testPassword8002"
+          }
+        }
+      }
+    }
+  ]
+}
