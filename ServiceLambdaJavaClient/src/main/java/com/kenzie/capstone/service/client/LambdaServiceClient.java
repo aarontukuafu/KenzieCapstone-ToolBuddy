@@ -5,10 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kenzie.capstone.service.converter.ToolConverter;
-import com.kenzie.capstone.service.model.CreateToolRequest;
-import com.kenzie.capstone.service.model.ExampleData;
-import com.kenzie.capstone.service.model.Tool;
-import com.kenzie.capstone.service.model.ToolResponse;
+import com.kenzie.capstone.service.model.*;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -114,8 +111,19 @@ public class LambdaServiceClient {
 
     public Tool borrowTool(String toolId, String borrower) {
         EndpointUtility endpointUtility = new EndpointUtility();
-        String response = endpointUtility.postEndpoint(PUT_BORROW_TOOL_ENDPOINT.replace("{toolid}", toolId), borrower);
+        UpdateToolRequest updateToolRequest = new UpdateToolRequest();
+        updateToolRequest.setToolId(toolId);
+        updateToolRequest.setUsername(borrower);
+
         Tool borrowedTool;
+
+        String response;
+        try {
+            response = endpointUtility.postEndpoint(PUT_BORROW_TOOL_ENDPOINT, mapper.writeValueAsString(updateToolRequest));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         try {
             borrowedTool = mapper.readValue(response, Tool.class);
         } catch (Exception e) {

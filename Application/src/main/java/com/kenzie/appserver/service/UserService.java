@@ -58,6 +58,12 @@ public class UserService {
         return toUserResponseFromRecord(userRecord);
     }
 
+    public UserResponse getUser(String username) {
+        Optional<UserRecord> userRecord = userRecordRepository.findById(username);
+
+        return userRecord.map(this::toUserResponseFromRecord).orElse(null);
+    }
+
     private UserRecord toUserRecord(UserCreateRequest userCreateRequest) {
         UserRecord userRecord = new UserRecord();
         userRecord.setName(userCreateRequest.getName());
@@ -78,4 +84,6 @@ public class UserService {
 
         return userResponse;
     }
+
+
 }
