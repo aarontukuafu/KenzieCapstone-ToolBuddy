@@ -1,5 +1,6 @@
 package com.kenzie.appserver.service;
 
+import com.kenzie.appserver.Cache.CachingUserDao;
 import com.kenzie.appserver.controller.model.UserCreateRequest;
 import com.kenzie.appserver.controller.model.UserResponse;
 //import com.kenzie.appserver.repositories.ToolRepository;
@@ -23,15 +24,17 @@ import static java.util.UUID.randomUUID;
 public class UserService {
 
     private UserRecordRepository userRecordRepository;
+    private CachingUserDao cache;
 
     @Autowired
-    public UserService(UserRecordRepository userRecordRepository) {
+    public UserService(UserRecordRepository userRecordRepository, CachingUserDao cache) {
         this.userRecordRepository = userRecordRepository;
+        this.cache = cache;
     }
   
     public boolean authenticator(String username, String password) {
-        if (userRecordRepository.existsById(username) &&
-                userRecordRepository.findById(username).get().getPassword().equals(password)) {
+        if (cache.findById(username).isPresent() &&
+                cache.findById(username).get().getPassword().equals(password)) {
             return true;
 //        } else if (username.isEmpty()) {
 //            throw new IllegalArgumentException("Username cannot be empty. Please enter username again");
@@ -54,12 +57,13 @@ public class UserService {
         UserRecord userRecord = toUserRecord(userCreateRequest);
 
         userRecordRepository.save(userRecord);
+        cache.invalidate(userRecord.getUsername());
 
         return toUserResponseFromRecord(userRecord);
     }
 
     public UserResponse getUser(String username) {
-        Optional<UserRecord> userRecord = userRecordRepository.findById(username);
+        Optional<UserRecord> userRecord = cache.findById(username);
 
         return userRecord.map(this::toUserResponseFromRecord).orElse(null);
     }
