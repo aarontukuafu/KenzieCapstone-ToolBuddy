@@ -17,6 +17,7 @@ export default class ExampleClient extends BaseClass {
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
+        this.initializeScrollListener();
     }
 
     /**
@@ -55,6 +56,25 @@ export default class ExampleClient extends BaseClass {
             this.handleError("createExample", error, errorCallback);
         }
     }
+
+      initializeScrollListener() {
+        window.addEventListener('scroll', function() {
+          var backgroundImage = document.querySelector('.background-image');
+          var scrollPosition = window.scrollY;
+          var windowHeight = window.innerHeight;
+
+          // Calculate the threshold to switch the image (e.g., when 50% of the window is scrolled)
+          var threshold = windowHeight * 0.5;
+
+          if (scrollPosition > threshold) {
+            backgroundImage.style.backgroundImage = 'url(./images/seemlesstools.png)';
+            backgroundImage.style.opacity = '1';
+          } else {
+            backgroundImage.style.backgroundImage = 'url(./images/toolbackground.jpg)';
+            backgroundImage.style.opacity = '0';
+          }
+        });
+      }
 
     /**
      * Helper method to log the error and run any error functions.
