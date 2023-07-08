@@ -9,7 +9,7 @@ class ExamplePage extends BaseClass {
 
     constructor() {
         super();
-        this.bindClassMethods(['onGet', 'onCreate', 'renderExample'], this);
+        this.bindClassMethods(['onGet', 'onCreate', 'renderExample', 'handleAddUser', 'handleAddTool'], this);
         this.dataStore = new DataStore();
     }
 
@@ -17,8 +17,6 @@ class ExamplePage extends BaseClass {
      * Once the page has loaded, set up the event handlers and fetch the concert list.
      */
     async mount() {
-        document.getElementById('get-by-id-form').addEventListener('submit', this.onGet);
-        document.getElementById('create-form').addEventListener('submit', this.onCreate);
         this.client = new ExampleClient();
 
         this.dataStore.addChangeListener(this.renderExample)
@@ -59,22 +57,40 @@ class ExamplePage extends BaseClass {
         }
     }
 
-    async onCreate(event) {
-        // Prevent the page from refreshing on form submit
+    async handleAddTool(event) {
         event.preventDefault();
-        this.dataStore.set("example", null);
 
-        let name = document.getElementById("create-name-field").value;
+        const toolName = document.querySelector("#toolName").value;
+        const description = document.querySelector("#description").value;
+        const username = document.querySelector("#usernameTool").value;
+        const password = document.querySelector("#passwordTool").value;
 
-        const createdExample = await this.client.createExample(name, this.errorHandler);
-        this.dataStore.set("example", createdExample);
+        const userCreateToolRequest = {
+          toolName: toolName,
+          description: description,
+          username: username,
+          password: password
+        };
 
-        if (createdExample) {
-            this.showMessage(`Created ${createdExample.name}!`)
-        } else {
-            this.errorHandler("Error creating!  Try again...");
-        }
+        const createdTool = await this.client.createTool(userCreateToolRequest, this.errorHandler);
+      }
+
+    async handleAddUser(event) {
+        event.preventDefault();
+
+        const name = document.querySelector("#name").value;
+        const username = document.querySelector("#username").value;
+        const password = document.querySelector("#password").value;
+
+        const userCreateRequest = {
+          name: name,
+          username: username,
+          password: password
+        };
+
+        const createdUser = await this.client.createUser(userCreateRequest, this.errorHandler);
     }
+
 }
 
 /**

@@ -13,7 +13,7 @@ export default class ExampleClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['clientLoaded', 'getExample', 'createExample'];
+        const methodsToBind = ['clientLoaded', 'getExample', 'createExample', 'createUser', 'createTool'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -30,6 +30,25 @@ export default class ExampleClient extends BaseClass {
             this.props.onReady();
         }
     }
+
+    async createTool(userCreateToolRequest, errorCallback) {
+        try {
+          const response = await this.client.post(`/tool`, userCreateToolRequest);
+          return response.data;
+        } catch (error) {
+          this.handleError("createTool", error, errorCallback);
+        }
+      }
+
+    async createUser(userCreateRequest, errorCallback) {
+       try {
+         const response = await this.client.post(`/user`, userCreateRequest);
+         return response.data;
+       } catch (error) {
+         this.handleError("createUser", error, errorCallback);
+       }
+     }
+
 
     /**
      * Gets the concert for the given ID.
