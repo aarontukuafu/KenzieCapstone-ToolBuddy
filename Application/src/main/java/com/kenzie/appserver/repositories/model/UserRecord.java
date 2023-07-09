@@ -8,9 +8,7 @@ import java.util.Objects;
 import com.amazonaws.services.dynamodbv2.xspec.S;
 import org.springframework.data.annotation.Id;
 
-@DynamoDBTable(
-        tableName = "UserDatabase"
-)
+@DynamoDBTable(tableName = "UserDatabase")
 public class UserRecord {
     private String name;
     private String username;
@@ -37,9 +35,9 @@ public class UserRecord {
     }
 
     @DynamoDBAttribute(attributeName = "name")
-    public String getName() {return this.name;}
+    public String getName() {return name;}
 
-    public void setName(String userId) {
+    public void setName(String name) {
         this.name = name;
     }
 

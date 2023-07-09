@@ -11,14 +11,7 @@ import com.kenzie.appserver.service.UserService;
 import com.kenzie.appserver.service.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -49,16 +42,14 @@ public class UserController {
         UserResponse userResponse = userService.createNewUser(userCreateRequest);
 
         return ResponseEntity.created(URI.create("/user" + userResponse.getUsername())).body(userResponse);
-
-
-//        UserRecord record = new UserRecord();
-//        record.setName(user.getName());
-//        record.setUsername(user.getUsername());
-//        record.setPassword(user.getPassword());
-//        userRecordRepository.save(record);
-//        return ResponseEntity.ok(user);
     }
 
-
-
+    @DeleteMapping("/{username}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String username, @RequestParam String authUsername, @RequestParam String authPassword) {
+        if (!userService.authenticator(authUsername, authPassword) || !username.equals(authUsername)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized request");
+        }
+        userService.deleteUser(username);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -30,7 +30,7 @@ public class GetToolById implements RequestHandler<APIGatewayProxyRequestEvent, 
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
 
         try {
-            String toolId = input.getPathParameters().get("toolId");
+            String toolId = input.getPathParameters().get("toolid");
             ToolResponse toolResponse = toolService.getToolById(toolId);
             return response
                     .withStatusCode(200)
