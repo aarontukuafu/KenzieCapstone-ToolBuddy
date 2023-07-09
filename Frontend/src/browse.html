@@ -40,5 +40,30 @@
     </div>
 </div>
 
+<script>
+    window.addEventListener('DOMContentLoaded', async () => {
+        const examplePage = new ExamplePage();
+        examplePage.mount();
+
+        const tools = await examplePage.client.getAllTools();
+        const toolsContainer = document.querySelector('.card .tools-list');
+
+        if (toolsContainer && tools && tools.length > 0) {
+            tools.forEach(tool => {
+                const toolElement = document.createElement('div');
+                toolElement.innerHTML = `
+                    <div>ID: ${tool.id}</div>
+                    <div>Name: ${tool.name}</div>
+                    <div>Description: ${tool.description}</div>
+                    <br>
+                `;
+                toolsContainer.appendChild(toolElement);
+            });
+        } else {
+            toolsContainer.innerHTML = "No tools found.";
+        }
+    });
+</script>
+
 </body>
 </html>

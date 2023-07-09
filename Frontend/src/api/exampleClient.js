@@ -13,7 +13,7 @@ export default class ExampleClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['clientLoaded', 'getExample', 'createExample', 'createUser', 'createTool'];
+        const methodsToBind = ['createUser', 'createTool', 'getAllTools'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -31,6 +31,15 @@ export default class ExampleClient extends BaseClass {
         }
     }
 
+    async createUser(userCreateRequest, errorCallback) {
+        try {
+          const response = await this.client.post(`/user`, userCreateRequest);
+          return response.data;
+        } catch (error) {
+          this.handleError("createUser", error, errorCallback);
+        }
+      }
+
     async createTool(userCreateToolRequest, errorCallback) {
         try {
           const response = await this.client.post(`/tool`, userCreateToolRequest);
@@ -40,41 +49,15 @@ export default class ExampleClient extends BaseClass {
         }
       }
 
-    async createUser(userCreateRequest, errorCallback) {
-       try {
-         const response = await this.client.post(`/user`, userCreateRequest);
-         return response.data;
-       } catch (error) {
-         this.handleError("createUser", error, errorCallback);
-       }
-     }
-
-
-    /**
-     * Gets the concert for the given ID.
-     * @param id Unique identifier for a concert
-     * @param errorCallback (Optional) A function to execute if the call fails.
-     * @returns The concert
-     */
-    async getExample(id, errorCallback) {
+    async getAllTools() {
         try {
-            const response = await this.client.get(`/example/${id}`);
-            return response.data;
+          const response = await this.client.get(`/tools`);
+          return response.data;
         } catch (error) {
-            this.handleError("getExample", error, errorCallback)
+          this.handleError("getAllTools", error);
+          return null;
         }
-    }
-
-    async createExample(name, errorCallback) {
-        try {
-            const response = await this.client.post(`example`, {
-                name: name
-            });
-            return response.data;
-        } catch (error) {
-            this.handleError("createExample", error, errorCallback);
-        }
-    }
+      }
 
       initializeScrollListener() {
         window.addEventListener('scroll', function() {
