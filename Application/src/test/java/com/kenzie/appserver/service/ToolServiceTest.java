@@ -1,5 +1,6 @@
 package com.kenzie.appserver.service;
 
+import com.kenzie.appserver.config.CacheStore;
 import com.kenzie.appserver.repositories.ToolRepository;
 import com.kenzie.appserver.repositories.UserRecordRepository;
 import com.kenzie.appserver.repositories.model.ToolRecord;
@@ -35,10 +36,13 @@ public class ToolServiceTest {
     private ToolRepository toolRepository;
     @Mock
     private UserRecordRepository userRecordRepository;
+    @Mock
+    private CacheStore cache;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        toolService = new ToolService(toolRepository, userService, cache);
     }
 
     @Test
@@ -140,11 +144,60 @@ public class ToolServiceTest {
     }
     @Test
     public void addNewTool_isSuccessful() {
-        Mockito.when(userService.authenticator(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
-
+        String username = randomUUID().toString();
+        String password = randomUUID().toString();
         Tool tool = new Tool();
-        toolService.addNewTool(tool, "dude11", "password");
 
-//        Mockito.verify(tool, Mockito.times(1)).
+        when(userService.authenticator(username,password)).thenReturn(true);
+        toolService.addNewTool(tool,username, password);
+
+       verify(userService).authenticator(username,password);
+    }
+    @Test
+    public void addNewTool_fails() {
+        String username = randomUUID().toString();
+        String password = randomUUID().toString();
+        Tool tool = new Tool();
+
+        when(userService.authenticator(username,password)).thenReturn(false);
+        toolService.addNewTool(tool,username, password);
+
+        verify(userService).authenticator(username,password);
+    }
+    @Test
+    public void findByToolName_cacheExists() {
+        String toolName = "Mjolnir";
+        Tool cachedTool = new Tool(666, "Dude", toolName, true, "Cant lift", "Steve");
+        when(cache.get(toolName)).thenReturn(cachedTool);
+
+        Tool result = toolService.findByToolName(toolName);
+
+        Assertions.assertEquals(cachedTool, result);
+        verify(cache, never()).add(anyString(), any(Tool.class));
+        verify(toolRepository, never()).findById(anyString());
+    }
+//    @Test
+//    public void findToolName_backendExists() {
+//        String toolName = "Wrench";
+//        Tool backendTool = new Tool(111, "ManDude", toolName, true, "tool", "Bob");
+//        when(cache.get(toolName)).thenReturn(null);
+//        when(toolRepository.findById(toolName)).thenReturn(Optional.of(backendTool));
+//
+//        Tool result = toolService.findByToolName(toolName);
+//
+//        Assertions.assertEquals(backendTool, result);
+//        verify(cache).add(toolName, backendTool);
+//        verify(toolRepository).findById(toolName);
+//    }
+    @Test
+    public void findToolName_backendDoesNotExist() {
+        String toolName = "Disintegrator Ray";
+        when(cache.get(toolName)).thenReturn(null);
+        when(toolRepository.findById(toolName)).thenReturn(Optional.empty());
+
+        Tool result = toolService.findByToolName(toolName);
+
+        Assertions.assertNull(result);
+        verify(cache, never()).add(anyString(), any(Tool.class));
     }
 }
