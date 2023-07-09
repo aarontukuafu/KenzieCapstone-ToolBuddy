@@ -6,11 +6,14 @@ import javax.validation.constraints.NotEmpty;
 
 public class UserCreateRequest  {
     @JsonProperty("name")
-    private @NotEmpty String name;
+    @NotEmpty
+    private String name;
     @JsonProperty("username")
-    private @NotEmpty String username;
+    @NotEmpty
+    private String username;
     @JsonProperty("password")
-    private @NotEmpty String password;
+    @NotEmpty
+    private String password;
 
     public UserCreateRequest(){
     }
