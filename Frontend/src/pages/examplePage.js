@@ -75,21 +75,46 @@ class ExamplePage extends BaseClass {
         const createdTool = await this.client.createTool(userCreateToolRequest, this.errorHandler);
       }
 
-    async handleAddUser(event) {
-        event.preventDefault();
+  async handleAddTool(event) {
+    event.preventDefault();
 
-        const name = document.querySelector("#name").value;
-        const username = document.querySelector("#username").value;
-        const password = document.querySelector("#password").value;
+    const toolName = document.querySelector("#toolName").value;
+    const description = document.querySelector("#description").value;
+    const username = document.querySelector("#usernameTool").value;
+    const password = document.querySelector("#passwordTool").value;
 
-        const userCreateRequest = {
-          name: name,
-          username: username,
-          password: password
-        };
+    const userCreateToolRequest = {
+      toolName: toolName,
+      description: description,
+      username: username,
+      password: password
+    };
 
-        const createdUser = await this.client.createUser(userCreateRequest, this.errorHandler);
+    const createdTool = await this.client.createTool(userCreateToolRequest, this.errorHandler);
+    // Handle the response as needed
+  }
+
+  async renderExample() {
+    let resultArea = document.getElementById("result-info");
+
+    const tools = await this.client.getAllTools();
+
+    if (tools) {
+      // Display the tools in the result area
+      let toolsHtml = "";
+      tools.forEach(tool => {
+        toolsHtml += `
+          <div>ID: ${tool.id}</div>
+          <div>Name: ${tool.name}</div>
+          <div>Description: ${tool.description}</div>
+          <br>
+        `;
+      });
+      resultArea.innerHTML = toolsHtml;
+    } else {
+      resultArea.innerHTML = "No tools found.";
     }
+  }
 
 }
 
