@@ -100,12 +100,10 @@ public class UserService {
             return null;
         }
         UserResponse userResponse = new UserResponse();
-        userResponse.setName(userResponse.getName());
+        userResponse.setName(userRecord.getName());
         userResponse.setUsername(userRecord.getUsername());
         userResponse.setPassword(userRecord.getPassword());
 
         return userResponse;
     }
-
-
 }

@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 public class CacheConfig {
 
-     //Create a Cache here if needed
 
     @Bean
     public CacheStore myCache() {
