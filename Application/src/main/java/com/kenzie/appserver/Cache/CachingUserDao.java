@@ -30,4 +30,8 @@ public class CachingUserDao {
     public void invalidate(String username){
         userCache.invalidate(username);
     }
+
+    public void addToCache(UserRecord userRecord) {
+        userCache.put(userRecord.getUsername(), Optional.of(userRecord));
+    }
 }

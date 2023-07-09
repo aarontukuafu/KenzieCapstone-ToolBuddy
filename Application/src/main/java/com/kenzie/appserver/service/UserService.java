@@ -33,15 +33,28 @@ public class UserService {
     }
   
     public boolean authenticator(String username, String password) {
-        if (cache.findById(username).isPresent() &&
-                cache.findById(username).get().getPassword().equals(password)) {
+        Optional<UserRecord> userRecord = cache.findById(username);
+
+        if (!userRecord.isPresent()) {
+            userRecord = userRecordRepository.findById(username);
+            if (userRecord.isPresent()) {
+                cache.addToCache(userRecord.get());  // Add the user to the cache
+            }
+        }
+
+        if (userRecord.isPresent() && userRecord.get().getPassword().equals(password)) {
             return true;
+        }
+        return false;
+//        if (cache.findById(username).isPresent() &&
+//                cache.findById(username).get().getPassword().equals(password)) {
+//            return true;
 //        } else if (username.isEmpty()) {
 //            throw new IllegalArgumentException("Username cannot be empty. Please enter username again");
 //        } else if (!userResponse.getPassword().equals(userRecord.getPassword())) {
 //            throw new IllegalArgumentException("Password does not match. Please re-enter password.");
-        }
-        return false;
+//    }
+//        return false;
     }
 
 //    public User createNewUser(User user) {
@@ -57,7 +70,7 @@ public class UserService {
         UserRecord userRecord = toUserRecord(userCreateRequest);
 
         userRecordRepository.save(userRecord);
-        cache.invalidate(userRecord.getUsername());
+        cache.addToCache(userRecord);
 
         return toUserResponseFromRecord(userRecord);
     }
@@ -68,11 +81,16 @@ public class UserService {
         return userRecord.map(this::toUserResponseFromRecord).orElse(null);
     }
 
+    public void deleteUser(String username) {
+        userRecordRepository.deleteById(username);
+        cache.invalidate(username); // Remove the user from the cache
+    }
+
     private UserRecord toUserRecord(UserCreateRequest userCreateRequest) {
         UserRecord userRecord = new UserRecord();
         userRecord.setName(userCreateRequest.getName());
-        userRecord.setUsername(userRecord.getUsername());
-        userRecord.setPassword(userRecord.getPassword());
+        userRecord.setUsername(userCreateRequest.getUsername());
+        userRecord.setPassword(userCreateRequest.getPassword());
 
         return userRecord;
     }
