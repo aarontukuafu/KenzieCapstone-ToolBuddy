@@ -7,6 +7,7 @@ import com.kenzie.appserver.controller.model.BorrowToolRequest;
 //import com.kenzie.appserver.controller.model.CreateToolRequest;
 //import com.kenzie.appserver.repositories.ToolRepository;
 import com.kenzie.appserver.controller.model.UserCreateToolRequest;
+import com.kenzie.appserver.controller.model.UserResponse;
 import com.kenzie.appserver.repositories.UserRecordRepository;
 //import com.kenzie.appserver.repositories.model.ToolRecord;
 import com.kenzie.appserver.repositories.model.UserRecord;
@@ -56,9 +57,9 @@ public class ToolController {
 
     @GetMapping("/owner/{ownerId}")
     public ResponseEntity<List<ToolResponse>> getAllToolsByOwnerId(@PathVariable String ownerId) {
-        Optional<UserRecord> userRecord = userRecordRepository.findById(ownerId);
+        UserResponse userRecord = userService.getUser(ownerId);
 
-        if (userRecord.isPresent()) {
+        if (userRecord != null) {
 
             List<Tool> allTools = toolService.getAllToolsByOwnerId(ownerId);
 
