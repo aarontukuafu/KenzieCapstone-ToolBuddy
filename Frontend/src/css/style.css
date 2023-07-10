@@ -21,8 +21,8 @@
 
 .color-background {
   font-family: 'myFont', sans-serif;
-  background-color: #F5F5F5; /* Replace with your desired color */
-  padding: 20px; /* Adjust the padding as needed */
+  background-color: #F5F5F5;
+  padding: 20px;
   width: 150%;
   height: 300px;
   border-radius: 10px;
