@@ -57,24 +57,6 @@ class ExamplePage extends BaseClass {
         }
     }
 
-    async handleAddTool(event) {
-        event.preventDefault();
-
-        const toolName = document.querySelector("#toolName").value;
-        const description = document.querySelector("#description").value;
-        const username = document.querySelector("#usernameTool").value;
-        const password = document.querySelector("#passwordTool").value;
-
-        const userCreateToolRequest = {
-          toolName: toolName,
-          description: description,
-          username: username,
-          password: password
-        };
-
-        const createdTool = await this.client.createTool(userCreateToolRequest, this.errorHandler);
-      }
-
   async handleAddTool(event) {
     event.preventDefault();
 
@@ -93,6 +75,23 @@ class ExamplePage extends BaseClass {
     const createdTool = await this.client.createTool(userCreateToolRequest, this.errorHandler);
     // Handle the response as needed
   }
+
+    async handleAddUser(event) {
+        event.preventDefault();
+
+        const name = document.querySelector("#name").value;
+        const username = document.querySelector("#username").value;
+        const password = document.querySelector("#password").value;
+
+        const userCreateRequest = {
+            name: name,
+            username: username,
+            password: password
+        };
+
+        const createdUser = await this.client.createUser(userCreateRequest, this.errorHandler);
+
+    }
 
   async renderExample() {
     let resultArea = document.getElementById("result-info");
