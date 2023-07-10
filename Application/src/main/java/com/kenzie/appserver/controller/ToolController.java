@@ -4,10 +4,12 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.kenzie.appserver.controller.model.BorrowToolRequest;
-import com.kenzie.appserver.controller.model.CreateToolRequest;
-import com.kenzie.appserver.repositories.ToolRepository;
+//import com.kenzie.appserver.controller.model.CreateToolRequest;
+//import com.kenzie.appserver.repositories.ToolRepository;
+import com.kenzie.appserver.controller.model.UserCreateToolRequest;
+import com.kenzie.appserver.controller.model.UserResponse;
 import com.kenzie.appserver.repositories.UserRecordRepository;
-import com.kenzie.appserver.repositories.model.ToolRecord;
+//import com.kenzie.appserver.repositories.model.ToolRecord;
 import com.kenzie.appserver.repositories.model.UserRecord;
 import com.kenzie.appserver.service.UserService;
 
@@ -21,6 +23,7 @@ import com.kenzie.capstone.service.model.ToolResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/tools")
@@ -28,14 +31,15 @@ public class ToolController {
 
     private final LambdaServiceClient toolService;
     private UserRecordRepository userRecordRepository;
-    private ToolRepository toolRepository;
+//    private ToolRepository toolRepository;
 
     private UserRecord userRecord;
-    private ToolRecord toolRecord;
+    //    private ToolRecord toolRecord;
     private UserService userService;
 
-    ToolController(LambdaServiceClient toolService) {
+    ToolController(LambdaServiceClient toolService, UserService userService) {
         this.toolService = toolService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -51,13 +55,13 @@ public class ToolController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{owner}")
-    public ResponseEntity<List<ToolResponse>> getAllToolsByOwnerId(@PathVariable String owner) {
-        Optional<UserRecord> userRecord = userRecordRepository.findById(owner);
+    @GetMapping("/owner/{ownerId}")
+    public ResponseEntity<List<ToolResponse>> getAllToolsByOwnerId(@PathVariable String ownerId) {
+        UserResponse userRecord = userService.getUser(ownerId);
 
-        if (userRecord.isPresent()) {
+        if (userRecord != null) {
 
-            List<Tool> allTools = toolService.getAllToolsByOwnerId(owner);
+            List<Tool> allTools = toolService.getAllToolsByOwnerId(ownerId);
 
             List<ToolResponse> toolResponses = new ArrayList<>();
             for (Tool tool : allTools) {
@@ -69,37 +73,65 @@ public class ToolController {
         return ResponseEntity.badRequest().build(); //Use frontend to display message to User
     }
 
+    @GetMapping("/tool/{toolId}")
+    public ResponseEntity<ToolResponse> getToolById(@PathVariable String toolId) {
+        Tool tool = toolService.getToolById(toolId);
+        if (tool == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(createToolResponse(tool));
+    }
+
     @PostMapping("/tools")
-    public ResponseEntity<ToolResponse> addNewTool(@RequestBody Tool tool, @RequestParam String username, @RequestParam String password) {
-        if (userService.authenticator(username, password)) {
-            Tool createdTool = toolService.addNewTool(tool);
+    public ResponseEntity<ToolResponse> addNewTool(@RequestBody UserCreateToolRequest userCreateToolRequest) {
+        if (userService.authenticator(userCreateToolRequest.getUsername(), userCreateToolRequest.getPassword())) {
+            Tool createdTool = toolService.addNewTool(new Tool(UUID.randomUUID().toString(),
+                    userCreateToolRequest.getUsername(),
+                    userCreateToolRequest.getToolName(),
+                    true,
+                    userCreateToolRequest.getDescription(),
+                    null));
             return ResponseEntity.ok().body(this.createToolResponse(createdTool));
         } else {
             return ResponseEntity.badRequest().build();
         }
     }
 
-//    @PutMapping("/borrowTool") //Switched to Put
-//    public ResponseEntity<ToolResponse> borrowTool(@RequestBody BorrowToolRequest borrowToolRequest) {
-//        Tool tool = toolService.borrowTool(borrowToolRequest.getToolId(), borrowToolRequest.getUsername(), borrowToolRequest.getPassword());
-//        if ( tool == null){
-//            return ResponseEntity.badRequest().build();
-//        } else return ResponseEntity.ok(createToolResponse(tool));
-//    }
+    @PutMapping("/borrowTool") //Switched to Put //Need Return Method
+    public ResponseEntity<ToolResponse> borrowTool(@RequestBody BorrowToolRequest borrowToolRequest) {
+        if (userService.authenticator(borrowToolRequest.getUsername(), borrowToolRequest.getPassword())) {
+            //user is valid
+            //What tool do the want to borrow? hint hint getToolById
+            Tool tool = toolService.getToolById(borrowToolRequest.getToolId());
 
-    @PutMapping("/{toolId}/borrow")
-    public ResponseEntity<ToolResponse> borrowTool(@PathVariable String toolId, @RequestParam String borrower, @RequestParam String username, @RequestParam String password) {
-        if (userService.authenticator(username, password)) {
-            Tool borrowedTool = toolService.borrowTool(toolId, borrower);
-            return ResponseEntity.ok().body(this.createToolResponse(borrowedTool));
+            //if tool is not Null && isAvailable is True THEN call borrow method with correct user and correct tool
+            if (tool != null && tool.getIsAvailable()) {
+                tool = toolService.borrowTool(borrowToolRequest.getToolId(), borrowToolRequest.getUsername());
+                return ResponseEntity.ok(createToolResponse(tool));
+            } else {
+                // The tool is either not found or not available.
+                return ResponseEntity.badRequest().build();
+            }
         } else {
+            // Invalid user credentials
             return ResponseEntity.badRequest().build();
         }
     }
 
+//    @PutMapping("/{toolId}/borrow")
+////    public ResponseEntity<ToolResponse> borrowTool(@PathVariable String toolId, @RequestParam String borrower, @RequestParam String username, @RequestParam String password) {
+////        if (userService.authenticator(username, password)) {
+////            Tool borrowedTool = toolService.borrowTool(toolId, borrower);
+////            return ResponseEntity.ok().body(this.createToolResponse(borrowedTool));
+////        } else {
+////            return ResponseEntity.badRequest().build();
+////        }
+////    }
+
 
     @DeleteMapping("/toolId")
-    public ResponseEntity<Void> removeTool(@PathVariable String toolId, @RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Void> removeTool(@PathVariable String toolId, @RequestParam String
+            username, @RequestParam String password) {
         if (userService.authenticator(username, password)) {
             toolService.deleteTool(toolId);
             return ResponseEntity.noContent().build();
@@ -120,3 +152,4 @@ public class ToolController {
         return toolResponse;
     }
 }
+

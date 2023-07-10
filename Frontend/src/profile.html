@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" type="text/css" href="/css/profilePage.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="./pages/examplePage.js"></script>
+</head>
+
+<body class="background">
+
+<header class="header" id="header">
+    <div class="site-title">
+        <a class="header_home" href="index.html">
+            <img src="/images/Tool_logo.PNG" alt="Logo" class="logo-image">
+            <img src="/images/name.png" alt="name" class="brandName">
+
+        </a>
+    </div>
+    <nav>
+        <a href="index.html" class="header_nav_link">Home</a>
+        <a href="browse.html" class="header_nav_link">Browse</a>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="vertical-card">
+        <h2>Profile</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus varius tellus sed ligula rutrum venenatis.</p>
+        <p>Nullam auctor, neque eu fermentum pharetra, ipsum quam iaculis mauris, sed efficitur mi tellus sed turpis.</p>
+        <p>Praesent eu dui feugiat, pretium lectus sed, volutpat risus.</p>
+        <div class="card-list">
+            <div class="card-item">
+                <h3>Rented</h3>
+            </div>
+            <div class="card-item">
+                <h3>Add to Catalog</h3>
+            </div>
+            <div class="card-item">
+                <h3>All Tools</h3>
+            </div>
+            <div class="card-item">
+                <h3>Create User info</h3>
+                <form>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="card-item">
+                <h3>Add a Tool</h3>
+                <form>
+                    <label for="toolName">Tool:</label>
+                    <input type="text" id="toolName" name="tool" required>
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" required>
+                    <label for="username">Username:</label>
+                    <input type="text" id="usernameTool" name="username" required>
+                    <label for="password">Password:</label>
+                    <input type="password" id="passwordTool" name="password" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <div class="card">
+        <h2>My Tools</h2>
+    </div>
+</div>
+
+
+</body>
+
+</html>

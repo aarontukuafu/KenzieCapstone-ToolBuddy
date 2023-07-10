@@ -4,15 +4,14 @@ import com.kenzie.capstone.service.converter.ToolConverter;
 import com.kenzie.capstone.service.dao.ToolDao;
 
 import com.kenzie.capstone.service.model.CreateToolRequest;
-import com.kenzie.capstone.service.model.Tool;
 import com.kenzie.capstone.service.model.ToolRecord;
 import com.kenzie.capstone.service.model.ToolResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class ToolService {
@@ -26,12 +25,21 @@ public class ToolService {
         this.toolDao = toolDao;
     }
 
-    public List<ToolRecord> getAllTools() {
-        return toolDao.getAllTools();
+    public List<ToolResponse> getAllTools() {
+        List<ToolRecord> toolRecords = toolDao.getAllTools();
+        List<ToolResponse> toolResponses = toolRecords.stream()
+                .map(ToolConverter::fromRecordToResponse)
+                .collect(Collectors.toList());
+        return toolResponses;
     }
 
     public List<ToolRecord> getAllToolsByOwnerId(String owner) {
         return toolDao.getAllToolsByOwnerId(owner);
+    }
+
+    public ToolResponse getToolById(String toolId) {
+        ToolRecord toolRecord = toolDao.getToolById(toolId);
+        return ToolConverter.fromRecordToResponse(toolRecord);
     }
 
     public ToolResponse addNewTool(CreateToolRequest toolRequest) {
@@ -44,8 +52,9 @@ public class ToolService {
         return toolDao.borrowTool(toolId, borrower);
     }
 
-    public void removeTool(String toolId) {
+    public ToolRecord removeTool(String toolId) {
         toolDao.removeTool(toolId);
+        return null;
     }
 
 

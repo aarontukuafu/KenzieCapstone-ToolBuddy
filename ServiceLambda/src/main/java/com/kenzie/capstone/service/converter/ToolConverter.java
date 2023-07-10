@@ -1,9 +1,8 @@
 package com.kenzie.capstone.service.converter;
 
-import com.kenzie.capstone.service.model.CreateToolRequest;
-import com.kenzie.capstone.service.model.ToolRecord;
-import com.kenzie.capstone.service.model.ToolResponse;
+import com.kenzie.capstone.service.model.*;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -31,4 +30,28 @@ public class ToolConverter {
         toolResponse.setBorrower(toolRecord.getBorrower());
         return toolResponse;
     }
+
+    public static CreateToolRequest fromToolToRequest(Tool tool) {
+        CreateToolRequest createToolRequest = new CreateToolRequest();
+        createToolRequest.setToolId(tool.getToolId());
+        createToolRequest.setOwner(tool.getOwner());
+        createToolRequest.setToolName(tool.getToolName());
+        createToolRequest.setIsAvailable(tool.getIsAvailable());
+        createToolRequest.setDescription(tool.getDescription());
+        createToolRequest.setComments(tool.getComments());
+        createToolRequest.setBorrower(tool.getBorrower());
+        return createToolRequest;
+    }
+
+    /*public static ToolRecordResponse fromRequestToToolRecord(List<ToolRecord> toolRecordList, CreateToolRecordRequest createToolRecordRequest) {
+        ToolRecordResponse toolRecordResponse = new ToolRecordResponse();
+        toolRecordResponse.setToolId(createToolRecordRequest.g);
+        toolRecordResponse.setOwner(createToolRecordRequest.getOwner());
+        toolRecordResponse.setToolName(createToolRecordRequest.getToolName());
+        toolRecordResponse.setIsAvailable(createToolRecordRequest.getIsAvailable());
+        toolRecordResponse.setDescription(createToolRecordRequest.getDescription());
+        toolRecordResponse.setBorrower(createToolRecordRequest.getBorrower());
+        //toolRecordResponse.add(toolRecordResponse);
+        return toolRecordResponse;
+    }*/
 }

@@ -6,9 +6,9 @@ import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import com.google.common.collect.ImmutableMap;
 import com.kenzie.capstone.service.model.ExampleData;
 import com.kenzie.capstone.service.model.ExampleRecord;
-import com.kenzie.capstone.service.model.Tool;
 import com.kenzie.capstone.service.model.ToolRecord;
 
+import javax.tools.Tool;
 import java.util.List;
 
 public class ToolDao {
@@ -34,11 +34,26 @@ public class ToolDao {
         toolRecord.setOwner(ownerId);
 
         DynamoDBQueryExpression<ToolRecord> queryExpression = new DynamoDBQueryExpression<ToolRecord>()
-                .withIndexName("owner")
+                .withIndexName("OwnerIndex")
                 .withHashKeyValues(toolRecord)
                 .withConsistentRead(false);
 
         return mapper.query(ToolRecord.class, queryExpression);
+    }
+
+    public ToolRecord getToolById(String toolId) {
+        ToolRecord toolRecord = new ToolRecord();
+        toolRecord.setToolId(toolId);
+
+        DynamoDBQueryExpression<ToolRecord> queryExpression = new DynamoDBQueryExpression<ToolRecord>()
+                .withHashKeyValues(toolRecord)
+                .withConsistentRead(false);
+
+        List<ToolRecord> toolRecords = mapper.query(ToolRecord.class, queryExpression);
+         if (toolRecords.size() > 0) {
+             return toolRecords.get(0);
+         }
+         else return null;
     }
 
     public ToolRecord addNewTool(ToolRecord toolRecord) {
