@@ -1,3 +1,4 @@
+
 //package com.kenzie.appserver.service;
 //
 //import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
@@ -119,16 +120,4 @@
 //        }
 //    }
 //
-//    public Tool borrowTool(String toolId, String borrower, String password) {
-//        if (toolRepository.existsById(toolId) && userService.authenticator(borrower, password)) {
-//            ToolRecord toolRecord = toolRepository.findById(toolId).get();
-//            if (toolRecord.getIsAvailable()) {
-//                toolRecord.setIsAvailable(false);
-//                toolRecord.setBorrower(borrower);
-//                toolRepository.save(toolRecord);
-//                return convertToTool(toolRecord);
-//            }
-//        }
-//        return null;
-//    }
-//}
+

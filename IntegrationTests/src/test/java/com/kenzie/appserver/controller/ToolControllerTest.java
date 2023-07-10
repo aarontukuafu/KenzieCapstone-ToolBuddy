@@ -1,34 +1,13 @@
 package com.kenzie.appserver.controller;
 
+import com.amazonaws.services.dynamodbv2.xspec.M;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kenzie.appserver.IntegrationTest;
-import net.andreinc.mockneat.MockNeat;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.module.SimpleModule;
-import org.testcontainers.shaded.com.github.dockerjava.core.MediaType;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 
-@IntegrationTest
-class ToolControllerTest {
-    @Autowired
-    private MockMvc mvc;
+import com.kenzie.appserver.service.ToolService;
+import com.kenzie.appserver.service.UserService;
+import com.kenzie.appserver.service.model.Tool;
 
     @InjectMocks
     ToolController toolController;
@@ -76,36 +55,66 @@ class ToolControllerTest {
 //
 //    @Test
 //    public void getTool_ToolExists() throws Exception {
+
 //        Random random = new Random();
-//
-//        int id = random.nextInt();
+//        int toolId = random.nextInt();
 //        String owner = mockNeat.strings().valStr();
 //        String toolName = mockNeat.strings().valStr();
-//        boolean isAvailable = true;
 //        String description = mockNeat.strings().valStr();
 //        String borrower = mockNeat.strings().valStr();
 //
-//        Tool tool = new Tool(id, owner, toolName, isAvailable, description, borrower);
-//        Tool existingTool = toolService.addNewTool(tool);
+//        String user = UUID.randomUUID().toString();
+//        String password = UUID.randomUUID().toString();
 //
-//        mapper.registerModule(new SimpleModule());
-//        //WHEN
-//        mvc.perform(get("/tools/{toolId}", existingTool.getToolId())
-//                        .accept(MediaType.APPLICATION_JSON))
-//                //THEN
-//                .andExpect(jsonPath("id")
-//                        .value(is(id)))
-//                .andExpect(jsonPath("owner")
-//                        .value(is(owner)))
-//                .andExpect(jsonPath("toolName")
-//                        .value(is(toolName)))
-//                .andExpect(jsonPath("isAvailable")
-//                        .value(is(false)))
-//                .andExpect(jsonPath("description")
-//                        .value(is(description)))
-//                .andExpect(jsonPath("borrower")
-//                        .value(is(borrower)))
-//                .andExpect(status().isOk());
+//        Tool tool = new Tool(toolId, owner, toolName, true, description, borrower);
+//
+//        Mockito.when(userService.authenticator(user, password)).thenReturn(true);
+//        Mockito.when(toolService.findByToolName(toolName)).thenReturn(tool);
+//
+//        mvc.perform(delete("/toolId")
+//                .param("toolId", String.valueOf(toolId))
+//                .param("user", user)
+//                .param("password", password))
+//                .andExpect(status().isNoContent());
+//
+//        Mockito.verify(toolService, Mockito.times(1)).removeTool(tool,user, password);
+//    }
+//    @Test
+//    public void removeTool_IncorrectUser() throws Exception {
+//        Random random = new Random();
+//        int toolId = random.nextInt();
+//        String owner = mockNeat.strings().valStr();
+//        String toolName = mockNeat.strings().valStr();
+//        String description = mockNeat.strings().valStr();
+//        String borrower = mockNeat.strings().valStr();
+//
+//        String user = UUID.randomUUID().toString();
+//        String password = UUID.randomUUID().toString();
+//
+//        Tool tool = new Tool(toolId, owner, toolName, true, description, borrower);
+//
+//        Mockito.when(userService.authenticator(user, password)).thenReturn(true);
+//
+//        mvc.perform(delete("/toolId")
+//                        .param("toolId", String.valueOf(toolId))
+//                        .param("user", user)
+//                        .param("password", password))
+//                .andExpect(status().isBadRequest());
+//
+//        Mockito.verify(toolService, Mockito.never()).removeTool(Mockito.any(Tool.class),
+//                Mockito.anyString(), Mockito.anyString());
+//    }
+//    @Test
+//    public void addNewTool_Successful() throws Exception {
+//        Mockito.when(userService.authenticator(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+//
+//        String request = "{\"name\" : \"Tool Name\"}";
+//
+//        mvc.perform(MockMvcRequestBuilders.post("/tools")
+//                .param("username", "testUser")
+//                .param("password", "testPassword")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(request))
+//                .andExpect(MockMvcResultMatchers.status().isOk());
 //    }
 }
-

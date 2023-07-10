@@ -13,7 +13,7 @@ export default class ExampleClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['createUser', 'createTool', 'getAllTools'];
+        const methodsToBind = ['createUser', 'createTool', 'getAllTools', 'getToolsByOwnerId'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -120,6 +120,16 @@ export default class ExampleClient extends BaseClass {
             backgroundImage.style.opacity = '0';
           }
         });
+      }
+
+      async getToolsByOwnerId(ownerId) {
+          try {
+            const response = await this.client.get(`/tools/owner/${ownerId}`);
+            return response.data;
+          } catch (error) {
+            this.handleError("getToolsByOwnerId", error);
+            return null;
+          }
       }
 
     /**
