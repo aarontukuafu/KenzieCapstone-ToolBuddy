@@ -5,21 +5,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kenzie.appserver.IntegrationTest;
 
 
-import com.kenzie.appserver.service.ToolService;
-import com.kenzie.appserver.service.UserService;
-import com.kenzie.appserver.service.model.Tool;
+//import com.kenzie.appserver.service.ToolService;
+//import com.kenzie.appserver.service.UserService;
+//import com.kenzie.appserver.service.model.Tool;
 
-    @InjectMocks
-    ToolController toolController;
-
-    private final MockNeat mockNeat = MockNeat.threadLocal();
-
-    private final ObjectMapper mapper = new ObjectMapper();
-
-    @BeforeEach
-    public void setUp() {
-        mvc = MockMvcBuilders.standaloneSetup(toolController).build();
-    }
+//    @InjectMocks
+//    ToolController toolController;
+//
+//    private final MockNeat mockNeat = MockNeat.threadLocal();
+//
+//    private final ObjectMapper mapper = new ObjectMapper();
+//
+//    @BeforeEach
+//    public void setUp() {
+//        mvc = MockMvcBuilders.standaloneSetup(toolController).build();
+//    }
 
 //    @Test
 //    public void viewAllTools_showsList() throws Exception {
@@ -117,4 +117,4 @@ import com.kenzie.appserver.service.model.Tool;
 //                .content(request))
 //                .andExpect(MockMvcResultMatchers.status().isOk());
 //    }
-}
+//}

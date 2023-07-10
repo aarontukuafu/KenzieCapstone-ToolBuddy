@@ -136,7 +136,7 @@ public class ToolController {
         toolResponse.setToolName(tool.getToolName());
         toolResponse.setIsAvailable(tool.getIsAvailable());
         toolResponse.setDescription(tool.getDescription());
-        toolResponse.setComments(tool.getComments());
+//        toolResponse.setComments(tool.getComments());
         toolResponse.setBorrower(tool.getBorrower());
         return toolResponse;
     }
