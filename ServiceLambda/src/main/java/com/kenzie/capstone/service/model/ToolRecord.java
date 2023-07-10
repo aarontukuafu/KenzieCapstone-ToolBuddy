@@ -44,7 +44,7 @@ public class ToolRecord {
         this.toolId = toolId;
     }
 
-    @DynamoDBIndexHashKey(globalSecondaryIndexName = "owner")
+    @DynamoDBIndexHashKey(globalSecondaryIndexName = "OwnerIndex")
     public String getOwner() {
         return owner;
     }

@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <script type="text/javascript" src="examplePage.js" defer></script>
+    <script type="text/javascript" src="./pages/examplePage.js" defer></script>
     <title>My Web Page</title>
 </head>
 
@@ -15,35 +16,37 @@
 <header class="header" id="header">
     <div class="site-title">
         <a href="index.html" class="header_home">
-            <img src="./images/Tool_logo.PNG" alt="Logo" class="logo-image">
-            <img src="./images/name.png" alt="Site Name" class="brandName">
+            <img src="/images/Tool_logo.PNG" alt="Logo" class="logo-image">
+            <img src="/images/name.png" alt="Site Name" class="brandName">
         </a>
     </div>
 </header>
 
 <main class="container">
     <div class="photo-container">
-        <img src="./images/Main_logo.png" alt="Main Logo" class="centered-image">
+        <img src="/images/Main_logo.PNG" alt="Main Logo" class="centered-image">
     </div>
 
     <div class="card">
         <h2>Directory</h2>
         <p>Card content goes here.</p>
         <div class="button-container">
-            <button class="card-button">Browse</button>
-            <a href="profile.html"><button class="card-button">Profile</button></a>
+            <a href="./browse.html"><button class="card-button">Browse</button></a>
+            <a href="./profile.html"><button class="card-button">Profile</button></a>
         </div>
     </div>
+
+    <div class="background-image"></div>
 
     <div class="color-background">
         <h2>Tools at Your Disposal!</h2>
         <div class="image-container">
-            <img src="./images/handtools.jpg" alt="hand" class="hand-tool">
-            <img src="./images/powertool.jpg" alt="power" class="power-tool">
-            <img src="./images/shovel.jpg" alt="shovel" class="gardening-tool">
+            <a href="./browse.html"><img src="/images/handtools.jpg" alt="hand" class="hand-tool"></a>
+            <a href="./browse.html"><img src="/images/powertool.jpg" alt="power" class="power-tool"></a>
+            <a href="./browse.html"><img src="/images/shovel.jpg" alt="shovel" class="gardening-tool"></a>
         </div>
     </div>
-
+    <img src="/images/toolbackground.jpg" alt="Background Image" class="background-image">
     <div class="card">
         <div class="card-content">
             <p class="sentence">
@@ -60,4 +63,3 @@
 </body>
 
 </html>
-

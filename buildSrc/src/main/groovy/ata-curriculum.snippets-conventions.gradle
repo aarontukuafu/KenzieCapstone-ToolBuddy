@@ -3,7 +3,7 @@ plugins {
   id 'maven-publish'
   id 'com.github.spotbugs'
   id 'checkstyle'
-  id 'jacoco'
+  //id 'jacoco'
 }
 
 def brazilOutputDir = "${buildDir}/private/"
@@ -26,15 +26,15 @@ test {
     exceptionFormat = 'full'
     events "passed", "skipped", "failed"
   }
-  finalizedBy jacocoTestReport // report is always generated after tests run
+  //finalizedBy jacocoTestReport // report is always generated after tests run
 }
-jacocoTestReport {
-  dependsOn test // tests are required to run before generating the report
-  reports {
-    xml.enabled true
-    html.enabled true
-  }
-}
+// jacocoTestReport {
+//   dependsOn test // tests are required to run before generating the report
+//   reports {
+//     xml.enabled true
+//     html.enabled true
+//   }
+// }
 
 /*
  Custom task for running 'check' task. The presence of this task in the taskGraph is used to turn on failures.

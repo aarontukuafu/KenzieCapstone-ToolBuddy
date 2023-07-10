@@ -10,10 +10,9 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 public class CacheConfig {
 
-    // Create a Cache here if needed
 
-//    @Bean
-//    public CacheStore myCache() {
-//        return new CacheStore(120, TimeUnit.SECONDS);
-//    }
+    @Bean
+    public CacheStore myCache() {
+        return new CacheStore(18, TimeUnit.HOURS);
+    }
 }

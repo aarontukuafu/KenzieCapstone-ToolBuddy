@@ -37,8 +37,9 @@ public class GetAllToolsByOwnerId implements RequestHandler<APIGatewayProxyReque
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
 
         try {
-            CreateToolRecordRequest createToolRecordRequest = jsonStringToolRecordConverter.convert(input.getBody());
-            List<ToolRecord> toolResponse = toolService.getAllToolsByOwnerId(createToolRecordRequest.toString());
+            //CreateToolRecordRequest createToolRecordRequest = jsonStringToolRecordConverter.convert(input.getBody());
+            String owner = input.getPathParameters().get("ownerid");
+            List<ToolRecord> toolResponse = toolService.getAllToolsByOwnerId(owner);
             return response
                     .withStatusCode(200)
                     .withBody(gson.toJson(toolResponse));
