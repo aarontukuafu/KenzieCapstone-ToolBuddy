@@ -33,11 +33,25 @@ module.exports = {
       filename: 'index.html',
       inject: false
     }),
+    new HtmlWebpackPlugin({
+      template: './src/browse.html',
+      filename: 'browse.html',
+      inject: false
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/profile.html',
+      filename: 'profile.html',
+      inject: false
+    }),
     new CopyPlugin({
       patterns: [
         {
           from: path.resolve('src/css'),
           to: path.resolve("dist/css")
+        },
+        {
+          from: path.resolve('src/images'),
+          to: path.resolve("dist/images")
         }
       ]
     }),
