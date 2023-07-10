@@ -15,7 +15,6 @@ public class ToolRecord {
     private String toolName;
     private boolean isAvailable;
     private String description;
-    private List<String> comments;
     private String borrower;
 
     public ToolRecord() {
@@ -79,15 +78,6 @@ public class ToolRecord {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @DynamoDBAttribute
-    public List<String> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<String> comments) {
-        this.comments = comments;
     }
 
     @DynamoDBAttribute
