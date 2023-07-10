@@ -118,17 +118,6 @@ public class ToolController {
         }
     }
 
-//    @PutMapping("/{toolId}/borrow")
-////    public ResponseEntity<ToolResponse> borrowTool(@PathVariable String toolId, @RequestParam String borrower, @RequestParam String username, @RequestParam String password) {
-////        if (userService.authenticator(username, password)) {
-////            Tool borrowedTool = toolService.borrowTool(toolId, borrower);
-////            return ResponseEntity.ok().body(this.createToolResponse(borrowedTool));
-////        } else {
-////            return ResponseEntity.badRequest().build();
-////        }
-////    }
-
-
     @DeleteMapping("/toolId")
     public ResponseEntity<Void> removeTool(@PathVariable String toolId, @RequestParam String
             username, @RequestParam String password) {
