@@ -4,14 +4,12 @@ import com.kenzie.capstone.service.converter.ToolConverter;
 import com.kenzie.capstone.service.dao.ToolDao;
 
 import com.kenzie.capstone.service.model.CreateToolRequest;
-import com.kenzie.capstone.service.model.Tool;
 import com.kenzie.capstone.service.model.ToolRecord;
 import com.kenzie.capstone.service.model.ToolResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,8 +52,9 @@ public class ToolService {
         return toolDao.borrowTool(toolId, borrower);
     }
 
-    public void removeTool(String toolId) {
+    public ToolRecord removeTool(String toolId) {
         toolDao.removeTool(toolId);
+        return null;
     }
 
 
