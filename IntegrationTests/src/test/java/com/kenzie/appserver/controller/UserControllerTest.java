@@ -94,7 +94,7 @@ public class UserControllerTest {
 
         // WHEN
         // THEN
-        MvcResult result = mvc.perform(delete("/user/{username}", username)
+        mvc.perform(delete("/user/{username}", username)
                         .param("authUsername", authUsername)
                         .param("authPassword", authPassword))
                 //.andExpect(status().isNoContent())
