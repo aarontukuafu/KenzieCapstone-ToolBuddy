@@ -13,7 +13,7 @@ export default class ExampleClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['createUser', 'createTool', 'getAllTools'];
+        const methodsToBind = ['createUser', 'createTool', 'getAllTools', 'getToolsByOwnerId'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -59,6 +59,50 @@ export default class ExampleClient extends BaseClass {
         }
       }
 
+    async getAllToolsByOwnerId(ownerId) {
+        try {
+            const response = await this.client.get(`/owner/${ownerId}`);
+            return response.data;
+        } catch (error) {
+            this.handleError("getAllToolsByOwnerId", error);
+            return null;
+        }
+    }
+
+    // async getToolById(toolId) {
+    //     try {
+    //         const response = await this.client.get(`/tool/${toolId}`);
+    //         return response.data;
+    //     } catch (error) {
+    //         this.handleError("getToolById", error);
+    //         return null;
+    //     }
+    // }
+
+    async borrowTool(borrowToolRequest, errorCallback) {
+        try {
+            const response = await this.client.put(`/borrowTool`, borrowToolRequest);
+            return response.data;
+        } catch (error) {
+            this.handleError("borrowTool", error, errorCallback);
+        }
+    }
+
+    // async deleteTool(toolId, username, password, errorCallback) {
+    //     try {
+    //         const response = await this.client.delete(`/toolId`, {
+    //             params: {
+    //                 username: username,
+    //                 password: password
+    //             }
+    //         });
+    //         return response.data;
+    //     } catch (error) {
+    //         this.handleError("deleteTool", error, errorCallback);
+    //     }
+    // }
+
+
       initializeScrollListener() {
         window.addEventListener('scroll', function() {
           var backgroundImage = document.querySelector('.background-image');
@@ -78,8 +122,19 @@ export default class ExampleClient extends BaseClass {
         });
       }
 
+      async getToolsByOwnerId(ownerId) {
+          try {
+            const response = await this.client.get(`/tools/owner/${ownerId}`);
+            return response.data;
+          } catch (error) {
+            this.handleError("getToolsByOwnerId", error);
+            return null;
+          }
+      }
+
     /**
      * Helper method to log the error and run any error functions.
+     * @param method
      * @param error The error received from the server.
      * @param errorCallback (Optional) A function to execute if the call fails.
      */

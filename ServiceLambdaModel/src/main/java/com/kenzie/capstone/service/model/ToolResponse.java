@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
+import java.util.Objects;
 
 @JsonInclude
 public class ToolResponse {
@@ -22,9 +23,6 @@ public class ToolResponse {
     @JsonProperty("description")
     private String description;
 
-    @JsonProperty("comments")
-    private List<String> comments;
-
     @JsonProperty("borrower")
     private String borrower;
 
@@ -32,13 +30,12 @@ public class ToolResponse {
 
     }
 
-    public ToolResponse(String toolId, String owner, String toolName, boolean isAvailable, String description, List<String> comments, String borrower) {
+    public ToolResponse(String toolId, String owner, String toolName, boolean isAvailable, String description, String borrower) {
         this.toolId = toolId;
         this.owner = owner;
         this.toolName = toolName;
         this.isAvailable = isAvailable;
         this.description = description;
-        this.comments = comments;
         this.borrower = borrower;
     }
 
@@ -83,19 +80,26 @@ public class ToolResponse {
         this.description = description;
     }
 
-    public List<String> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<String> comments) {
-        this.comments = comments;
-    }
-
     public String getBorrower() {
         return borrower;
     }
 
     public void setBorrower(String borrower) {
         this.borrower = borrower;
+    }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ToolResponse that = (ToolResponse) o;
+        return isAvailable == that.isAvailable &&
+                Objects.equals(toolId, that.toolId) &&
+                Objects.equals(owner, that.owner) &&
+                Objects.equals(toolName, that.toolName) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(borrower, that.borrower);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(toolId, owner, toolName, isAvailable, description, borrower);
     }
 }
