@@ -8,7 +8,7 @@
 /* Global Styles */
 @font-face {
   font-family: 'myFont';
-  src: url('./font/carbon.otf') format('opentype');
+  src: url('./font/carbon.otf')
 }
 
 body {
