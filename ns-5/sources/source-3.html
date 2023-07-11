@@ -1,0 +1,249 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ToolController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.kenzie.appserver.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: ToolController (com.kenzie.appserver.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ToolController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    12.5%
+  </span>
+  <span class="absValue">
+    (1/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    5.9%
+  </span>
+  <span class="absValue">
+    (3/51)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.kenzie.appserver.controller;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+<i class="no-highlight">4</i>&nbsp;import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+<i class="no-highlight">5</i>&nbsp;import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+<i class="no-highlight">6</i>&nbsp;import com.kenzie.appserver.controller.model.BorrowToolRequest;
+<i class="no-highlight">7</i>&nbsp;//import com.kenzie.appserver.controller.model.CreateToolRequest;
+<i class="no-highlight">8</i>&nbsp;//import com.kenzie.appserver.repositories.ToolRepository;
+<i class="no-highlight">9</i>&nbsp;import com.kenzie.appserver.controller.model.UserCreateToolRequest;
+<i class="no-highlight">10</i>&nbsp;import com.kenzie.appserver.controller.model.UserResponse;
+<i class="no-highlight">11</i>&nbsp;import com.kenzie.appserver.repositories.UserRecordRepository;
+<i class="no-highlight">12</i>&nbsp;//import com.kenzie.appserver.repositories.model.ToolRecord;
+<i class="no-highlight">13</i>&nbsp;import com.kenzie.appserver.repositories.model.UserRecord;
+<i class="no-highlight">14</i>&nbsp;import com.kenzie.appserver.service.UserService;
+<i class="no-highlight">15</i>&nbsp;
+<i class="no-highlight">16</i>&nbsp;import com.kenzie.capstone.service.client.LambdaServiceClient;
+<i class="no-highlight">17</i>&nbsp;import org.springframework.http.ResponseEntity;
+<i class="no-highlight">18</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i class="no-highlight">19</i>&nbsp;
+<i class="no-highlight">20</i>&nbsp;import com.kenzie.capstone.service.model.Tool;
+<i class="no-highlight">21</i>&nbsp;import com.kenzie.capstone.service.model.ToolResponse;
+<i class="no-highlight">22</i>&nbsp;
+<i class="no-highlight">23</i>&nbsp;import java.util.ArrayList;
+<i class="no-highlight">24</i>&nbsp;import java.util.List;
+<i class="no-highlight">25</i>&nbsp;import java.util.Optional;
+<i class="no-highlight">26</i>&nbsp;import java.util.UUID;
+<i class="no-highlight">27</i>&nbsp;
+<i class="no-highlight">28</i>&nbsp;@RestController
+<i class="no-highlight">29</i>&nbsp;@RequestMapping(&quot;/tools&quot;)
+<i class="no-highlight">30</i>&nbsp;public class ToolController {
+<i class="no-highlight">31</i>&nbsp;
+<i class="no-highlight">32</i>&nbsp;    private final LambdaServiceClient toolService;
+<i class="no-highlight">33</i>&nbsp;    private UserRecordRepository userRecordRepository;
+<i class="no-highlight">34</i>&nbsp;//    private ToolRepository toolRepository;
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;    private UserRecord userRecord;
+<i class="no-highlight">37</i>&nbsp;    //    private ToolRecord toolRecord;
+<i class="no-highlight">38</i>&nbsp;    private UserService userService;
+<i class="no-highlight">39</i>&nbsp;
+<b class="fc"><i class="no-highlight">40</i>&nbsp;    ToolController(LambdaServiceClient toolService, UserService userService) {</b>
+<b class="fc"><i class="no-highlight">41</i>&nbsp;        this.toolService = toolService;</b>
+<b class="fc"><i class="no-highlight">42</i>&nbsp;        this.userService = userService;</b>
+<i class="no-highlight">43</i>&nbsp;    }
+<i class="no-highlight">44</i>&nbsp;
+<i class="no-highlight">45</i>&nbsp;    @GetMapping
+<i class="no-highlight">46</i>&nbsp;    public ResponseEntity&lt;List&lt;ToolResponse&gt;&gt; getAllTools() {
+<b class="nc"><i class="no-highlight">47</i>&nbsp;        List&lt;Tool&gt; tools = toolService.getAllTools();</b>
+<b class="nc"><i class="no-highlight">48</i>&nbsp;        if (tools == null || tools.isEmpty()) {</b>
+<b class="nc"><i class="no-highlight">49</i>&nbsp;            return ResponseEntity.noContent().build();</b>
+<i class="no-highlight">50</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">51</i>&nbsp;        List&lt;ToolResponse&gt; response = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">52</i>&nbsp;        for (Tool tool : tools) {</b>
+<b class="nc"><i class="no-highlight">53</i>&nbsp;            response.add(this.createToolResponse(tool));</b>
+<b class="nc"><i class="no-highlight">54</i>&nbsp;        }</b>
+<b class="nc"><i class="no-highlight">55</i>&nbsp;        return ResponseEntity.ok(response);</b>
+<i class="no-highlight">56</i>&nbsp;    }
+<i class="no-highlight">57</i>&nbsp;
+<i class="no-highlight">58</i>&nbsp;    @GetMapping(&quot;/owner/{ownerId}&quot;)
+<i class="no-highlight">59</i>&nbsp;    public ResponseEntity&lt;List&lt;ToolResponse&gt;&gt; getAllToolsByOwnerId(@PathVariable String ownerId) {
+<b class="nc"><i class="no-highlight">60</i>&nbsp;        UserResponse userRecord = userService.getUser(ownerId);</b>
+<i class="no-highlight">61</i>&nbsp;
+<b class="nc"><i class="no-highlight">62</i>&nbsp;        if (userRecord != null) {</b>
+<i class="no-highlight">63</i>&nbsp;
+<b class="nc"><i class="no-highlight">64</i>&nbsp;            List&lt;Tool&gt; allTools = toolService.getAllToolsByOwnerId(ownerId);</b>
+<i class="no-highlight">65</i>&nbsp;
+<b class="nc"><i class="no-highlight">66</i>&nbsp;            List&lt;ToolResponse&gt; toolResponses = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i class="no-highlight">67</i>&nbsp;            for (Tool tool : allTools) {</b>
+<b class="nc"><i class="no-highlight">68</i>&nbsp;                ToolResponse toolResponse = createToolResponse(tool);</b>
+<b class="nc"><i class="no-highlight">69</i>&nbsp;                toolResponses.add(toolResponse);</b>
+<b class="nc"><i class="no-highlight">70</i>&nbsp;            }</b>
+<b class="nc"><i class="no-highlight">71</i>&nbsp;            return ResponseEntity.ok(toolResponses);</b>
+<i class="no-highlight">72</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">73</i>&nbsp;        return ResponseEntity.badRequest().build(); //Use frontend to display message to User</b>
+<i class="no-highlight">74</i>&nbsp;    }
+<i class="no-highlight">75</i>&nbsp;
+<i class="no-highlight">76</i>&nbsp;    @GetMapping(&quot;/tool/{toolId}&quot;)
+<i class="no-highlight">77</i>&nbsp;    public ResponseEntity&lt;ToolResponse&gt; getToolById(@PathVariable String toolId) {
+<b class="nc"><i class="no-highlight">78</i>&nbsp;        Tool tool = toolService.getToolById(toolId);</b>
+<b class="nc"><i class="no-highlight">79</i>&nbsp;        if (tool == null) {</b>
+<b class="nc"><i class="no-highlight">80</i>&nbsp;            return ResponseEntity.notFound().build();</b>
+<i class="no-highlight">81</i>&nbsp;        }
+<b class="nc"><i class="no-highlight">82</i>&nbsp;        return ResponseEntity.ok(createToolResponse(tool));</b>
+<i class="no-highlight">83</i>&nbsp;    }
+<i class="no-highlight">84</i>&nbsp;
+<i class="no-highlight">85</i>&nbsp;    @PostMapping(&quot;/tools&quot;)
+<i class="no-highlight">86</i>&nbsp;    public ResponseEntity&lt;ToolResponse&gt; addNewTool(@RequestBody UserCreateToolRequest userCreateToolRequest) {
+<b class="nc"><i class="no-highlight">87</i>&nbsp;        if (userService.authenticator(userCreateToolRequest.getUsername(), userCreateToolRequest.getPassword())) {</b>
+<b class="nc"><i class="no-highlight">88</i>&nbsp;            Tool createdTool = toolService.addNewTool(new Tool(UUID.randomUUID().toString(),</b>
+<b class="nc"><i class="no-highlight">89</i>&nbsp;                    userCreateToolRequest.getUsername(),</b>
+<b class="nc"><i class="no-highlight">90</i>&nbsp;                    userCreateToolRequest.getToolName(),</b>
+<i class="no-highlight">91</i>&nbsp;                    true,
+<b class="nc"><i class="no-highlight">92</i>&nbsp;                    userCreateToolRequest.getDescription(),</b>
+<i class="no-highlight">93</i>&nbsp;                    null));
+<b class="nc"><i class="no-highlight">94</i>&nbsp;            return ResponseEntity.ok().body(this.createToolResponse(createdTool));</b>
+<i class="no-highlight">95</i>&nbsp;        } else {
+<b class="nc"><i class="no-highlight">96</i>&nbsp;            return ResponseEntity.badRequest().build();</b>
+<i class="no-highlight">97</i>&nbsp;        }
+<i class="no-highlight">98</i>&nbsp;    }
+<i class="no-highlight">99</i>&nbsp;
+<i class="no-highlight">100</i>&nbsp;    @PutMapping(&quot;/borrowTool&quot;) //Switched to Put //Need Return Method
+<i class="no-highlight">101</i>&nbsp;    public ResponseEntity&lt;ToolResponse&gt; borrowTool(@RequestBody BorrowToolRequest borrowToolRequest) {
+<b class="nc"><i class="no-highlight">102</i>&nbsp;        if (userService.authenticator(borrowToolRequest.getUsername(), borrowToolRequest.getPassword())) {</b>
+<i class="no-highlight">103</i>&nbsp;            //user is valid
+<i class="no-highlight">104</i>&nbsp;            //What tool do the want to borrow? hint hint getToolById
+<b class="nc"><i class="no-highlight">105</i>&nbsp;            Tool tool = toolService.getToolById(borrowToolRequest.getToolId());</b>
+<i class="no-highlight">106</i>&nbsp;
+<i class="no-highlight">107</i>&nbsp;            //if tool is not Null &amp;&amp; isAvailable is True THEN call borrow method with correct user and correct tool
+<b class="nc"><i class="no-highlight">108</i>&nbsp;            if (tool != null &amp;&amp; tool.getIsAvailable()) {</b>
+<b class="nc"><i class="no-highlight">109</i>&nbsp;                tool = toolService.borrowTool(borrowToolRequest.getToolId(), borrowToolRequest.getUsername());</b>
+<b class="nc"><i class="no-highlight">110</i>&nbsp;                return ResponseEntity.ok(createToolResponse(tool));</b>
+<i class="no-highlight">111</i>&nbsp;            } else {
+<i class="no-highlight">112</i>&nbsp;                // The tool is either not found or not available.
+<b class="nc"><i class="no-highlight">113</i>&nbsp;                return ResponseEntity.badRequest().build();</b>
+<i class="no-highlight">114</i>&nbsp;            }
+<i class="no-highlight">115</i>&nbsp;        } else {
+<i class="no-highlight">116</i>&nbsp;            // Invalid user credentials
+<b class="nc"><i class="no-highlight">117</i>&nbsp;            return ResponseEntity.badRequest().build();</b>
+<i class="no-highlight">118</i>&nbsp;        }
+<i class="no-highlight">119</i>&nbsp;    }
+<i class="no-highlight">120</i>&nbsp;
+<i class="no-highlight">121</i>&nbsp;    @DeleteMapping(&quot;/toolId&quot;)
+<i class="no-highlight">122</i>&nbsp;    public ResponseEntity&lt;Void&gt; removeTool(@PathVariable String toolId, @RequestParam String
+<i class="no-highlight">123</i>&nbsp;            username, @RequestParam String password) {
+<b class="nc"><i class="no-highlight">124</i>&nbsp;        if (userService.authenticator(username, password)) {</b>
+<b class="nc"><i class="no-highlight">125</i>&nbsp;            toolService.deleteTool(toolId);</b>
+<b class="nc"><i class="no-highlight">126</i>&nbsp;            return ResponseEntity.noContent().build();</b>
+<i class="no-highlight">127</i>&nbsp;        } else {
+<b class="nc"><i class="no-highlight">128</i>&nbsp;            return ResponseEntity.badRequest().build();</b>
+<i class="no-highlight">129</i>&nbsp;        }
+<i class="no-highlight">130</i>&nbsp;    }
+<i class="no-highlight">131</i>&nbsp;
+<i class="no-highlight">132</i>&nbsp;    private ToolResponse createToolResponse(Tool tool) {
+<b class="nc"><i class="no-highlight">133</i>&nbsp;        ToolResponse toolResponse = new ToolResponse();</b>
+<b class="nc"><i class="no-highlight">134</i>&nbsp;        toolResponse.setToolId(tool.getToolId());</b>
+<b class="nc"><i class="no-highlight">135</i>&nbsp;        toolResponse.setOwner(tool.getOwner());</b>
+<b class="nc"><i class="no-highlight">136</i>&nbsp;        toolResponse.setToolName(tool.getToolName());</b>
+<b class="nc"><i class="no-highlight">137</i>&nbsp;        toolResponse.setIsAvailable(tool.getIsAvailable());</b>
+<b class="nc"><i class="no-highlight">138</i>&nbsp;        toolResponse.setDescription(tool.getDescription());</b>
+<i class="no-highlight">139</i>&nbsp;//        toolResponse.setComments(tool.getComments());
+<b class="nc"><i class="no-highlight">140</i>&nbsp;        toolResponse.setBorrower(tool.getBorrower());</b>
+<b class="nc"><i class="no-highlight">141</i>&nbsp;        return toolResponse;</b>
+<i class="no-highlight">142</i>&nbsp;    }
+<i class="no-highlight">143</i>&nbsp;}
+<i class="no-highlight">144</i>&nbsp;
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-10 22:09</div>
+</div>
+</body>
+</html>

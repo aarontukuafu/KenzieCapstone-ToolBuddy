@@ -1,0 +1,210 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > DaggerServiceComponent</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.kenzie.capstone.service.dependency</a>
+</div>
+
+<h1>Coverage Summary for Class: DaggerServiceComponent (com.kenzie.capstone.service.dependency)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DaggerServiceComponent</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DaggerServiceComponent$Builder</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.kenzie.capstone.service.dependency;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+<i class="no-highlight">4</i>&nbsp;import com.kenzie.capstone.service.ToolService;
+<i class="no-highlight">5</i>&nbsp;import com.kenzie.capstone.service.dao.ToolDao;
+<i class="no-highlight">6</i>&nbsp;import dagger.internal.DoubleCheck;
+<i class="no-highlight">7</i>&nbsp;import dagger.internal.Preconditions;
+<i class="no-highlight">8</i>&nbsp;import javax.annotation.processing.Generated;
+<i class="no-highlight">9</i>&nbsp;import javax.inject.Provider;
+<i class="no-highlight">10</i>&nbsp;
+<i class="no-highlight">11</i>&nbsp;@Generated(
+<i class="no-highlight">12</i>&nbsp;    value = &quot;dagger.internal.codegen.ComponentProcessor&quot;,
+<i class="no-highlight">13</i>&nbsp;    comments = &quot;https://dagger.dev&quot;
+<i class="no-highlight">14</i>&nbsp;)
+<i class="no-highlight">15</i>&nbsp;@SuppressWarnings({
+<i class="no-highlight">16</i>&nbsp;    &quot;unchecked&quot;,
+<i class="no-highlight">17</i>&nbsp;    &quot;rawtypes&quot;
+<i class="no-highlight">18</i>&nbsp;})
+<i class="no-highlight">19</i>&nbsp;public final class DaggerServiceComponent implements ServiceComponent {
+<i class="no-highlight">20</i>&nbsp;  private Provider&lt;DynamoDBMapper&gt; provideDynamoDBMapperProvider;
+<i class="no-highlight">21</i>&nbsp;
+<i class="no-highlight">22</i>&nbsp;  private Provider&lt;ToolDao&gt; provideToolDaoProvider;
+<i class="no-highlight">23</i>&nbsp;
+<i class="no-highlight">24</i>&nbsp;  private Provider&lt;ToolService&gt; provideLambdaServiceProvider;
+<i class="no-highlight">25</i>&nbsp;
+<b class="nc"><i class="no-highlight">26</i>&nbsp;  private DaggerServiceComponent(DaoModule daoModuleParam, ServiceModule serviceModuleParam) {</b>
+<i class="no-highlight">27</i>&nbsp;
+<b class="nc"><i class="no-highlight">28</i>&nbsp;    initialize(daoModuleParam, serviceModuleParam);</b>
+<i class="no-highlight">29</i>&nbsp;  }
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;  public static Builder builder() {
+<b class="nc"><i class="no-highlight">32</i>&nbsp;    return new Builder();</b>
+<i class="no-highlight">33</i>&nbsp;  }
+<i class="no-highlight">34</i>&nbsp;
+<i class="no-highlight">35</i>&nbsp;  public static ServiceComponent create() {
+<b class="nc"><i class="no-highlight">36</i>&nbsp;    return new Builder().build();</b>
+<i class="no-highlight">37</i>&nbsp;  }
+<i class="no-highlight">38</i>&nbsp;
+<i class="no-highlight">39</i>&nbsp;  @SuppressWarnings(&quot;unchecked&quot;)
+<i class="no-highlight">40</i>&nbsp;  private void initialize(final DaoModule daoModuleParam, final ServiceModule serviceModuleParam) {
+<b class="nc"><i class="no-highlight">41</i>&nbsp;    this.provideDynamoDBMapperProvider = DoubleCheck.provider(DaoModule_ProvideDynamoDBMapperFactory.create(daoModuleParam));</b>
+<b class="nc"><i class="no-highlight">42</i>&nbsp;    this.provideToolDaoProvider = DoubleCheck.provider(DaoModule_ProvideToolDaoFactory.create(daoModuleParam, provideDynamoDBMapperProvider));</b>
+<b class="nc"><i class="no-highlight">43</i>&nbsp;    this.provideLambdaServiceProvider = DoubleCheck.provider(ServiceModule_ProvideLambdaServiceFactory.create(serviceModuleParam, provideToolDaoProvider));</b>
+<i class="no-highlight">44</i>&nbsp;  }
+<i class="no-highlight">45</i>&nbsp;
+<i class="no-highlight">46</i>&nbsp;  @Override
+<i class="no-highlight">47</i>&nbsp;  public ToolService provideToolLambdaService() {
+<b class="nc"><i class="no-highlight">48</i>&nbsp;    return provideLambdaServiceProvider.get();</b>
+<i class="no-highlight">49</i>&nbsp;  }
+<i class="no-highlight">50</i>&nbsp;
+<i class="no-highlight">51</i>&nbsp;  public static final class Builder {
+<i class="no-highlight">52</i>&nbsp;    private DaoModule daoModule;
+<i class="no-highlight">53</i>&nbsp;
+<i class="no-highlight">54</i>&nbsp;    private ServiceModule serviceModule;
+<i class="no-highlight">55</i>&nbsp;
+<b class="nc"><i class="no-highlight">56</i>&nbsp;    private Builder() {</b>
+<i class="no-highlight">57</i>&nbsp;    }
+<i class="no-highlight">58</i>&nbsp;
+<i class="no-highlight">59</i>&nbsp;    public Builder daoModule(DaoModule daoModule) {
+<b class="nc"><i class="no-highlight">60</i>&nbsp;      this.daoModule = Preconditions.checkNotNull(daoModule);</b>
+<b class="nc"><i class="no-highlight">61</i>&nbsp;      return this;</b>
+<i class="no-highlight">62</i>&nbsp;    }
+<i class="no-highlight">63</i>&nbsp;
+<i class="no-highlight">64</i>&nbsp;    public Builder serviceModule(ServiceModule serviceModule) {
+<b class="nc"><i class="no-highlight">65</i>&nbsp;      this.serviceModule = Preconditions.checkNotNull(serviceModule);</b>
+<b class="nc"><i class="no-highlight">66</i>&nbsp;      return this;</b>
+<i class="no-highlight">67</i>&nbsp;    }
+<i class="no-highlight">68</i>&nbsp;
+<i class="no-highlight">69</i>&nbsp;    public ServiceComponent build() {
+<b class="nc"><i class="no-highlight">70</i>&nbsp;      if (daoModule == null) {</b>
+<b class="nc"><i class="no-highlight">71</i>&nbsp;        this.daoModule = new DaoModule();</b>
+<i class="no-highlight">72</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">73</i>&nbsp;      if (serviceModule == null) {</b>
+<b class="nc"><i class="no-highlight">74</i>&nbsp;        this.serviceModule = new ServiceModule();</b>
+<i class="no-highlight">75</i>&nbsp;      }
+<b class="nc"><i class="no-highlight">76</i>&nbsp;      return new DaggerServiceComponent(daoModule, serviceModule);</b>
+<i class="no-highlight">77</i>&nbsp;    }
+<i class="no-highlight">78</i>&nbsp;  }
+<i class="no-highlight">79</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2023-07-10 22:09</div>
+</div>
+</body>
+</html>
