@@ -102,25 +102,23 @@ export default class ExampleClient extends BaseClass {
     //     }
     // }
 
-
-      initializeScrollListener() {
+     initializeScrollListener() {
         window.addEventListener('scroll', function() {
-          var backgroundImage = document.querySelector('.background-image');
-          var scrollPosition = window.scrollY;
-          var windowHeight = window.innerHeight;
-
-          // Calculate the threshold to switch the image (e.g., when 50% of the window is scrolled)
-          var threshold = windowHeight * 0.5;
-
-          if (scrollPosition > threshold) {
-            backgroundImage.style.backgroundImage = 'url(./images/seemlesstools.png)';
-            backgroundImage.style.opacity = '1';
-          } else {
-            backgroundImage.style.backgroundImage = 'url(./images/toolbackground.jpg)';
-            backgroundImage.style.opacity = '0';
-          }
+        var backgroundImage = document.querySelector('.background-image');
+        var scrollPosition = window.scrollY;
+        var windowHeight = window.innerH
+        // Calculate the threshold to switch the image (e.g., when 50% of the window is scrolled)
+        var threshold = windowHeight
+        if (scrollPosition > threshold) {
+          backgroundImage.style.backgroundImage = 'url(./images/seemlesstools.png)';
+          backgroundImage.style.opacity = '1';
+        } else {
+          backgroundImage.style.backgroundImage = 'url(./images/toolbackground.jpg)';
+          backgroundImage.style.opacity = '1';
+        }
         });
-      }
+     }
+
 
       async getToolsByOwnerId(ownerId) {
           try {
