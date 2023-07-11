@@ -7,11 +7,24 @@ import ExampleClient from "../api/exampleClient";
  */
 class ExamplePage extends BaseClass {
 
-    constructor() {
+      constructor() {
         super();
-        this.bindClassMethods(['onGet', 'onCreate', 'renderExample', 'renderAllTools', 'renderAllToolsByOwner','handleAddUser', 'handleAddTool', 'handleBorrowTool'], this);
+        this.bindClassMethods(
+          [
+            "onGet",
+            "handleAddTool",
+            "handleBorrowTool",
+            "handleAddUser",
+            "renderExample",
+            "renderAllTools",
+            "renderAllToolsByOwner",
+            "renderNewTools",
+            "renderUserTools",
+          ],
+          this
+        );
         this.dataStore = new DataStore();
-    }
+      }
 
     /**
      * Once the page has loaded, set up the event handlers and fetch the concert list.
@@ -24,6 +37,48 @@ class ExamplePage extends BaseClass {
 
     // Render Methods --------------------------------------------------------------------------------------------------
 
+    async renderUserTools() {
+        let userToolsCard = document.getElementById("user-tools-card");
+
+        const ownerId = document.querySelector("#usernameID").value;
+        const tools = await this.client.getToolsByOwnerId(ownerId);
+
+        if (tools) {
+            let toolsHtml = "";
+            tools.forEach(tool => {
+                toolsHtml += `
+                    <div>ID: ${tool.id}</div>
+                    <div>Name: ${tool.name}</div>
+                    <div>Description: ${tool.description}</div>
+                    <br>
+                `;
+            });
+            userToolsCard.innerHTML = toolsHtml;
+        } else {
+            userToolsCard.innerHTML = "No tools found.";
+        }
+    }
+
+    async renderNewTools() {
+        let newToolsCard = document.getElementById("new-tools-card");
+
+        const tools = await this.client.getAllTools();
+
+        if (tools) {
+            let toolsHtml = "";
+            tools.forEach(tool => {
+                toolsHtml += `
+                    <div>ID: ${tool.id}</div>
+                    <div>Name: ${tool.name}</div>
+                    <div>Description: ${tool.description}</div>
+                    <br>
+                `;
+            });
+            newToolsCard.innerHTML = toolsHtml;
+        } else {
+            newToolsCard.innerHTML = "No tools found.";
+        }
+    }
     async renderExample() {
         let resultArea = document.getElementById("result-info");
 
@@ -62,27 +117,26 @@ class ExamplePage extends BaseClass {
     }
 
     async renderAllToolsByOwner() {
-        let resultArea = document.getElementById("result-info");
+      let resultArea = document.getElementById("result-info");
 
-        //const urlParts = window.location.pathname.split("/");
-        const ownerId = document.querySelector("#usernameID").HTTPInputElement.value;// get the owner ID from somewhere (e.g., a form field or a data attribute)
-        const tools = await this.client.getAllToolsByOwnerId(ownerId);
+      const ownerId = document.querySelector("#usernameID").value;
+      const tools = await this.client.getToolsByOwnerId(ownerId);
 
-        if (tools) {
-            // Display the tools in the result area
-            let toolsHtml = "";
-            tools.forEach(tool => {
-                toolsHtml += `
-                <div>ID: ${tool.id}</div>
-                <div>Name: ${tool.name}</div>
-                <div>Description: ${tool.description}</div>
-                <br>
-            `;
-            });
-            resultArea.innerHTML = toolsHtml;
-        } else {
-            resultArea.innerHTML = "No tools found.";
-        }
+      if (tools) {
+        // Display the tools in the result area
+        let toolsHtml = "";
+        tools.forEach(tool => {
+          toolsHtml += `
+            <div>ID: ${tool.id}</div>
+            <div>Name: ${tool.name}</div>
+            <div>Description: ${tool.description}</div>
+            <br>
+          `;
+        });
+        resultArea.innerHTML = toolsHtml;
+      } else {
+        resultArea.innerHTML = "No tools found.";
+      }
     }
 
     // async renderToolById() {
@@ -170,9 +224,9 @@ class ExamplePage extends BaseClass {
     async handleAddUser(event) {
         event.preventDefault();
 
-        const name = document.querySelector("#name").value;
-        const username = document.querySelector("#username").value;
-        const password = document.querySelector("#password").value;
+        let name = document.getElementById("name").value;
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
 
         const userCreateRequest = {
             name: name,
@@ -182,7 +236,10 @@ class ExamplePage extends BaseClass {
 
         const createdUser = await this.client.createUser(userCreateRequest, this.errorHandler);
 
+        // Log the creation of the user to the console
+        console.log(`User created: ${JSON.stringify(createdUser)}`);
     }
+
 
 }
 
