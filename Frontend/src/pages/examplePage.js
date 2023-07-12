@@ -17,6 +17,7 @@ class ExamplePage extends BaseClass {
                 "renderAllTools",
                 "renderAllToolsByOwner",
                 "renderUserTools",
+                "onGetTools"
             ],
             this
         );
@@ -29,14 +30,17 @@ class ExamplePage extends BaseClass {
     async mount() {
         this.client = new ExampleClient();
 
+        document.getElementById("tools-list").addEventListener('submit', this.onGetTools);
         document.getElementById('add-tool-form').addEventListener('submit', this.handleAddTool);
         //document.getElementById('borrow-tool-form').addEventListener('submit', this.handleBorrowTool);
         document.getElementById('add-user-form').addEventListener('submit', this.handleAddUser);
-        document.getElementById('get-tools-by-owner-form').addEventListener('submit', this.handleAddUser);
+        /*document.getElementById('get-tools-by-owner-form').addEventListener('submit', this.handleAddUser);*/
+
 
         this.dataStore.addChangeListener(this.renderAllTools);
         this.dataStore.addChangeListener(this.renderAllToolsByOwner);
         this.dataStore.addChangeListener(this.renderUserTools);
+
 
         await this.fetchAllTools();
         await this.fetchOwnerTools();
@@ -69,10 +73,39 @@ class ExamplePage extends BaseClass {
     }
 
     async renderAllTools() {
+        let resultArea = document.getElementById("tools-list");
         const tools = this.dataStore.get('tools-list');
-        const resultArea = document.getElementById("result-info");
+        /*const resultArea = document.getElementById("result-info");*/
 
-        if (tools) {
+        resultArea.innerHTML = `
+        <div class = "row">
+        <table class = "table-bordered">
+        <thead>
+        <tr>
+        <th> id </th>
+        <th> name </th>
+        <th> description </th>
+        </tr>
+        </thead>
+        <tbody id = "toolid">`;
+
+        if (tools && tools.length !== 0 ){
+        const tableBody = document.getElementById("toolid");
+
+        for (let tool of tools){
+            let row = tableBody.insertRow();
+            let toolid = row.insertCell(0);
+            toolid.innerHTML = tool.toolId;
+
+            let name = row.insertCell(1);
+            name.innerHTML = tool.toolName;
+
+            let description = row.insertCell(2);
+            description.innerHTML = tool.description;
+        }
+        console.log(this.dataStore);
+        }
+        /*if (tools) {
             // Display the tools in the result area
             let toolsHtml = "";
             tools.forEach(tool => {
@@ -86,7 +119,7 @@ class ExamplePage extends BaseClass {
             resultArea.innerHTML = toolsHtml;
         } else {
             resultArea.innerHTML = "No tools found.";
-        }
+        }*/
     }
 
     async renderAllToolsByOwner() {
@@ -112,6 +145,18 @@ class ExamplePage extends BaseClass {
     }
 
     // Event Handlers --------------------------------------------------------------------------------------------------
+
+    async onGetTools(event) {
+        // Prevent the page from refreshing on form submit
+        event.preventDefault();
+        let result = await this.client.getExample(id, this.errorHandler);
+        this.dataStore.set("tools-list", result);
+        if (result) {
+            this.showMessage(`Got ${result.name}!`)
+        } else {
+            this.errorHandler("Error doing GET!  Try again...");
+        }
+    }
 
     async handleAddTool(event) {
         event.preventDefault();
@@ -152,6 +197,8 @@ class ExamplePage extends BaseClass {
             await this.fetchAllTools();
         }
     }
+
+
 
     async handleAddUser(event) {
         event.preventDefault();

@@ -56,6 +56,7 @@ export default class ExampleClient extends BaseClass {
     async getAllTools() {
         try {
           const response = await this.client.get(`/tools`);
+
           return response.data;
         } catch (error) {
           this.handleError("getAllTools", error);
@@ -110,7 +111,7 @@ export default class ExampleClient extends BaseClass {
         window.addEventListener('scroll', function() {
         var backgroundImage = document.querySelector('.background-image');
         var scrollPosition = window.scrollY;
-        var windowHeight = window.innerH
+        var windowHeight = window.innerHTML;
         // Calculate the threshold to switch the image (e.g., when 50% of the window is scrolled)
         var threshold = windowHeight
         if (scrollPosition > threshold) {
