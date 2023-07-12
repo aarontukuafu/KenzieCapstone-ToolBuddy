@@ -13,9 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 @RestController
-@RequestMapping({"/user"})
+@RequestMapping("/user")
 public class UserController {
     private UserService userService;
     private UserRecord userRecord;
@@ -26,7 +25,7 @@ public class UserController {
     UserController(UserService userService){
         this.userService = userService;
     }
-    @PostMapping("/user") //check if User already exists in DB
+    @PostMapping//check if User already exists in DB
     public ResponseEntity<UserResponse> createNewUser(@RequestBody UserCreateRequest userCreateRequest) {
 
         if (userCreateRequest.getName() == null || userCreateRequest.getName().length() == 0) {

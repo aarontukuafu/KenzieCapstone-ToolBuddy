@@ -32,17 +32,21 @@ export default class ExampleClient extends BaseClass {
     }
 
     async createUser(userCreateRequest, errorCallback) {
+        console.log("createUser function called");
+        console.log("createUser called with request:", userCreateRequest);
         try {
-          const response = await this.client.post(`/user`, userCreateRequest);
-          return response.data;
+            const response = await this.client.post(`/user`, userCreateRequest);
+            console.log("createUser response:", response.data);
+            return response.data;
         } catch (error) {
-          this.handleError("createUser", error, errorCallback);
+            console.error("createUser error:", error);
+            this.handleError("createUser", error, errorCallback);
         }
-      }
+    }
 
     async createTool(userCreateToolRequest, errorCallback) {
         try {
-          const response = await this.client.post(`/tool`, userCreateToolRequest);
+          const response = await this.client.post(`/tools/tools`, userCreateToolRequest);
           return response.data;
         } catch (error) {
           this.handleError("createTool", error, errorCallback);
