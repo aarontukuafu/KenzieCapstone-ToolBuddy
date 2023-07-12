@@ -13,7 +13,7 @@ export default class ExampleClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['createUser', 'createTool', 'getAllTools', 'getToolsByOwnerId'];
+        const methodsToBind = ['createUser', 'createTool', 'getAllTools', 'getAllToolsByOwnerId'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -125,7 +125,7 @@ export default class ExampleClient extends BaseClass {
      }
 
 
-      async getToolsByOwnerId(ownerId) {
+/*      async getToolsByOwnerId(ownerId) {
           try {
             const response = await this.client.get(`/tools/owner/${ownerId}`);
             return response.data;
@@ -133,7 +133,7 @@ export default class ExampleClient extends BaseClass {
             this.handleError("getToolsByOwnerId", error);
             return null;
           }
-      }
+      }*/
 
     /**
      * Helper method to log the error and run any error functions.
