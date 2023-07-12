@@ -132,11 +132,14 @@ class ExamplePage extends BaseClass {
                 let row = tableBody.insertRow();
                 let usertoolsbyID = row.insertCell(0);
                 usertoolsbyID.innerHTML = tool.owner;
+
                 let name = row.insertCell(1);
                 name.innerHTML = tool.toolName;
+
                 let description = row.insertCell(2);
                 description.innerHTML = tool.description;
             }
+
             console.log(this.dataStore);
         }
     }
@@ -158,7 +161,7 @@ class ExamplePage extends BaseClass {
     async onGetUserTools(event) {
         // Prevent the page from refreshing on form submit
         event.preventDefault();
-        let result = await this.client.getAllToolsByOwnerId(ownerId, this.errorHandler);
+        let result = await this.client.getAllToolsByOwnerId(this.renderAllToolsByOwner(), this.errorHandler);
         this.dataStore.set("get-user-tools", result);
         if (result) {
             this.showMessage(`Got ${result.ownerId}!`)
