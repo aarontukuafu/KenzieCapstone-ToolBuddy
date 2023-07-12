@@ -22,6 +22,8 @@ module.exports = {
       {
         context: [
           '/example',
+            '/tools',
+            '/user'
         ],
         target: 'http://localhost:5001'
       }

@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <script type="text/javascript" src="examplePage.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
@@ -44,7 +43,7 @@
             </div>
             <div class="card-item">
                 <h3>Create User info</h3>
-                <form>
+                <form id="add-user-form">
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" required>
                     <label for="username">Username:</label>
@@ -56,7 +55,7 @@
             </div>
             <div class="card-item">
                 <h3>Add a Tool</h3>
-                <form>
+                <form id="add-tool-form">
                     <label for="toolName">Tool:</label>
                     <input type="text" id="toolName" name="tool" required>
                     <label for="description">Description:</label>
@@ -70,7 +69,7 @@
             </div>
             <div class="card-item">
                 <h4>Get tools By user</h4>
-                <form>
+                <form id="get-tools-by-user-form">
                     <label for="username">Username:</label>
                     <input type="text" id="usernameID" name="username" required>
                     <button type="submit">Submit</button>
@@ -96,7 +95,8 @@
     </div>
 </div>
 
-
+<script type="text/javascript" src="examplePage.js"></script>
 </body>
+
 
 </html>
