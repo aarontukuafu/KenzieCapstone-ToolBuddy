@@ -70,7 +70,7 @@
                 </form>
             </div>
             <div class="card-item">
-                <h4>Get Tools By User</h4>
+                <h4>Get tools By user</h4>
                 <form id="get-tools-by-user-form">
                     <label for="username">Username:</label>
                     <input type="text" id="usernameID" name="username" required>
@@ -78,15 +78,30 @@
 
                 </form>
             </div>
+            <div class="card-item">
+                <h4>Borrow Tool</h4>
+                <form id="borrow-tool-form">
+                    <label for="tool-id-input">Tool ID:</label>
+                    <input type="text" id="tool-id-input" name="toolId" required>
+
+                    <label for="username-id-input">Borrower Username:</label>
+                    <input type="text" id="username-id-input" name="username" required>
+
+                    <label for="password-input">Password:</label>
+                    <input type="password" id="password-input" name="password" required>
+
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
 
         </div>
     </div>
     <div class="card">
         <h2>My Tools</h2>
-        <div class="card">
-                <div class="card-content1" id="tools-list">
-                </div>
+        <div class="card-content1" id="tools-list">
         </div>
+
     </div>
     <div class = "card">
         <div class="card-content" id="get-user-tools">
