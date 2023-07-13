@@ -1,5 +1,6 @@
 import BaseClass from "../util/baseClass";
 import DataStore from "../util/DataStore";
+import OwnerDataStore from "../util/OwnerDataStore"
 import ExampleClient from "../api/exampleClient";
 
 /**
@@ -16,11 +17,13 @@ class ExamplePage extends BaseClass {
                 "handleAddUser",
                 "renderAllTools",
                 "renderAllToolsByOwner",
-                "onGetTools"
+                "onGetTools",
+                "onGetUserTools"
             ],
             this
         );
         this.dataStore = new DataStore();
+        this.ownerData = new OwnerDataStore();
     }
 
     /**
@@ -28,17 +31,19 @@ class ExamplePage extends BaseClass {
      */
     async mount() {
         this.client = new ExampleClient();
+        const createUserForm = document.getElementById('add-user-form');
 
         document.getElementById("tools-list").addEventListener('submit', this.onGetTools);
         document.getElementById('add-tool-form').addEventListener('submit', this.handleAddTool);
-        //document.getElementById('borrow-tool-form').addEventListener('submit', this.handleBorrowTool);
+        document.getElementById('add-user-form').addEventListener('click', this.toggleFormVisibility);
         document.getElementById('add-user-form').addEventListener('submit', this.handleAddUser);
-        document.getElementById('get-user-tools').addEventListener('submit', this.getAllToolsByOwnerId);
-
+        document.getElementById('get-tools-by-user-form').addEventListener('submit', this.onGetUserTools);
+        document.getElementById('borrow-tool-form').addEventListener('submit', this.handleBorrowTool);
 
         this.dataStore.addChangeListener(this.renderAllTools);
-        this.dataStore.addChangeListener(this.renderAllToolsByOwner);
+        this.ownerData.addChangeListener(this.renderAllToolsByOwner);
         /*this.dataStore.addChangeListener(this.renderUserTools);*/
+
 
 
         await this.fetchAllTools();
@@ -53,23 +58,13 @@ class ExamplePage extends BaseClass {
         this.dataStore.set('tools-list', tools);
     }
 
-    /*async fetchOwnerTools() {
-        const userTools = await this.client.getAllToolsByOwnerId();
-        this.dataStore.set('get-user-tools', tools);
-    }*/
 
     // Render Methods --------------------------------------------------------------------------------------------------
 
-//    async renderUserTools() {
-//        const userTools = this.dataStore.get('userTools');
-//        const userToolsCard = document.getElementById('user-tools-card');
-//        userToolsCard.innerHTML = '';
-//        userTools.forEach(tool => {
-//            const toolElement = document.createElement('p');
-//            toolElement.textContent = `Tool: ${tool.name}, Description: ${tool.description}`;
-//            userToolsCard.appendChild(toolElement);
-//        });
-//    }
+    // Function to toggle the visibility of the forms
+
+
+
 
     async renderAllTools() {
         let resultArea = document.getElementById("tools-list");
@@ -84,6 +79,7 @@ class ExamplePage extends BaseClass {
         <th> id </th>
         <th> name </th>
         <th> description </th>
+        <th> borrower </th>
         </tr>
         </thead>
         <tbody id = "toolid">`;
@@ -101,6 +97,9 @@ class ExamplePage extends BaseClass {
 
             let description = row.insertCell(2);
             description.innerHTML = tool.description;
+
+            let borrower = row.insertCell(3);
+            borrower.innerHTML = tool.borrower;
         }
         console.log(this.dataStore);
         }
@@ -109,7 +108,7 @@ class ExamplePage extends BaseClass {
 
     async renderAllToolsByOwner() {
         let resultArea = document.getElementById("get-user-tools");
-        const tools = this.dataStore.get('get-user-tools');
+        const tools = this.ownerData.get('get-user-tools');
         /*const resultArea = document.getElementById("result-info");*/
 
         resultArea.innerHTML =`
@@ -130,18 +129,17 @@ class ExamplePage extends BaseClass {
 
             for (let tool of tools){
                 let row = tableBody.insertRow();
-                let usertoolsbyID = row.insertCell(0);
-                usertoolsbyID.innerHTML = tool.owner;
-
+                let owner = row.insertCell(0);
+                owner.innerHTML = tool.owner;
                 let name = row.insertCell(1);
                 name.innerHTML = tool.toolName;
-
                 let description = row.insertCell(2);
                 description.innerHTML = tool.description;
             }
-
-            console.log(this.dataStore);
+            console.log(this.ownerData);
         }
+/*        const getUserToolsForm = document.getElementById("get-tools-by-user-form");
+        getUserToolsForm.addEventListener("submit", this.onGetUserTools);*/
     }
 
     // Event Handlers --------------------------------------------------------------------------------------------------
@@ -161,10 +159,13 @@ class ExamplePage extends BaseClass {
     async onGetUserTools(event) {
         // Prevent the page from refreshing on form submit
         event.preventDefault();
-        let result = await this.client.getAllToolsByOwnerId(this.renderAllToolsByOwner(), this.errorHandler);
-        this.dataStore.set("get-user-tools", result);
+
+        let ownerId = document.getElementById("usernameID").value;
+
+        let result = await this.client.getAllToolsByOwnerId(ownerId, this.errorHandler);
+        this.ownerData.set("get-user-tools", result);
         if (result) {
-            this.showMessage(`Got ${result.ownerId}!`)
+            this.showMessage(`Got ${result[0].owner}!`)
         } else {
             this.errorHandler("Error doing GET!  Try again...");
         }
@@ -184,19 +185,23 @@ class ExamplePage extends BaseClass {
             username: username,
             password: password
         };
-
-        const createdTool = await this.client.createTool(userCreateToolRequest, this.errorHandler);
-        if (createdTool) {
-            await this.fetchAllTools();
-        }
+        try {
+                const createdTool = await this.client.createTool(userCreateToolRequest, this.errorHandler);
+                if (createdTool) {
+                    this.showMessage(`${createdTool.toolName} Added to Catalog`);
+                    await this.fetchAllTools();
+                }
+            } catch (error) {
+                console.error('Error adding tool:', error);
+            }
     }
 
     async handleBorrowTool(event) {
         event.preventDefault();
 
-        const toolId = document.querySelector("#toolId").value;
-        const username = document.querySelector("#username").value;
-        const password = document.querySelector("#password").value;
+        const toolId = document.getElementById("tool-id-input").value;
+        const username = document.getElementById("username-id-input").value;
+        const password = document.getElementById("password-input").value;
 
         const borrowToolRequest = {
             toolId: toolId,
@@ -206,42 +211,38 @@ class ExamplePage extends BaseClass {
 
         const borrowedTool = await this.client.borrowTool(borrowToolRequest, this.errorHandler);
         if (borrowedTool) {
+            this.showMessage(`${borrowedTool.borrower} Borrowed ${borrowedTool.toolName}!`)
             await this.fetchAllTools();
         }
     }
 
-
-
     async handleAddUser(event) {
         event.preventDefault();
 
+        const name = document.getElementById("name").value;
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
 
+        const userCreateRequest = {
+            name: name,
+            username: username,
+            password: password
+        };
 
-            const name = document.getElementById("name").value;
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            const userCreateRequest = {
-                name: name,
-                username: username,
-                password: password
-            };
-
+        try {
             const response = await this.client.createUser(userCreateRequest, this.errorHandler);
-
-            console.log("handleAddUser called with request:", userCreateRequest);
-
-            if (!response) {
-                console.error('Error creating user:', response.statusText);
-            } else {
+            if (response) {
+                this.showMessage(`User ${userCreateRequest.username} created!`);
                 const createdUser = await response.json();
                 console.log(`User created: ${JSON.stringify(createdUser)}`);
+            } else {
+                console.error('Error creating user:', response.statusText);
             }
+        } catch (error) {
+            console.error('Error creating user:', error);
+        }
     }
 
-    errorHandler(error) {
-        console.error("An error occurred:", error);
-    }
 }
 
 /**
@@ -363,5 +364,13 @@ const main = async () => {
     const examplePage = new ExamplePage();
     examplePage.mount();
 };
+function toggleFormVisibility(event) {
+          // Get the associated form based on the clicked heading
+          const formId = event.target.dataset.formId;
+          const form = document.getElementById(formId);
+
+          // Toggle the visibility of the form by adding or removing a CSS class
+          form.classList.toggle('hidden');
+        }
 
 window.addEventListener('DOMContentLoaded', main);

@@ -13,7 +13,7 @@ export default class ExampleClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['createUser', 'createTool', 'getAllTools', 'getAllToolsByOwnerId'];
+        const methodsToBind = ['createUser', 'createTool', 'getAllTools', 'getAllToolsByOwnerId', 'borrowTool'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -64,12 +64,13 @@ export default class ExampleClient extends BaseClass {
         }
       }
 
-    async getAllToolsByOwnerId(ownerId, errorCallback) {
+    async getAllToolsByOwnerId(ownerId) {
         try {
-            const response = await this.client.get(`/tools/owner/${ownerId}`, ownerId);
+            const response = await this.client.get(`/tools/owner/${ownerId}`);
             return response.data;
         } catch (error) {
-            this.handleError("getAllToolsByOwnerId", error, errorCallback);
+            this.handleError("getAllToolsByOwnerId", error);
+            return null;
         }
     }
 
@@ -85,7 +86,7 @@ export default class ExampleClient extends BaseClass {
 
     async borrowTool(borrowToolRequest, errorCallback) {
         try {
-            const response = await this.client.put(`/borrowTool`, borrowToolRequest);
+            const response = await this.client.put(`/tools/borrowTool`, borrowToolRequest);
             return response.data;
         } catch (error) {
             this.handleError("borrowTool", error, errorCallback);
