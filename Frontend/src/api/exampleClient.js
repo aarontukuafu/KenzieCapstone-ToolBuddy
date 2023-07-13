@@ -64,13 +64,12 @@ export default class ExampleClient extends BaseClass {
         }
       }
 
-    async getAllToolsByOwnerId(ownerId) {
+    async getAllToolsByOwnerId(ownerId, errorCallback) {
         try {
-            const response = await this.client.get(`/owner/${ownerId}`);
+            const response = await this.client.get(`/tools/owner/${ownerId}`, ownerId);
             return response.data;
         } catch (error) {
-            this.handleError("getAllToolsByOwnerId", error);
-            return null;
+            this.handleError("getAllToolsByOwnerId", error, errorCallback);
         }
     }
 
