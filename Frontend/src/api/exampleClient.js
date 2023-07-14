@@ -83,15 +83,30 @@ export default class ExampleClient extends BaseClass {
     //         return null;
     //     }
     // }
-
     async borrowTool(borrowToolRequest, errorCallback) {
+      try {
+        const response = await this.client.put(`/tools/borrowTool`, borrowToolRequest);
+        return response.data;
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          // Handle the 400 error specifically and provide a custom error message
+          const errorMessage = "Sorry :( Tool is Unavailable";
+          errorCallback(errorMessage);
+        } else {
+          this.handleError("borrowTool", error, errorCallback);
+        }
+      }
+    }
+
+
+   /* async borrowTool(borrowToolRequest, errorCallback) {
         try {
             const response = await this.client.put(`/tools/borrowTool`, borrowToolRequest);
             return response.data;
         } catch (error) {
             this.handleError("borrowTool", error, errorCallback);
         }
-    }
+    }*/
 
     // async deleteTool(toolId, username, password, errorCallback) {
     //     try {
