@@ -8,7 +8,7 @@
 /* Global Styles */
 @font-face {
   font-family: 'myFont';
-  src: url('./font/carbon.otf') format('opentype');
+  src: url('./font/carbon.otf')
 }
 
 body {
@@ -37,6 +37,7 @@ body {
   margin-right: 20px;
   line-height: 5px;
 }
+
 
 .header_home {
   font-size: 36px;
@@ -75,27 +76,103 @@ body {
   text-decoration: underline;
 }
 
+/* Profile section styles */
+.profile-section {
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+.profile-section h2 {
+  margin-top: 0;
+}
+
+/* Container styles */
 .container {
   display: flex;
-  flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20px;
 }
 
 .card {
-  background-color: #f5f5f5;
-  padding: 5px 20px;
-  margin: 0;
-  width: 100%;
-  box-sizing: border-box;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 20px;
-  height: 300px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  padding: 20px;
+  width: 70%; /* Adjust the width as needed */
+  max-width: 1250px;
+  height: 800px;
+  margin-left: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+  overflow: auto;
 }
 
-.card-header {
+.vertical-card {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  padding: 20px;
+  width: 500px;
+  height: 800px;
+  margin-left: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+}
+
+.vertical-card h2 {
+  font-size: 24px;
   margin-bottom: 10px;
+}
+
+.vertical-card p {
+  margin-bottom: 20px;
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-item {
+  flex-direction: column;
+  background-color: #ffffff;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.card-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-item h3 {
+  margin: 0;
+}
+
+#user-tools-card, #new-tools-card {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+#user-tools-card:hover, #new-tools-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.validated-field:invalid {
+  outline: 2px solid var(--error-color);
+}
+
+.validated-field:focus:invalid {
+  color: var(--error-color);
 }

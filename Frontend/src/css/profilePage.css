@@ -8,7 +8,7 @@
 /* Global Styles */
 @font-face {
   font-family: 'myFont';
-  src: url('./font/carbon.otf') format('opentype');
+  src: url('./font/carbon.otf')
 }
 
 body {
@@ -108,6 +108,7 @@ body {
   margin-left: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: 0.3s;
+  overflow: auto;
 }
 
 .vertical-card {
@@ -153,6 +154,19 @@ body {
 
 .card-item h3 {
   margin: 0;
+}
+
+#user-tools-card, #new-tools-card {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+#user-tools-card:hover, #new-tools-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .validated-field:invalid {

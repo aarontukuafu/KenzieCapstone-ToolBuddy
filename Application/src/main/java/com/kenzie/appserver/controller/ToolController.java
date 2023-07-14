@@ -14,6 +14,7 @@ import com.kenzie.appserver.repositories.model.UserRecord;
 import com.kenzie.appserver.service.UserService;
 
 import com.kenzie.capstone.service.client.LambdaServiceClient;
+import com.kenzie.capstone.service.model.ToolRecord;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,7 +57,7 @@ public class ToolController {
     }
 
     @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<ToolResponse>> getAllToolsByOwnerId(@PathVariable String ownerId) {
+    public ResponseEntity<List<ToolResponse>> getAllToolsByOwnerId(@PathVariable("ownerId") String ownerId) {
         UserResponse userRecord = userService.getUser(ownerId);
 
         if (userRecord != null) {
@@ -118,12 +119,14 @@ public class ToolController {
         }
     }
 
-    @DeleteMapping("/toolId")
-    public ResponseEntity<Void> removeTool(@PathVariable String toolId, @RequestParam String
-            username, @RequestParam String password) {
+    @DeleteMapping("/{toolId}")
+    public ResponseEntity<ToolResponse> removeTool(@PathVariable("toolId") String toolId, @RequestParam ("username") String
+            username, @RequestParam ("password") String password) {
         if (userService.authenticator(username, password)) {
+
+            Tool tool = toolService.getToolById(toolId);
             toolService.deleteTool(toolId);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(createToolResponse(tool));
         } else {
             return ResponseEntity.badRequest().build();
         }

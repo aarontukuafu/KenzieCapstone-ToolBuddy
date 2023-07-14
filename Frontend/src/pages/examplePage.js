@@ -1,5 +1,6 @@
 import BaseClass from "../util/baseClass";
 import DataStore from "../util/DataStore";
+import OwnerDataStore from "../util/OwnerDataStore"
 import ExampleClient from "../api/exampleClient";
 
 /**
@@ -9,8 +10,20 @@ class ExamplePage extends BaseClass {
 
     constructor() {
         super();
-        this.bindClassMethods(['onGet', 'onCreate', 'renderExample', 'renderAllTools', 'renderAllToolsByOwner','handleAddUser', 'handleAddTool', 'handleBorrowTool'], this);
+        this.bindClassMethods(
+            [
+                "handleAddTool",
+                "handleBorrowTool",
+                "handleAddUser",
+                "renderAllTools",
+                "renderAllToolsByOwner",
+                "onGetTools",
+                "onGetUserTools"
+            ],
+            this
+        );
         this.dataStore = new DataStore();
+        this.ownerData = new OwnerDataStore();
     }
 
     /**
@@ -18,105 +31,141 @@ class ExamplePage extends BaseClass {
      */
     async mount() {
         this.client = new ExampleClient();
+        const createUserForm = document.getElementById('add-user-form');
 
-        this.dataStore.addChangeListener(this.renderExample)
+        document.getElementById("tools-list").addEventListener('submit', this.onGetTools);
+        document.getElementById('add-tool-form').addEventListener('submit', this.handleAddTool);
+        document.getElementById('add-user-form').addEventListener('click', this.toggleFormVisibility);
+        document.getElementById('add-user-form').addEventListener('submit', this.handleAddUser);
+        document.getElementById('get-tools-by-user-form').addEventListener('submit', this.onGetUserTools);
+        document.getElementById('borrow-tool-form').addEventListener('submit', this.handleBorrowTool);
+
+        this.dataStore.addChangeListener(this.renderAllTools);
+        this.ownerData.addChangeListener(this.renderAllToolsByOwner);
+        /*this.dataStore.addChangeListener(this.renderUserTools);*/
+
+
+
+        await this.fetchAllTools();
+//        await this.fetchOwnerTools();
     }
+
+    // Fetch methods
+    // These methods fetch data from the API and update the DataStore
+
+    async fetchAllTools() {
+        const tools = await this.client.getAllTools();
+        this.dataStore.set('tools-list', tools);
+    }
+
 
     // Render Methods --------------------------------------------------------------------------------------------------
 
-    async renderExample() {
-        let resultArea = document.getElementById("result-info");
+    // Function to toggle the visibility of the forms
 
-        const example = this.dataStore.get("example");
 
-        if (example) {
-            resultArea.innerHTML = `
-                <div>ID: ${example.id}</div>
-                <div>Name: ${example.name}</div>
-            `
-        } else {
-            resultArea.innerHTML = "No Item";
-        }
-    }
+
 
     async renderAllTools() {
-        let resultArea = document.getElementById("result-info");
+        let resultArea = document.getElementById("tools-list");
+        const tools = this.dataStore.get('tools-list');
+        /*const resultArea = document.getElementById("result-info");*/
 
-        const tools = await this.client.getAllTools();
+        resultArea.innerHTML = `
+        <div class = "row">
+        <table class = "table-bordered">
+        <thead>
+        <tr>
+        <th> id </th>
+        <th> name </th>
+        <th> description </th>
+        <th> borrower </th>
+        </tr>
+        </thead>
+        <tbody id = "toolid">`;
 
-        if (tools) {
-            // Display the tools in the result area
-            let toolsHtml = "";
-            tools.forEach(tool => {
-                toolsHtml += `
-           <div>ID: ${tool.id}</div>
-           <div>Name: ${tool.name}</div>
-           <div>Description: ${tool.description}</div>
-           <br>
-         `;
-            });
-            resultArea.innerHTML = toolsHtml;
-        } else {
-            resultArea.innerHTML = "No tools found.";
+        if (tools && tools.length !== 0 ){
+        const tableBody = document.getElementById("toolid");
+
+        for (let tool of tools){
+            let row = tableBody.insertRow();
+            let toolid = row.insertCell(0);
+            toolid.innerHTML = tool.toolId;
+
+            let name = row.insertCell(1);
+            name.innerHTML = tool.toolName;
+
+            let description = row.insertCell(2);
+            description.innerHTML = tool.description;
+
+            let borrower = row.insertCell(3);
+            borrower.innerHTML = tool.borrower;
         }
+        console.log(this.dataStore);
+        }
+
     }
 
     async renderAllToolsByOwner() {
-        let resultArea = document.getElementById("result-info");
+        let resultArea = document.getElementById("get-user-tools");
+        const tools = this.ownerData.get('get-user-tools');
+        /*const resultArea = document.getElementById("result-info");*/
 
-        //const urlParts = window.location.pathname.split("/");
-        const ownerId = document.querySelector("#usernameID").HTTPInputElement.value;// get the owner ID from somewhere (e.g., a form field or a data attribute)
-        const tools = await this.client.getAllToolsByOwnerId(ownerId);
+        resultArea.innerHTML =`
+        <div class = "row">
+        <table class = "table-bordered">
+        <thead>
+        <tr>
+        <th> owner </th>
+        <th> name </th>
+        <th> description </th>
+        </tr>
+        </thead>
+        <tbody id = "usertoolsbyID">`;
 
-        if (tools) {
-            // Display the tools in the result area
-            let toolsHtml = "";
-            tools.forEach(tool => {
-                toolsHtml += `
-                <div>ID: ${tool.id}</div>
-                <div>Name: ${tool.name}</div>
-                <div>Description: ${tool.description}</div>
-                <br>
-            `;
-            });
-            resultArea.innerHTML = toolsHtml;
-        } else {
-            resultArea.innerHTML = "No tools found.";
+
+        if (tools && tools.length !== 0 ){
+            const tableBody = document.getElementById("usertoolsbyID");
+
+            for (let tool of tools){
+                let row = tableBody.insertRow();
+                let owner = row.insertCell(0);
+                owner.innerHTML = tool.owner;
+                let name = row.insertCell(1);
+                name.innerHTML = tool.toolName;
+                let description = row.insertCell(2);
+                description.innerHTML = tool.description;
+            }
+            console.log(this.ownerData);
         }
+/*        const getUserToolsForm = document.getElementById("get-tools-by-user-form");
+        getUserToolsForm.addEventListener("submit", this.onGetUserTools);*/
     }
-
-    // async renderToolById() {
-    //     let resultArea = document.getElementById("result-info");
-    //
-    //
-    //     const toolId = document.querySelector("#toolName").value; //Switch to a field
-    //     const tool = await this.client.getToolById(toolId);
-    //
-    //     if (tool) {
-    //         // Display the tool in the result area
-    //         resultArea.innerHTML = `
-    //         <div>ID: ${tool.id}</div>
-    //         <div>Name: ${tool.name}</div>
-    //         <div>Description: ${tool.description}</div>
-    //     `;
-    //     } else {
-    //         resultArea.innerHTML = "Tool not found.";
-    //     }
-    // }
 
     // Event Handlers --------------------------------------------------------------------------------------------------
 
-    async onGet(event) {
+    async onGetTools(event) {
+        // Prevent the page from refreshing on form submit
+        event.preventDefault();
+        let result = await this.client.getExample(id, this.errorHandler);
+        this.dataStore.set("tools-list", result);
+        if (result) {
+            this.showMessage(`Got ${result.name}!`)
+        } else {
+            this.errorHandler("Error doing GET!  Try again...");
+        }
+    }
+
+    async onGetUserTools(event) {
         // Prevent the page from refreshing on form submit
         event.preventDefault();
 
-        let id = document.getElementById("id-field").value;
-        this.dataStore.set("example", null);
+        let ownerId = document.getElementById("usernameID").value;
 
-        let result = await this.client.getExample(id, this.errorHandler);
-        this.dataStore.set("example", result);
+        let result = await this.client.getAllToolsByOwnerId(ownerId, this.errorHandler);
+        this.ownerData.set("get-user-tools", result);
         if (result) {
-            this.showMessage(`Got ${result.name}!`)
+            this.showMessage(`Got ${result[0].owner}!`)
         } else {
             this.errorHandler("Error doing GET!  Try again...");
         }
@@ -136,17 +185,23 @@ class ExamplePage extends BaseClass {
             username: username,
             password: password
         };
-
-        const createdTool = await this.client.createTool(userCreateToolRequest, this.errorHandler);
-        // Handle the response as needed
+        try {
+                const createdTool = await this.client.createTool(userCreateToolRequest, this.errorHandler);
+                if (createdTool) {
+                    this.showMessage(`${createdTool.toolName} Added to Catalog`);
+                    await this.fetchAllTools();
+                }
+            } catch (error) {
+                console.error('Error adding tool:', error);
+            }
     }
 
     async handleBorrowTool(event) {
         event.preventDefault();
 
-        const toolId = document.querySelector("#toolId").value;
-        const username = document.querySelector("#username").value;
-        const password = document.querySelector("#password").value;
+        const toolId = document.getElementById("tool-id-input").value;
+        const username = document.getElementById("username-id-input").value;
+        const password = document.getElementById("password-input").value;
 
         const borrowToolRequest = {
             toolId: toolId,
@@ -155,24 +210,18 @@ class ExamplePage extends BaseClass {
         };
 
         const borrowedTool = await this.client.borrowTool(borrowToolRequest, this.errorHandler);
+        if (borrowedTool) {
+            this.showMessage(`${borrowedTool.borrower} Borrowed ${borrowedTool.toolName}!`)
+            await this.fetchAllTools();
+        }
     }
-
-    // async handleDeleteTool(event) {
-    //     event.preventDefault();
-    //
-    //     const toolId = document.querySelector("#toolId").value;
-    //     const username = document.querySelector("#username").value;
-    //     const password = document.querySelector("#password").value;
-    //
-    //     const deletedTool = await this.client.deleteTool(toolId, username, password, this.errorHandler);
-    // }
 
     async handleAddUser(event) {
         event.preventDefault();
 
-        const name = document.querySelector("#name").value;
-        const username = document.querySelector("#username").value;
-        const password = document.querySelector("#password").value;
+        const name = document.getElementById("name").value;
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
 
         const userCreateRequest = {
             name: name,
@@ -180,11 +229,133 @@ class ExamplePage extends BaseClass {
             password: password
         };
 
-        const createdUser = await this.client.createUser(userCreateRequest, this.errorHandler);
-
+        try {
+            const response = await this.client.createUser(userCreateRequest, this.errorHandler);
+            if (response) {
+                this.showMessage(`User ${userCreateRequest.username} created!`);
+                const createdUser = await response.json();
+                console.log(`User created: ${JSON.stringify(createdUser)}`);
+            } else {
+                console.error('Error creating user:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error creating user:', error);
+        }
     }
 
 }
+
+/**
+ * NOT USED CODE. MAY USE LATER.
+ */
+// async renderUserTools() {
+//     let userToolsCard = document.getElementById("user-tools-card");
+//
+//     const ownerId = document.querySelector("#usernameID").value;
+//     const tools = await this.client.getToolsByOwnerId(ownerId);
+//
+//     if (tools) {
+//         let toolsHtml = "";
+//         tools.forEach(tool => {
+//             toolsHtml += `
+//                     <div>ID: ${tool.id}</div>
+//                     <div>Name: ${tool.name}</div>
+//                     <div>Description: ${tool.description}</div>
+//                     <br>
+//                 `;
+//         });
+//         userToolsCard.innerHTML = toolsHtml;
+//     } else {
+//         userToolsCard.innerHTML = "No tools found.";
+//     }
+// }
+
+// async renderNewTools() {
+//     let newToolsCard = document.getElementById("new-tools-card");
+//
+//     const tools = await this.client.getAllTools();
+//
+//     if (tools) {
+//         let toolsHtml = "";
+//         tools.forEach(tool => {
+//             toolsHtml += `
+//                     <div>ID: ${tool.id}</div>
+//                     <div>Name: ${tool.name}</div>
+//                     <div>Description: ${tool.description}</div>
+//                     <br>
+//                 `;
+//         });
+//         newToolsCard.innerHTML = toolsHtml;
+//     } else {
+//         newToolsCard.innerHTML = "No tools found.";
+//     }
+// }
+
+// async renderToolById() {
+//     let resultArea = document.getElementById("result-info");
+//
+//
+//     const toolId = document.querySelector("#toolName").value; //Switch to a field
+//     const tool = await this.client.getToolById(toolId);
+//
+//     if (tool) {
+//         // Display the tool in the result area
+//         resultArea.innerHTML = `
+//         <div>ID: ${tool.id}</div>
+//         <div>Name: ${tool.name}</div>
+//         <div>Description: ${tool.description}</div>
+//     `;
+//     } else {
+//         resultArea.innerHTML = "Tool not found.";
+//     }
+// }
+
+// async onGet(event) {
+//     // Prevent the page from refreshing on form submit
+//     event.preventDefault();
+//
+//     let id = document.getElementById("id-field").value;
+//     this.dataStore.set("example", null);
+//
+//     let result = await this.client.getExample(id, this.errorHandler);
+//     this.dataStore.set("example", result);
+//     if (result) {
+//         this.showMessage(`Got ${result.name}!`)
+//     } else {
+//         this.errorHandler("Error doing GET!  Try again...");
+//     }
+// }
+
+// async handleDeleteTool(event) {
+//     event.preventDefault();
+//
+//     const toolId = document.querySelector("#toolId").value;
+//     const username = document.querySelector("#username").value;
+//     const password = document.querySelector("#password").value;
+//
+//     const deletedTool = await this.client.deleteTool(toolId, username, password, this.errorHandler);
+// }
+
+// async fetchNewTools() {
+//     const newTools = await this.client.g;
+//     this.dataStore.set('newTools', newTools);
+// }
+//
+//this.dataStore.addChangeListener(this.renderNewTools);
+//
+// "renderNewTools",
+//
+// async renderNewTools() {
+//     const newTools = this.dataStore.get('newTools');
+//     const newToolsCard = document.getElementById('new-tools-card');
+//     newToolsCard.innerHTML = '';
+//     newTools.forEach(tool => {
+//         const toolElement = document.createElement('p');
+//         toolElement.textContent = `Tool: ${tool.name}, Description: ${tool.description}`;
+//         newToolsCard.appendChild(toolElement);
+//     });
+// }
+
 
 /**
  * Main method to run when the page contents have loaded.
@@ -193,5 +364,13 @@ const main = async () => {
     const examplePage = new ExamplePage();
     examplePage.mount();
 };
+function toggleFormVisibility(event) {
+          // Get the associated form based on the clicked heading
+          const formId = event.target.dataset.formId;
+          const form = document.getElementById(formId);
+
+          // Toggle the visibility of the form by adding or removing a CSS class
+          form.classList.toggle('hidden');
+        }
 
 window.addEventListener('DOMContentLoaded', main);

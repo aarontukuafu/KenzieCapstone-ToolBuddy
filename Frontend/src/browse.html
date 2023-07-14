@@ -6,7 +6,7 @@
     <title>Browser Page</title>
     <link rel="stylesheet" href="/css/browse.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <script type="text/javascript" src="./pages/examplePage.js"></script>
+    <script type="text/javascript" src="examplePage.js"></script>
     <style>
         body {
             margin: 0;
@@ -14,13 +14,14 @@
         }
     </style>
 </head>
-<body>
+<body class="background">
 
 <header class="header" id="header">
     <div class="site-title">
         <a class="header_home" href="index.html">
             <img src="/images/Tool_logo.PNG" alt="Logo" class="logo-image">
             <img src="/images/name.png" alt="name" class="brandName">
+
         </a>
     </div>
     <nav>
@@ -28,42 +29,77 @@
         <a href="profile.html" class="header_nav_link">Profile</a>
     </nav>
 </header>
+
 <div class="container">
+    <div class="vertical-card">
+        <h2>Profile</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus varius tellus sed ligula rutrum venenatis.</p>
+        <p>Nullam auctor, neque eu fermentum pharetra, ipsum quam iaculis mauris, sed efficitur mi tellus sed turpis.</p>
+        <p>Praesent eu dui feugiat, pretium lectus sed, volutpat risus.</p>
+        <div class="card-list">
+            <div class="card-item">
+                <h3>Create User info</h3>
+                <form id="add-user-form">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="card-item">
+                <h3>Add a Tool</h3>
+                <form id="add-tool-form">
+                    <label for="toolName">Tool:</label>
+                    <input type="text" id="toolName" name="tool" required>
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" required>
+                    <label for="username">Username:</label>
+                    <input type="text" id="usernameTool" name="username" required>
+                    <label for="password">Password:</label>
+                    <input type="password" id="passwordTool" name="password" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            <div class="card-item">
+                <h4>Get tools By user</h4>
+                <form id="get-tools-by-user-form">
+                    <label for="username">Username:</label>
+                    <input type="text" id="usernameID" name="username" required>
+                    <button type="submit">Submit</button>
+
+                </form>
+            </div>
+            <div class="card-item">
+                <h4>Borrow Tool</h4>
+                <form id="borrow-tool-form">
+                    <label for="tool-id-input">Tool ID:</label>
+                    <input type="text" id="tool-id-input" name="toolId" required>
+
+                    <label for="username-id-input">Borrower Username:</label>
+                    <input type="text" id="username-id-input" name="username" required>
+
+                    <label for="password-input">Password:</label>
+                    <input type="password" id="password-input" name="password" required>
+
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
     <div class="card">
-        <h2 class="card-header">Newly Added</h2>
-        <p>This card shows newly added items.</p>
+        <h2>Catalog</h2>
+        <div class="card-content1" id="catalog-list">
+        </div>
+
     </div>
 
-    <div class="card">
-        <h2 class="card-header">Tools for Borrow</h2>
-        <p>This card displays tools available for borrowing.</p>
-    </div>
 </div>
 
-<script>
-    window.addEventListener('DOMContentLoaded', async () => {
-        const examplePage = new ExamplePage();
-        examplePage.mount();
-
-        const tools = await examplePage.client.getAllTools();
-        const toolsContainer = document.querySelector('.card .tools-list');
-
-        if (toolsContainer && tools && tools.length > 0) {
-            tools.forEach(tool => {
-                const toolElement = document.createElement('div');
-                toolElement.innerHTML = `
-                    <div>ID: ${tool.id}</div>
-                    <div>Name: ${tool.name}</div>
-                    <div>Description: ${tool.description}</div>
-                    <br>
-                `;
-                toolsContainer.appendChild(toolElement);
-            });
-        } else {
-            toolsContainer.innerHTML = "No tools found.";
-        }
-    });
-</script>
-
-</body>
+<script type="text/javascript" src="examplePage.js"></script>
+</body></body>
 </html>

@@ -22,10 +22,23 @@ module.exports = {
       {
         context: [
           '/example',
+            '/tools',
+            '/user'
         ],
         target: 'http://localhost:5001'
       }
     ]
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -57,4 +70,4 @@ module.exports = {
     }),
     new CleanWebpackPlugin()
   ]
-}
+};

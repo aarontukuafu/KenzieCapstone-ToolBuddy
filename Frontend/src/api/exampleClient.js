@@ -13,7 +13,7 @@ export default class ExampleClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['createUser', 'createTool', 'getAllTools', 'getToolsByOwnerId'];
+        const methodsToBind = ['createUser', 'createTool', 'getAllTools', 'getAllToolsByOwnerId', 'borrowTool'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -32,17 +32,21 @@ export default class ExampleClient extends BaseClass {
     }
 
     async createUser(userCreateRequest, errorCallback) {
+        console.log("createUser function called");
+        console.log("createUser called with request:", userCreateRequest);
         try {
-          const response = await this.client.post(`/user`, userCreateRequest);
-          return response.data;
+            const response = await this.client.post(`/user`, userCreateRequest);
+            console.log("createUser response:", response.data);
+            return response.data;
         } catch (error) {
-          this.handleError("createUser", error, errorCallback);
+            console.error("createUser error:", error);
+            this.handleError("createUser", error, errorCallback);
         }
-      }
+    }
 
     async createTool(userCreateToolRequest, errorCallback) {
         try {
-          const response = await this.client.post(`/tool`, userCreateToolRequest);
+          const response = await this.client.post(`/tools/tools`, userCreateToolRequest);
           return response.data;
         } catch (error) {
           this.handleError("createTool", error, errorCallback);
@@ -52,6 +56,7 @@ export default class ExampleClient extends BaseClass {
     async getAllTools() {
         try {
           const response = await this.client.get(`/tools`);
+
           return response.data;
         } catch (error) {
           this.handleError("getAllTools", error);
@@ -61,7 +66,7 @@ export default class ExampleClient extends BaseClass {
 
     async getAllToolsByOwnerId(ownerId) {
         try {
-            const response = await this.client.get(`/owner/${ownerId}`);
+            const response = await this.client.get(`/tools/owner/${ownerId}`);
             return response.data;
         } catch (error) {
             this.handleError("getAllToolsByOwnerId", error);
@@ -81,7 +86,7 @@ export default class ExampleClient extends BaseClass {
 
     async borrowTool(borrowToolRequest, errorCallback) {
         try {
-            const response = await this.client.put(`/borrowTool`, borrowToolRequest);
+            const response = await this.client.put(`/tools/borrowTool`, borrowToolRequest);
             return response.data;
         } catch (error) {
             this.handleError("borrowTool", error, errorCallback);
@@ -102,27 +107,25 @@ export default class ExampleClient extends BaseClass {
     //     }
     // }
 
-
-      initializeScrollListener() {
+     initializeScrollListener() {
         window.addEventListener('scroll', function() {
-          var backgroundImage = document.querySelector('.background-image');
-          var scrollPosition = window.scrollY;
-          var windowHeight = window.innerHeight;
-
-          // Calculate the threshold to switch the image (e.g., when 50% of the window is scrolled)
-          var threshold = windowHeight * 0.5;
-
-          if (scrollPosition > threshold) {
-            backgroundImage.style.backgroundImage = 'url(./images/seemlesstools.png)';
-            backgroundImage.style.opacity = '1';
-          } else {
-            backgroundImage.style.backgroundImage = 'url(./images/toolbackground.jpg)';
-            backgroundImage.style.opacity = '0';
-          }
+        var backgroundImage = document.querySelector('.background-image');
+        var scrollPosition = window.scrollY;
+        var windowHeight = window.innerHTML;
+        // Calculate the threshold to switch the image (e.g., when 50% of the window is scrolled)
+        var threshold = windowHeight
+        if (scrollPosition > threshold) {
+          backgroundImage.style.backgroundImage = 'url(./images/seemlesstools.png)';
+          backgroundImage.style.opacity = '1';
+        } else {
+          backgroundImage.style.backgroundImage = 'url(./images/toolbackground.jpg)';
+          backgroundImage.style.opacity = '1';
+        }
         });
-      }
+     }
 
-      async getToolsByOwnerId(ownerId) {
+
+/*      async getToolsByOwnerId(ownerId) {
           try {
             const response = await this.client.get(`/tools/owner/${ownerId}`);
             return response.data;
@@ -130,7 +133,7 @@ export default class ExampleClient extends BaseClass {
             this.handleError("getToolsByOwnerId", error);
             return null;
           }
-      }
+      }*/
 
     /**
      * Helper method to log the error and run any error functions.
