@@ -21,7 +21,6 @@
         <a class="header_home" href="index.html">
             <img src="/images/Tool_logo.PNG" alt="Logo" class="logo-image">
             <img src="/images/name.png" alt="name" class="brandName">
-
         </a>
     </div>
     <nav>
@@ -32,23 +31,12 @@
 
 <div class="container">
     <div class="vertical-card">
-        <h2>Profile</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus varius tellus sed ligula rutrum venenatis.</p>
-        <p>Nullam auctor, neque eu fermentum pharetra, ipsum quam iaculis mauris, sed efficitur mi tellus sed turpis.</p>
-        <p>Praesent eu dui feugiat, pretium lectus sed, volutpat risus.</p>
+        <h2>Browse</h2>
+        <p>Welcome to our platform, where you can conveniently explore a wide range of tools.
+            With the ability to browse the catalog, you can easily access both available tools and those currently on loan.
+            By creating an account, you gain the privilege of contributing to the catalog by adding tools or borrowing
+            them as per your requirements.</p>
         <div class="card-list">
-            <div class="card-item">
-                <h3>Create User info</h3>
-                <form id="add-user-form">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" required>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                    <button type="submit">Submit</button>
-                </form>
-            </div>
             <div class="card-item">
                 <h3>Add a Tool</h3>
                 <form id="add-tool-form">
@@ -56,50 +44,76 @@
                     <input type="text" id="toolName" name="tool" required>
                     <label for="description">Description:</label>
                     <input type="text" id="description" name="description" required>
-                    <label for="username">Username:</label>
+                    <label for="usernameTool">Username:</label>
                     <input type="text" id="usernameTool" name="username" required>
-                    <label for="password">Password:</label>
+                    <label for="passwordTool">Password:</label>
                     <input type="password" id="passwordTool" name="password" required>
                     <button type="submit">Submit</button>
                 </form>
             </div>
-            <div class="card-item">
-                <h4>Get tools By user</h4>
-                <form id="get-tools-by-user-form">
-                    <label for="username">Username:</label>
-                    <input type="text" id="usernameID" name="username" required>
-                    <button type="submit">Submit</button>
-
-                </form>
-            </div>
+            <!--            <div class="card-item">
+                            <h4>Get tools By user</h4>
+                            <form id="get-tools-by-user-form">
+                                <label for="usernameID">Username:</label>
+                                <input type="text" id="usernameID" name="username" required>
+                                <button type="submit">Submit</button>
+                            </form>
+                        </div>-->
             <div class="card-item">
                 <h4>Borrow Tool</h4>
                 <form id="borrow-tool-form">
                     <label for="tool-id-input">Tool ID:</label>
                     <input type="text" id="tool-id-input" name="toolId" required>
-
                     <label for="username-id-input">Borrower Username:</label>
                     <input type="text" id="username-id-input" name="username" required>
-
                     <label for="password-input">Password:</label>
                     <input type="password" id="password-input" name="password" required>
-
                     <button type="submit">Submit</button>
                 </form>
             </div>
-
-
         </div>
     </div>
     <div class="card">
         <h2>Catalog</h2>
         <div class="card-content1" id="catalog-list">
         </div>
+    </div>
+</div>
+<div class="container1">
+    <div class="vertical-card">
+        <h2>Profile</h2>
+        <p>Here can establish a profile and gain access to your personal catalog. By creating a profile,
+            you can conveniently view and manage the tools that you have listed.</p>
+        <div class="card-item">
+            <h3>Create User info</h3>
+            <form id="add-user-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
 
+        <div class="card-item">
+            <h4>Get tools By user</h4>
+            <form id="get-tools-by-user-form">
+                <label for="username">Username:</label>
+                <input type="text" id="usernameID" name="username" required>
+                <button type="submit">Submit</button>
+
+            </form>
+        </div>
     </div>
 
+    <div class="card">
+        <h2>My Tools</h2>
+        <div class="card-content1" id="get-user-tools">
+        </div>
+    </div>
 </div>
-
 <script type="text/javascript" src="examplePage.js"></script>
-</body></body>
+</body>
 </html>

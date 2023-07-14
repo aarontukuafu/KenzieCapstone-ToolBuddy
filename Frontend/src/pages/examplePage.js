@@ -18,7 +18,8 @@ class ExamplePage extends BaseClass {
                 "renderAllTools",
                 "renderAllToolsByOwner",
                 "onGetTools",
-                "onGetUserTools"
+                "onGetUserTools",
+                "handleError"
             ],
             this
         );
@@ -33,7 +34,7 @@ class ExamplePage extends BaseClass {
         this.client = new ExampleClient();
         const createUserForm = document.getElementById('add-user-form');
 
-        document.getElementById("tools-list").addEventListener('submit', this.onGetTools);
+        document.getElementById("catalog-list").addEventListener('submit', this.onGetTools);
         document.getElementById('add-tool-form').addEventListener('submit', this.handleAddTool);
         document.getElementById('add-user-form').addEventListener('click', this.toggleFormVisibility);
         document.getElementById('add-user-form').addEventListener('submit', this.handleAddUser);
@@ -55,7 +56,8 @@ class ExamplePage extends BaseClass {
 
     async fetchAllTools() {
         const tools = await this.client.getAllTools();
-        this.dataStore.set('tools-list', tools);
+/*        this.dataStore.set('tools-list', tools);*/
+        this.dataStore.set('catalog-list', tools);
     }
 
 
@@ -63,12 +65,13 @@ class ExamplePage extends BaseClass {
 
     // Function to toggle the visibility of the forms
 
-
-
+    fillToolId(toolId) {
+      document.getElementById('tool-id-input').value = toolId;
+    }
 
     async renderAllTools() {
-        let resultArea = document.getElementById("tools-list");
-        const tools = this.dataStore.get('tools-list');
+        let resultArea = document.getElementById("catalog-list");
+        const tools = this.dataStore.get('catalog-list');
         /*const resultArea = document.getElementById("result-info");*/
 
         resultArea.innerHTML = `
@@ -89,8 +92,10 @@ class ExamplePage extends BaseClass {
 
         for (let tool of tools){
             let row = tableBody.insertRow();
+
             let toolid = row.insertCell(0);
             toolid.innerHTML = tool.toolId;
+            toolid.addEventListener('click', () => this.fillToolId(tool.toolId));
 
             let name = row.insertCell(1);
             name.innerHTML = tool.toolName;
@@ -148,7 +153,7 @@ class ExamplePage extends BaseClass {
         // Prevent the page from refreshing on form submit
         event.preventDefault();
         let result = await this.client.getExample(id, this.errorHandler);
-        this.dataStore.set("tools-list", result);
+        this.dataStore.set("catalog-list", result);
         if (result) {
             this.showMessage(`Got ${result.name}!`)
         } else {
@@ -165,9 +170,9 @@ class ExamplePage extends BaseClass {
         let result = await this.client.getAllToolsByOwnerId(ownerId, this.errorHandler);
         this.ownerData.set("get-user-tools", result);
         if (result) {
-            this.showMessage(`Got ${result[0].owner}!`)
+            this.showMessage(`${result[0].owner}!'s Tools'`)
         } else {
-            this.errorHandler("Error doing GET!  Try again...");
+            this.errorHandler("User Does Not Exist. Try Again!");
         }
     }
 
@@ -214,6 +219,11 @@ class ExamplePage extends BaseClass {
             this.showMessage(`${borrowedTool.borrower} Borrowed ${borrowedTool.toolName}!`)
             await this.fetchAllTools();
         }
+    }
+
+    handleError(errorMessage) {
+      // Handle the error and display the custom error message TOOL UNAVAILABLE
+      console.error(errorMessage);
     }
 
     async handleAddUser(event) {
