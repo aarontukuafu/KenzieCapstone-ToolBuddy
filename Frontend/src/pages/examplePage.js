@@ -43,12 +43,9 @@ class ExamplePage extends BaseClass {
 
         this.dataStore.addChangeListener(this.renderAllTools);
         this.ownerData.addChangeListener(this.renderAllToolsByOwner);
-        /*this.dataStore.addChangeListener(this.renderUserTools);*/
-
-
 
         await this.fetchAllTools();
-//        await this.fetchOwnerTools();
+        await this.fetchOwnerTools();
     }
 
     // Fetch methods
@@ -58,6 +55,11 @@ class ExamplePage extends BaseClass {
         const tools = await this.client.getAllTools();
 /*        this.dataStore.set('tools-list', tools);*/
         this.dataStore.set('catalog-list', tools);
+    }
+
+    async fetchOwnerTools() {
+        const tools = await this.client.getAllToolsByOwnerId();
+        this.ownerData.set('get-user-tools', tools);
     }
 
 
@@ -79,10 +81,10 @@ class ExamplePage extends BaseClass {
         <table class = "table-bordered">
         <thead>
         <tr>
-        <th> id </th>
-        <th> name </th>
-        <th> description </th>
-        <th> borrower </th>
+        <th> Tool ID </th>
+        <th> Name </th>
+        <th> Description </th>
+        <th> Borrower </th>
         </tr>
         </thead>
         <tbody id = "toolid">`;
@@ -114,16 +116,15 @@ class ExamplePage extends BaseClass {
     async renderAllToolsByOwner() {
         let resultArea = document.getElementById("get-user-tools");
         const tools = this.ownerData.get('get-user-tools');
-        /*const resultArea = document.getElementById("result-info");*/
 
         resultArea.innerHTML =`
         <div class = "row">
         <table class = "table-bordered">
         <thead>
         <tr>
-        <th> owner </th>
-        <th> name </th>
-        <th> description </th>
+        <th> Owner </th>
+        <th> Name </th>
+        <th> Description </th>
         </tr>
         </thead>
         <tbody id = "usertoolsbyID">`;
@@ -143,8 +144,6 @@ class ExamplePage extends BaseClass {
             }
             console.log(this.ownerData);
         }
-/*        const getUserToolsForm = document.getElementById("get-tools-by-user-form");
-        getUserToolsForm.addEventListener("submit", this.onGetUserTools);*/
     }
 
     // Event Handlers --------------------------------------------------------------------------------------------------
@@ -170,7 +169,7 @@ class ExamplePage extends BaseClass {
         let result = await this.client.getAllToolsByOwnerId(ownerId, this.errorHandler);
         this.ownerData.set("get-user-tools", result);
         if (result) {
-            this.showMessage(`${result[0].owner}!'s Tools'`)
+            this.showMessage(`${result[0].owner}'s Tools'`)
         } else {
             this.errorHandler("User Does Not Exist. Try Again!");
         }
@@ -197,7 +196,7 @@ class ExamplePage extends BaseClass {
                     await this.fetchAllTools();
                 }
             } catch (error) {
-                console.error('Error adding tool:', error);
+                console.error('Invalid User. Try Again!');
             }
     }
 
@@ -218,6 +217,8 @@ class ExamplePage extends BaseClass {
         if (borrowedTool) {
             this.showMessage(`${borrowedTool.borrower} Borrowed ${borrowedTool.toolName}!`)
             await this.fetchAllTools();
+            await this.fetchOwnerTools();
+            this.renderAllToolsByOwner();
         }
     }
 
@@ -254,119 +255,6 @@ class ExamplePage extends BaseClass {
     }
 
 }
-
-/**
- * NOT USED CODE. MAY USE LATER.
- */
-// async renderUserTools() {
-//     let userToolsCard = document.getElementById("user-tools-card");
-//
-//     const ownerId = document.querySelector("#usernameID").value;
-//     const tools = await this.client.getToolsByOwnerId(ownerId);
-//
-//     if (tools) {
-//         let toolsHtml = "";
-//         tools.forEach(tool => {
-//             toolsHtml += `
-//                     <div>ID: ${tool.id}</div>
-//                     <div>Name: ${tool.name}</div>
-//                     <div>Description: ${tool.description}</div>
-//                     <br>
-//                 `;
-//         });
-//         userToolsCard.innerHTML = toolsHtml;
-//     } else {
-//         userToolsCard.innerHTML = "No tools found.";
-//     }
-// }
-
-// async renderNewTools() {
-//     let newToolsCard = document.getElementById("new-tools-card");
-//
-//     const tools = await this.client.getAllTools();
-//
-//     if (tools) {
-//         let toolsHtml = "";
-//         tools.forEach(tool => {
-//             toolsHtml += `
-//                     <div>ID: ${tool.id}</div>
-//                     <div>Name: ${tool.name}</div>
-//                     <div>Description: ${tool.description}</div>
-//                     <br>
-//                 `;
-//         });
-//         newToolsCard.innerHTML = toolsHtml;
-//     } else {
-//         newToolsCard.innerHTML = "No tools found.";
-//     }
-// }
-
-// async renderToolById() {
-//     let resultArea = document.getElementById("result-info");
-//
-//
-//     const toolId = document.querySelector("#toolName").value; //Switch to a field
-//     const tool = await this.client.getToolById(toolId);
-//
-//     if (tool) {
-//         // Display the tool in the result area
-//         resultArea.innerHTML = `
-//         <div>ID: ${tool.id}</div>
-//         <div>Name: ${tool.name}</div>
-//         <div>Description: ${tool.description}</div>
-//     `;
-//     } else {
-//         resultArea.innerHTML = "Tool not found.";
-//     }
-// }
-
-// async onGet(event) {
-//     // Prevent the page from refreshing on form submit
-//     event.preventDefault();
-//
-//     let id = document.getElementById("id-field").value;
-//     this.dataStore.set("example", null);
-//
-//     let result = await this.client.getExample(id, this.errorHandler);
-//     this.dataStore.set("example", result);
-//     if (result) {
-//         this.showMessage(`Got ${result.name}!`)
-//     } else {
-//         this.errorHandler("Error doing GET!  Try again...");
-//     }
-// }
-
-// async handleDeleteTool(event) {
-//     event.preventDefault();
-//
-//     const toolId = document.querySelector("#toolId").value;
-//     const username = document.querySelector("#username").value;
-//     const password = document.querySelector("#password").value;
-//
-//     const deletedTool = await this.client.deleteTool(toolId, username, password, this.errorHandler);
-// }
-
-// async fetchNewTools() {
-//     const newTools = await this.client.g;
-//     this.dataStore.set('newTools', newTools);
-// }
-//
-//this.dataStore.addChangeListener(this.renderNewTools);
-//
-// "renderNewTools",
-//
-// async renderNewTools() {
-//     const newTools = this.dataStore.get('newTools');
-//     const newToolsCard = document.getElementById('new-tools-card');
-//     newToolsCard.innerHTML = '';
-//     newTools.forEach(tool => {
-//         const toolElement = document.createElement('p');
-//         toolElement.textContent = `Tool: ${tool.name}, Description: ${tool.description}`;
-//         newToolsCard.appendChild(toolElement);
-//     });
-// }
-
-
 /**
  * Main method to run when the page contents have loaded.
  */
